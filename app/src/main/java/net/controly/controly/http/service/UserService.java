@@ -1,5 +1,7 @@
 package net.controly.controly.http.service;
 
+import net.controly.controly.http.response.GetAllUserKeyboardsResponse;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -21,6 +23,6 @@ public interface UserService {
      */
     @FormUrlEncoded
     @POST("getAllUserKeyboards")
-    Call<ResponseBody> getAllUserKeyboards(@Header("Authorization") String jwt, @Field("userId") long userId);
+    Call<GetAllUserKeyboardsResponse> getAllUserKeyboards(@Header("Authorization") String jwt, @Field("userId") long userId);
 
 }

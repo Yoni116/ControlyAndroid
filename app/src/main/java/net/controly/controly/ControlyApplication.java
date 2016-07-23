@@ -82,7 +82,7 @@ public class ControlyApplication extends Application {
      */
     public boolean isAuthenticated() {
         try {
-            return getAuthenticatedUser() != null;
+            return getAuthenticatedUser() != null && getJwt() != null;
         } catch (RuntimeException e) {
             return false;
         }

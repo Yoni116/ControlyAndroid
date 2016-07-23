@@ -8,6 +8,7 @@ import android.widget.ListView;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
+import net.controly.controly.http.response.GetAllUserKeyboardsResponse;
 import net.controly.controly.http.service.UserService;
 import net.controly.controly.model.User;
 import net.controly.controly.util.Logger;
@@ -44,18 +45,18 @@ public class MainActivity extends BaseActivity {
         User authenticatedUser = ControlyApplication.getInstace()
                 .getAuthenticatedUser();
 
-        Call<ResponseBody> call = ControlyApplication.getInstace()
+        Call<GetAllUserKeyboardsResponse> call = ControlyApplication.getInstace()
                 .getService(UserService.class)
                 .getAllUserKeyboards("Bearer " + jwt, authenticatedUser.getId());
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<GetAllUserKeyboardsResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<GetAllUserKeyboardsResponse> call, Response<GetAllUserKeyboardsResponse> response) {
                 dismissDialog();
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<GetAllUserKeyboardsResponse> call, Throwable t) {
                 Logger.error(t.getMessage());
                 dismissDialog();
             }
