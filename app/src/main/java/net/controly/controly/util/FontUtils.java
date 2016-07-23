@@ -12,16 +12,14 @@ public final class FontUtils {
 
     /**
      * Set the default font of the app.
-     *
-     * @param context                 The context of the current activity.
-     * @param staticTypefaceFieldName The name of the type face.
+     *  @param context                 The context of the current activity.
      * @param fontAssetName           The name of the font to override.
      */
     public static void setDefaultFont(Context context,
-                                      String staticTypefaceFieldName, String fontAssetName) {
+                                      String fontAssetName) {
         final Typeface regular = Typeface.createFromAsset(context.getAssets(),
                 fontAssetName);
-        replaceFont(staticTypefaceFieldName, regular);
+        replaceFont("MONOSPACE", regular);
     }
 
     /**
@@ -30,8 +28,8 @@ public final class FontUtils {
      * @param staticTypefaceFieldName The type face of the font.
      * @param newTypeface             The new type face.
      */
-    protected static void replaceFont(String staticTypefaceFieldName,
-                                      final Typeface newTypeface) {
+    private static void replaceFont(String staticTypefaceFieldName,
+                                    final Typeface newTypeface) {
         try {
 
             final Field staticField = Typeface.class.getDeclaredField(staticTypefaceFieldName);

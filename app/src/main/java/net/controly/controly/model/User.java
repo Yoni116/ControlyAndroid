@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Created by Itai on 23-Jul-16.
+ * This class represents a user entity.
  */
 public class User {
 

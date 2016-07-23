@@ -6,11 +6,13 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import net.controly.controly.http.HeaderInterceptor;
 import net.controly.controly.model.User;
 import net.controly.controly.util.FontUtils;
+import net.controly.controly.util.GsonFactory;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * This is the main class of the application.
@@ -58,14 +60,19 @@ public class ControlyApplication extends Application {
         super.onCreate();
         sInstance = this;
 
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new HeaderInterceptor())
+                .build();
+
         final String baseUrl = "https://api.controly.net/ControlyApi/Receiver.php/";
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonFactory.getGsonConverterFactory())
+                .client(client)
                 .build();
 
         final String fontName = "Brandon_reg.ttf";
-        FontUtils.setDefaultFont(this, "MONOSPACE", fontName);
+        FontUtils.setDefaultFont(this, fontName);
     }
 
     /**

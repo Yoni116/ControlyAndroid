@@ -14,12 +14,11 @@ import net.controly.controly.R;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected ProgressDialog mWaitDialog;
+    private ProgressDialog mWaitDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     /**

@@ -6,11 +6,15 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by Itai on 23-Jul-16.
+ * This class is used to format date.
  */
 public class DateUtils {
 
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    public static String getDefaultDateFormat() {
+        return DEFAULT_DATE_FORMAT;
+    }
 
     public static Date parse(String date) {
         try {

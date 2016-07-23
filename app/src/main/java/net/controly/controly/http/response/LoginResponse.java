@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class LoginResponse extends BaseResponse {
 
+    //TODO Change the data map to user entity.
     private Map<String, String> data;
     private String jwt;
 

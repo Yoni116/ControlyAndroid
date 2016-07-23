@@ -13,7 +13,6 @@ import net.controly.controly.http.service.UserService;
 import net.controly.controly.model.User;
 import net.controly.controly.util.Logger;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,15 +38,12 @@ public class MainActivity extends BaseActivity {
 
         showWaitDialog();
 
-        String jwt = ControlyApplication.getInstace()
-                .getJwt();
-
         User authenticatedUser = ControlyApplication.getInstace()
                 .getAuthenticatedUser();
 
         Call<GetAllUserKeyboardsResponse> call = ControlyApplication.getInstace()
                 .getService(UserService.class)
-                .getAllUserKeyboards("Bearer " + jwt, authenticatedUser.getId());
+                .getAllUserKeyboards(authenticatedUser.getId());
 
         call.enqueue(new Callback<GetAllUserKeyboardsResponse>() {
             @Override
