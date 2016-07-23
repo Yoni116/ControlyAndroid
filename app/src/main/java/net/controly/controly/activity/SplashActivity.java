@@ -3,6 +3,7 @@ package net.controly.controly.activity;
 import android.os.Bundle;
 import android.os.Handler;
 
+import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 
 /**
@@ -17,21 +18,20 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        //TODO: If user is already authenticated, continue to the main activity.
-        startAuthenticationFlow();
-    }
-
-    /**
-     * If the user is logged in already, continue to the main activity.
-     * If not, continue to the login activity.
-     */
-    private void startAuthenticationFlow() {
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(LoginActivity.class);
-                finish();
+                Class nextActivity;
+
+                //If the user is already authenticated, continue to the main activity.
+                //If he is not authenticated, continue to the login activity.
+                if (ControlyApplication.getInstace().isAuthenticated()) {
+                    nextActivity = MainActivity.class;
+                } else {
+                    nextActivity = LoginActivity.class;
+                }
+
+                startActivity(nextActivity);
             }
         }, SPLASH_DURATION);
     }

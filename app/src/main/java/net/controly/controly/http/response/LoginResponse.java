@@ -2,6 +2,8 @@ package net.controly.controly.http.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.controly.controly.model.User;
+
 import java.util.Map;
 
 /**
@@ -31,6 +33,10 @@ public class LoginResponse {
 
     public Map<String, String> getData() {
         return data;
+    }
+
+    public User getUser() {
+        return data == null ? null : new User(data);
     }
 
     public void setData(Map<String, String> data) {

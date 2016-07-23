@@ -31,5 +31,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         startActivity(intent);
+        finish();
     }
 }

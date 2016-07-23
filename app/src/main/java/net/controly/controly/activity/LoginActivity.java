@@ -47,7 +47,7 @@ public class LoginActivity extends BaseActivity {
                 String password = HashUtils.MD5(mPasswordEditText.getText().toString());
 
                 //Get the relevant API method for logging in.
-                Call<LoginResponse> call = ControlyApplication.getsInstance()
+                Call<LoginResponse> call = ControlyApplication.getInstace()
                         .getService(LoginService.class)
                         .login(email, password);
 
@@ -59,8 +59,18 @@ public class LoginActivity extends BaseActivity {
                         LoginResponse loginResponse = response.body();
 
                         if (loginResponse.hasSucceeded()) {
-                            //TODO Continue to main activity.
                             Logger.info("Login succeeded! Continuing to main activity. " + loginResponse.toString());
+
+                            //Show a message that the authentication was successful.
+                            Toast.makeText(getApplicationContext(), "Login succeeded!", Toast.LENGTH_SHORT)
+                                    .show();
+
+                            //Set the authenticated user.
+                            ControlyApplication.getInstace()
+                                    .setAuthenticatedUser(loginResponse.getUser());
+
+                            //Continue to the main activity.
+                            startActivity(MainActivity.class);
                         } else {
                             Logger.error("Login failed! " + loginResponse.toString());
 
