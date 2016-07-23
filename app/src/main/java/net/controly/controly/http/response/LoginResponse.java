@@ -9,12 +9,10 @@ import java.util.Map;
 /**
  * This class represents a response from the server for logging in to the application.
  */
-public class LoginResponse {
+public class LoginResponse extends BaseResponse {
 
-    private String status;
     private Map<String, String> data;
     private String jwt;
-    private String reason;
 
     @SerializedName("ID")
     private int id;
@@ -51,27 +49,12 @@ public class LoginResponse {
         this.jwt = jwt;
     }
 
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    /**
-     * @return Whether the login was successful.
-     */
-    public boolean hasSucceeded() {
-        return status.equals("OK");
     }
 
     @Override

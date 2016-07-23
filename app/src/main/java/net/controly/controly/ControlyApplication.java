@@ -33,9 +33,19 @@ public class ControlyApplication extends Application {
     private User user;
 
     /**
+     * The authenticated user's token.
+     */
+    private String jwt;
+
+    /**
      * The name of the user shared preference.
      */
     private final String PREF_USER = "user";
+
+    /**
+     * The name of the jwt shared preference.
+     */
+    private final String PREF_JWT = "jwt";
 
     public static ControlyApplication getInstace() {
         return sInstance;
@@ -81,7 +91,7 @@ public class ControlyApplication extends Application {
     /**
      * The method receives a user and sets it as the authenticated user.
      *
-     * @param user The user to set as authenticated/
+     * @param user The user to set as authenticated.
      */
     public void setAuthenticatedUser(User user) {
         this.user = user;
@@ -118,5 +128,29 @@ public class ControlyApplication extends Application {
 
         //If there is no user authenticated, throw a runtime exception.
         throw new RuntimeException("Tried to get the authenticated user, but there is no user in the application memory.");
+    }
+
+    /**
+     * Save the given JWT in the shared preferences.
+     *
+     * @param jwt The JWT token to save.
+     */
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstace());
+        sp.edit().putString(PREF_JWT, jwt).apply();
+    }
+
+    /**
+     * @return The current jwt.
+     */
+    public String getJwt() {
+        if (jwt != null) {
+            return jwt;
+        }
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstace());
+        return sp.getString(PREF_JWT, null);
     }
 }

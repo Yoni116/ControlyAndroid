@@ -69,6 +69,10 @@ public class LoginActivity extends BaseActivity {
                             ControlyApplication.getInstace()
                                     .setAuthenticatedUser(loginResponse.getUser());
 
+                            //Set the authenticated user's jwt token.
+                            ControlyApplication.getInstace()
+                                    .setJwt(loginResponse.getJwt());
+
                             //Continue to the main activity.
                             startActivity(MainActivity.class);
                         } else {
