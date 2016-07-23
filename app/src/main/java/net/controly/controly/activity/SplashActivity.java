@@ -15,7 +15,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_splash);
 
         //TODO: If user is already authenticated, continue to the main activity.
         startAuthenticationFlow();

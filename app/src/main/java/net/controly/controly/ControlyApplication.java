@@ -2,7 +2,10 @@ package net.controly.controly;
 
 import android.app.Application;
 
+import net.controly.controly.util.FontUtils;
+
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * This is the main class of the application.
@@ -15,11 +18,6 @@ public class ControlyApplication extends Application {
     private static ControlyApplication sInstance;
 
     /**
-     * The base url of the API.
-     */
-    private final String BASE_URL = "https://api.controly.net/ControlyApi/Receiver.php/";
-
-    /**
      * The configuration of the relationship with the API.
      */
     private Retrofit retrofit;
@@ -29,15 +27,20 @@ public class ControlyApplication extends Application {
     }
 
     /**
-     * On create, configure the {@code Retrofit} connection.
+     * On create, configure the {@code Retrofit} connection and the default font.
      */
     public void onCreate() {
         super.onCreate();
         sInstance = this;
 
+        final String baseUrl = "https://api.controly.net/ControlyApi/Receiver.php/";
         retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
+        final String fontName = "Brandon_reg.ttf";
+        FontUtils.setDefaultFont(this, "MONOSPACE", fontName);
     }
 
     /**

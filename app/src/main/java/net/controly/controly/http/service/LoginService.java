@@ -1,6 +1,7 @@
 package net.controly.controly.http.service;
 
-import okhttp3.ResponseBody;
+import net.controly.controly.http.response.LoginResponse;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -12,11 +13,10 @@ import retrofit2.http.POST;
 public interface LoginService {
 
     /**
-     * Login a user.
+     * Login a user according to the given username/email & password.
      */
-
     @FormUrlEncoded
     @POST("verifyUserPass")
-    Call<ResponseBody> login(@Field("userOrEmail") String userOrEmail, @Field("pass") String password);
+    Call<LoginResponse> login(@Field("userOrEmail") String userOrEmail, @Field("pass") String password);
 
 }
