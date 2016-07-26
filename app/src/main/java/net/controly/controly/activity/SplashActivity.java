@@ -1,10 +1,12 @@
 package net.controly.controly.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
+import net.controly.controly.util.UIUtils;
 
 /**
  * This is the splash activity of the application.
@@ -17,6 +19,8 @@ public class SplashActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        final Context context = this;
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -31,7 +35,7 @@ public class SplashActivity extends BaseActivity {
                     nextActivity = LoginActivity.class;
                 }
 
-                startActivity(nextActivity);
+                UIUtils.startActivity(context, nextActivity);
             }
         }, SPLASH_DURATION);
     }

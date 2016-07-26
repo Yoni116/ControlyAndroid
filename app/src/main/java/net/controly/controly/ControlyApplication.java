@@ -1,13 +1,21 @@
 package net.controly.controly;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
+import android.util.LruCache;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
+import net.controly.controly.activity.LoginActivity;
 import net.controly.controly.http.HeaderInterceptor;
 import net.controly.controly.model.User;
+import net.controly.controly.util.UIUtils;
 import net.controly.controly.util.FontUtils;
 import net.controly.controly.util.GsonFactory;
 
@@ -25,9 +33,19 @@ public class ControlyApplication extends Application {
     private static ControlyApplication sInstance;
 
     /**
+     * The base url of the server.
+     */
+    private final String BASE_URL = "https://api.controly.net/ControlyApi/";
+
+    /**
      * The configuration of the relationship with the API.
      */
     private Retrofit retrofit;
+
+    /**
+     * Image loader for retrieving images from web.
+     */
+    private ImageLoader mImageLoader;
 
     /**
      * The currently authenticated user.
@@ -60,19 +78,52 @@ public class ControlyApplication extends Application {
         super.onCreate();
         sInstance = this;
 
+        //Initialize app font
+        final String fontName = "Brandon_reg.ttf";
+        FontUtils.setDefaultFont(this, fontName);
+
+        //Initialize retrofit
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new HeaderInterceptor())
                 .build();
 
-        final String baseUrl = "https://api.controly.net/ControlyApi/Receiver.php/";
         retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(BASE_URL + "Receiver.php/")
                 .addConverterFactory(GsonFactory.getGsonConverterFactory())
                 .client(client)
                 .build();
 
-        final String fontName = "Brandon_reg.ttf";
-        FontUtils.setDefaultFont(this, fontName);
+        //Initialize web images
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        mImageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
+
+            private final int maxCacheSize = 10000;
+            private final LruCache<String, Bitmap> mCache = new LruCache<>(maxCacheSize);
+
+            @Override
+            public Bitmap getBitmap(String url) {
+                return mCache.get(url);
+            }
+
+            @Override
+            public void putBitmap(String url, Bitmap bitmap) {
+                mCache.put(url, bitmap);
+            }
+        });
+    }
+
+    /**
+     * @return The image loader object in order to retrieve images from web.
+     */
+    public ImageLoader getImageLoader() {
+        return mImageLoader;
+    }
+
+    /**
+     * @return The base url for retrieving images from the server.
+     */
+    public String getBaseUrl() {
+        return BASE_URL;
     }
 
     /**
@@ -159,5 +210,15 @@ public class ControlyApplication extends Application {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstace());
         return sp.getString(PREF_JWT, null);
+    }
+
+    /**
+     * Logout from the application.
+     */
+    public void logout(Context context) {
+        setJwt(null);
+        setAuthenticatedUser(null);
+
+        UIUtils.startActivity(context, LoginActivity.class);
     }
 }

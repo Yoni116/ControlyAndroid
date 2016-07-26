@@ -3,6 +3,7 @@
     package="net.controly.controly">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".ControlyApplication"
@@ -20,7 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.LoginActivity"
+            android:exported="true"/>
 
         <activity
             android:name=".activity.MainActivity"
@@ -28,7 +30,6 @@
 
         <activity
             android:name=".activity.MenuActivity"
-            android:parentActivityName=".activity.MainActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
     </application>
 

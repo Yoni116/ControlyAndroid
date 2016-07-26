@@ -1,19 +1,56 @@
 package net.controly.controly.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Window;
+import android.support.design.widget.FloatingActionButton;
+import android.view.MotionEvent;
+import android.view.View;
 
+import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
+import net.controly.controly.util.UIUtils;
+import net.controly.controly.util.Logger;
 
 /**
  * This activity is for the menu of the application.
  */
 public class MenuActivity extends BaseActivity {
 
+    private FloatingActionButton mLogoutButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        final Context context = this;
+
+        //Initialize the logout button
+        //TODO Change icon
+        mLogoutButton = (FloatingActionButton) findViewById(R.id.logout_button);
+        mLogoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.info("Logging out of the application");
+                ControlyApplication.getInstace()
+                        .logout(context);
+
+                UIUtils.startActivity(context, LoginActivity.class);
+            }
+        });
+    }
+
+    /**
+     * When the user clicks the activity, close the menu.
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            finish();
+            return true;
+        }
+
+        return false;
     }
 }
