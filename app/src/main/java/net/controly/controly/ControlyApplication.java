@@ -15,9 +15,9 @@ import com.google.gson.Gson;
 import net.controly.controly.activity.LoginActivity;
 import net.controly.controly.http.HeaderInterceptor;
 import net.controly.controly.model.User;
-import net.controly.controly.util.UIUtils;
 import net.controly.controly.util.FontUtils;
 import net.controly.controly.util.GsonFactory;
+import net.controly.controly.util.UIUtils;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
