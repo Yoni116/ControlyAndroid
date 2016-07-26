@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--Theme-->
     <color name="backgroundColor">#0d0d0d</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#43b7e3</color>
     <color name="blackTransparent">#80000000</color>
+
+    <!--Keyboard list swipe-->
+    <color name="light_green">#1DCC3A</color>
+    <color name="light_grey">#C7C7CC</color>
 </resources>
