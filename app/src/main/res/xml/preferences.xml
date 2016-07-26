@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/authentication_category">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_auto_login"
+            android:title="@string/auto_login" />
+
+        <Preference
+            android:key="pref_edit_profile"
+            android:title="@string/edit_profile" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -21,8 +21,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.LoginActivity"
-            android:exported="true"/>
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="true" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -31,6 +32,8 @@
         <activity
             android:name=".activity.MenuActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
+
+        <activity android:name=".activity.SettingsActivity" />
     </application>
 
 </manifest>

@@ -27,9 +27,11 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 Class nextActivity;
 
+                ControlyApplication instance = ControlyApplication.getInstance();
+
                 //If the user is already authenticated, continue to the main activity.
                 //If he is not authenticated, continue to the login activity.
-                if (ControlyApplication.getInstace().isAuthenticated()) {
+                if (instance.isAuthenticated() && instance.autoLogin(context)) {
                     nextActivity = MainActivity.class;
                 } else {
                     nextActivity = LoginActivity.class;

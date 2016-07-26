@@ -67,7 +67,12 @@ public class ControlyApplication extends Application {
      */
     private final String PREF_JWT = "jwt";
 
-    public static ControlyApplication getInstace() {
+    /**
+     * Preference for deciding whether to auto login.
+     */
+    private static final String KEY_PREF_AUTO_LOGIN = "pref_auto_login";
+
+    public static ControlyApplication getInstance() {
         return sInstance;
     }
 
@@ -159,7 +164,7 @@ public class ControlyApplication extends Application {
         String userJson = gson.toJson(user);
 
         //Save the JSON user.
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstace());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstance());
         sp.edit().putString(PREF_USER, userJson).apply();
     }
 
@@ -174,7 +179,7 @@ public class ControlyApplication extends Application {
         }
 
         //Try to get the user saved in the phone memory.
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstace());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstance());
         String userJson = sp.getString(PREF_USER, null);
 
         if (userJson != null) {
@@ -196,7 +201,7 @@ public class ControlyApplication extends Application {
     public void setJwt(String jwt) {
         this.jwt = jwt;
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstace());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstance());
         sp.edit().putString(PREF_JWT, jwt).apply();
     }
 
@@ -208,7 +213,7 @@ public class ControlyApplication extends Application {
             return jwt;
         }
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstace());
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getInstance());
         return sp.getString(PREF_JWT, null);
     }
 
@@ -220,5 +225,16 @@ public class ControlyApplication extends Application {
         setAuthenticatedUser(null);
 
         UIUtils.startActivity(context, LoginActivity.class);
+    }
+
+    /**
+     * This method returns whether the user has enabled auto login.
+     *
+     * @param context The context of the application
+     * @return Whether the user has enabled auto login.
+     */
+    public boolean autoLogin(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getBoolean(KEY_PREF_AUTO_LOGIN, true);
     }
 }

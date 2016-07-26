@@ -76,10 +76,10 @@ public class KeyboardListAdapter extends BaseAdapter {
         NetworkImageView keyboardImage = (NetworkImageView) convertView.findViewById(R.id.keyboard_image);
         TextView keyboardText = (TextView) convertView.findViewById(R.id.keyboard_text);
 
-        String keyboardImageUrl = ControlyApplication.getInstace().getBaseUrl() + keyboard.getPictureUrl();
+        String keyboardImageUrl = ControlyApplication.getInstance().getBaseUrl() + keyboard.getPictureUrl();
         String keyboardName = keyboard.getName();
 
-        keyboardImage.setImageUrl(keyboardImageUrl, ControlyApplication.getInstace().getImageLoader());
+        keyboardImage.setImageUrl(keyboardImageUrl, ControlyApplication.getInstance().getImageLoader());
         keyboardText.setText(keyboardName);
 
         return convertView;

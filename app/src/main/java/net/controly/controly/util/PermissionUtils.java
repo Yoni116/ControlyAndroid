@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat;
 import net.controly.controly.R;
 
 /**
- * Created by Itai on 25-Jul-16.
+ * This class contains an assortment of util methods relating to user permissions.
  */
 public class PermissionUtils {
 

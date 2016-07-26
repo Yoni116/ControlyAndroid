@@ -16,9 +16,9 @@ public class HeaderInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
-        if (ControlyApplication.getInstace()
+        if (ControlyApplication.getInstance()
                 .isAuthenticated()) {
-            String jwt = ControlyApplication.getInstace()
+            String jwt = ControlyApplication.getInstance()
                     .getJwt();
 
             request = request.newBuilder()

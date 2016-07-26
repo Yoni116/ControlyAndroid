@@ -66,7 +66,7 @@ public class LoginActivity extends BaseActivity {
                 String password = HashUtils.MD5(mPasswordEditText.getText().toString());
 
                 //Get the relevant API method for logging in.
-                Call<LoginResponse> call = ControlyApplication.getInstace()
+                Call<LoginResponse> call = ControlyApplication.getInstance()
                         .getService(LoginService.class)
                         .login(email, password);
 
@@ -81,11 +81,11 @@ public class LoginActivity extends BaseActivity {
                             Logger.info("Login succeeded! Continuing to main activity. " + loginResponse.toString());
 
                             //Set the authenticated user.
-                            ControlyApplication.getInstace()
+                            ControlyApplication.getInstance()
                                     .setAuthenticatedUser(loginResponse.getUser());
 
                             //Set the authenticated user's jwt token.
-                            ControlyApplication.getInstace()
+                            ControlyApplication.getInstance()
                                     .setJwt(loginResponse.getJwt());
 
                             //Continue to the main activity.

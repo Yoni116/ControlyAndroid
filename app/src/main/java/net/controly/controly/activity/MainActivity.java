@@ -1,9 +1,12 @@
 package net.controly.controly.activity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -31,6 +34,8 @@ import retrofit2.Response;
 
 public class MainActivity extends BaseActivity {
 
+    private Context mContext;
+
     private FloatingActionButton mMenuButton;
     private SwipeMenuListView mKeyboardList;
     private KeyboardListAdapter mKeyboardListAdapter;
@@ -39,6 +44,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = this;
 
         //Set the main menu floating action button.
         mMenuButton = (FloatingActionButton) findViewById(R.id.open_menu_button);
@@ -81,16 +88,16 @@ public class MainActivity extends BaseActivity {
 
                 menu.addMenuItem(moreItem);
 
-                //Set the 'update profile' button.
-                SwipeMenuItem updateProfile = new SwipeMenuItem(getApplicationContext());
+                //Set the 'publish' button.
+                SwipeMenuItem publish = new SwipeMenuItem(getApplicationContext());
 
-                updateProfile.setBackground(R.color.light_green);
-                updateProfile.setWidth(400);
-                updateProfile.setTitle("Update Profile");
-                updateProfile.setTitleSize(15);
-                updateProfile.setTitleColor(Color.WHITE);
+                publish.setBackground(R.color.light_green);
+                publish.setWidth(400);
+                publish.setTitle("Publish");
+                publish.setTitleSize(15);
+                publish.setTitleColor(Color.WHITE);
 
-                menu.addMenuItem(updateProfile);
+                menu.addMenuItem(publish);
             }
         };
 
@@ -100,10 +107,36 @@ public class MainActivity extends BaseActivity {
         mKeyboardList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                Toast.makeText(getApplicationContext(), "Clicked on " + menu.getMenuItem(index).getTitle(), Toast.LENGTH_SHORT)
-                        .show();
+                Logger.info("User clicked on '" + menu.getMenuItem(index).getTitle() + "' button in the swipe menu.");
 
-                return true;
+                switch (index) {
+                    case 0:
+                        final String[] options = {"Delete", "Edit"};
+                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+                        dialogBuilder.setTitle("Choose an option");
+                        dialogBuilder.setItems(options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        Toast.makeText(MainActivity.this, "Will delete...", Toast.LENGTH_SHORT)
+                                                .show();
+                                        break;
+                                    case 1:
+                                        Toast.makeText(MainActivity.this, "Will edit...", Toast.LENGTH_SHORT)
+                                                .show();
+                                        break;
+                                }
+                            }
+                        }).show();
+
+                    case 1:
+                        Toast.makeText(MainActivity.this, "Will lunch the publish activity.", Toast.LENGTH_SHORT)
+                                .show();
+                        break;
+                }
+
+                return false;
             }
         });
 
@@ -117,11 +150,11 @@ public class MainActivity extends BaseActivity {
         //Show a wait dialog while loading the keyboards.
         showWaitDialog();
 
-        User authenticatedUser = ControlyApplication.getInstace()
+        User authenticatedUser = ControlyApplication.getInstance()
                 .getAuthenticatedUser();
 
         //Get the keyboard list for the authenticated user.
-        Call<GetAllUserKeyboardsResponse> call = ControlyApplication.getInstace()
+        Call<GetAllUserKeyboardsResponse> call = ControlyApplication.getInstance()
                 .getService(UserService.class)
                 .getAllUserKeyboards(authenticatedUser.getId());
 
@@ -140,7 +173,7 @@ public class MainActivity extends BaseActivity {
 
                 //Log that the request was successful and add the keyboards to the list.
                 List<Keyboard> keyboards = response.body().getKeyboards();
-                Logger.info("Received user keyboards. There are " + keyboards.size() + " keyboards.");
+                Logger.info("Received user keyboards - there are " + keyboards.size() + " keyboards.");
 
                 mKeyboardListAdapter.addAll(keyboards);
             }
