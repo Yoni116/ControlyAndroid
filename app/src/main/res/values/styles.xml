@@ -2,15 +2,18 @@
 
     <!-- Base application theme. -->
     <style name="ControlyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!--Colors-->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/backgroundColor</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:editTextColor">@color/colorAccent</item>
         <item name="android:textColorHint">@color/colorAccent</item>
+
         <item name="android:typeface">monospace</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="Theme.AppCompat.Translucent" parent="ControlyTheme">
@@ -18,13 +21,17 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:background">@null</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:textColorPrimary">@color/colorAccent</item>
     </style>
 
-    <!--TODO: Themes for views: edittexts, buttons etc-->
+    <style name="Autocomplete" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:colorBackground">@color/backgroundColor</item>
+        <item name="android:typeface">monospace</item>
+    </style>
 
 </resources>

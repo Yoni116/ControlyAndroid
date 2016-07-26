@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity {
                 dismissDialog();
 
                 //Avoid NullPointerException
-                if (response.body() == null) {
+                if (response.body() == null || !response.body().hasSucceeded()) {
                     Toast.makeText(getApplicationContext(), "Controly encountered an error", Toast.LENGTH_SHORT)
                             .show();
                     UIUtils.startActivity(getApplicationContext(), LoginActivity.class);
