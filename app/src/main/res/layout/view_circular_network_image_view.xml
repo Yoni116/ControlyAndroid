@@ -8,9 +8,6 @@
         android:layout_height="150dp"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:innerRadius="0dp"
-        android:shape="ring"
-        android:thicknessRatio="1.9"
         app:cardCornerRadius="75dp">
 
         <com.android.volley.toolbox.NetworkImageView

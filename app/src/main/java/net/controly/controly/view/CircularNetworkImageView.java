@@ -35,11 +35,11 @@ public class CircularNetworkImageView extends LinearLayout {
         CardView imageCircle = (CardView) getChildAt(0);
         mNetworkImageView = (NetworkImageView) imageCircle.getChildAt(0);
 
+        imageCircle.setCardBackgroundColor(backgroundColor);
+
         imageCircle.setRadius(radius);
-        imageCircle.setPreventCornerOverlap(false);
         imageCircle.getLayoutParams().height = (int) (2 * radius);
         imageCircle.getLayoutParams().width = (int) (2 * radius);
-        imageCircle.setBackgroundColor(backgroundColor);
     }
 
     public void setImageUrl(String url) {
