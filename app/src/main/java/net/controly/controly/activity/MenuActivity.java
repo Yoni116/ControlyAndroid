@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
@@ -20,6 +21,7 @@ public class MenuActivity extends BaseActivity {
 
     private FloatingActionButton mLogoutButton;
     private FloatingActionButton mSettingsButton;
+    private FloatingActionButton mCreateKeyboardButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +50,15 @@ public class MenuActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent settingsActivity = new Intent(context, SettingsActivity.class);
                 startActivity(settingsActivity);
+            }
+        });
+
+        mCreateKeyboardButton = (FloatingActionButton) findViewById(R.id.create_keyboard_button);
+        mCreateKeyboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "CLicked create button", Toast.LENGTH_SHORT)
+                        .show();
             }
         });
     }
