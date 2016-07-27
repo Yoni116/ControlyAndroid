@@ -8,11 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 import net.controly.controly.model.Keyboard;
+import net.controly.controly.view.CircularNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,13 +73,13 @@ public class KeyboardListAdapter extends BaseAdapter {
 
         Keyboard keyboard = mKeyboards.get(position);
 
-        NetworkImageView keyboardImage = (NetworkImageView) convertView.findViewById(R.id.keyboard_image);
+        CircularNetworkImageView keyboardImage = (CircularNetworkImageView) convertView.findViewById(R.id.keyboard_image);
         TextView keyboardText = (TextView) convertView.findViewById(R.id.keyboard_text);
 
         String keyboardImageUrl = ControlyApplication.getInstance().getBaseUrl() + keyboard.getPictureUrl();
         String keyboardName = keyboard.getName();
 
-        keyboardImage.setImageUrl(keyboardImageUrl, ControlyApplication.getInstance().getImageLoader());
+        keyboardImage.setImageUrl(keyboardImageUrl);
         keyboardText.setText(keyboardName);
 
         return convertView;
