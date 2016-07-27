@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".ControlyApplication"
@@ -34,6 +35,8 @@
             android:theme="@style/Theme.AppCompat.Translucent" />
 
         <activity android:name=".activity.SettingsActivity" />
+
+        <activity android:name=".activity.CreateKeyboardActivity" />
     </application>
 
 </manifest>

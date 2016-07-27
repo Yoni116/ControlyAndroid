@@ -17,6 +17,13 @@ public class PermissionUtils {
 
     public static final int READ_CONTACTS_REQUEST_CODE = 0;
 
+    /**
+     * This method shows the UI that asks a certain permission from the user.
+     *
+     * @param context    The context of the application.
+     * @param permission The permission to request.
+     * @param dialogText The text in the dialog explaining the reason for the permission.
+     */
     public static void requestPermission(final Context context, final String permission, final String dialogText) {
 
         Logger.info("Requesting " + permission + " permission.");
@@ -41,6 +48,13 @@ public class PermissionUtils {
         }
     }
 
+    /**
+     * This method returns whether we have the given permission.
+     *
+     * @param context    The context of the application.
+     * @param permission The permission to check.
+     * @return Whether we have the given permission.
+     */
     public static boolean hasPermission(Context context, String permission) {
         return ContextCompat.checkSelfPermission(context, permission)
                 == PackageManager.PERMISSION_GRANTED;

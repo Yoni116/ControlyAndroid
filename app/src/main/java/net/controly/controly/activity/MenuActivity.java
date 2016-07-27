@@ -57,8 +57,8 @@ public class MenuActivity extends BaseActivity {
         mCreateKeyboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "CLicked create button", Toast.LENGTH_SHORT)
-                        .show();
+                Intent intent = new Intent(context, CreateKeyboardActivity.class);
+                startActivity(intent);
             }
         });
     }

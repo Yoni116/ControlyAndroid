@@ -3,5 +3,6 @@
     <declare-styleable name="CircularNetworkImageView">
         <attr name="radius" format="dimension" />
         <attr name="circle_color" format="color" />
+        <attr name="src" format="reference" />
     </declare-styleable>
 </resources>

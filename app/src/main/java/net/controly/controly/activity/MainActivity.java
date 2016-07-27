@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
@@ -113,23 +112,23 @@ public class MainActivity extends BaseActivity {
                 switch (index) {
                     case 0:
                         final String[] options = {"Delete", "Edit"};
-                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
-                        dialogBuilder.setTitle("Choose an option");
-                        dialogBuilder.setItems(options, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                switch (i) {
-                                    case 0:
-                                        Toast.makeText(MainActivity.this, "Will delete...", Toast.LENGTH_SHORT)
-                                                .show();
-                                        break;
-                                    case 1:
-                                        Toast.makeText(MainActivity.this, "Will edit...", Toast.LENGTH_SHORT)
-                                                .show();
-                                        break;
-                                }
-                            }
-                        }).show();
+                        new AlertDialog.Builder(mContext)
+                                .setTitle("Choose an option")
+                                .setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        switch (i) {
+                                            case 0:
+                                                Toast.makeText(MainActivity.this, "Will delete...", Toast.LENGTH_SHORT)
+                                                        .show();
+                                                break;
+                                            case 1:
+                                                Toast.makeText(MainActivity.this, "Will edit...", Toast.LENGTH_SHORT)
+                                                        .show();
+                                                break;
+                                        }
+                                    }
+                                }).show();
 
                     case 1:
                         Toast.makeText(MainActivity.this, "Will lunch the publish activity.", Toast.LENGTH_SHORT)
