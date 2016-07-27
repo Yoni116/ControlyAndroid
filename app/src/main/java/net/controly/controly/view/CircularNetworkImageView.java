@@ -36,6 +36,7 @@ public class CircularNetworkImageView extends LinearLayout {
         mNetworkImageView = (NetworkImageView) imageCircle.getChildAt(0);
 
         imageCircle.setRadius(radius);
+        imageCircle.setPreventCornerOverlap(false);
         imageCircle.getLayoutParams().height = (int) (2 * radius);
         imageCircle.getLayoutParams().width = (int) (2 * radius);
         imageCircle.setBackgroundColor(backgroundColor);

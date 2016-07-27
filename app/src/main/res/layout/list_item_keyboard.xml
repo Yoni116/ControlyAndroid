@@ -13,9 +13,9 @@
 
         <net.controly.controly.view.CircularNetworkImageView
             android:id="@+id/keyboard_image"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:circle_color="@color/backgroundColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:circle_color="@android:color/white"
             app:radius="75dp" />
 
         <TextView
