@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <net.controly.controly.view.CircularNetworkImageView
+    <net.controly.controly.view.CircularImageView
         android:id="@+id/keyboard_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_centerInParent="true"
-        app:radius="100dp"
-        app:circle_color="@color/backgroundColor"
+        app:radius="150dp"
+        app:circle_color="@android:color/white"
         app:src="@drawable/ic_add_white"/>
 
 </RelativeLayout>

@@ -9,33 +9,31 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Picasso;
 
-import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 
 /**
  * This view is a circular shaped network image view.
  */
-public class CircularNetworkImageView extends LinearLayout {
+public class CircularImageView extends LinearLayout {
 
     private ImageView mImageView;
 
-    public CircularNetworkImageView(Context context, AttributeSet attrs) {
+    public CircularImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         //Get the XML attributes of the view: radius, color of the circular border, offline image (optional).
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularNetworkImageView);
-        float radius = a.getDimension(R.styleable.CircularNetworkImageView_radius, 150);
-        int backgroundColor = a.getColor(R.styleable.CircularNetworkImageView_circle_color, getResources().getColor(R.color.backgroundColor));
-        int src = a.getResourceId(R.styleable.CircularNetworkImageView_src, -1);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularImageView);
+        float radius = a.getDimension(R.styleable.CircularImageView_radius, 150);
+        int backgroundColor = a.getColor(R.styleable.CircularImageView_circle_color, getResources().getColor(R.color.backgroundColor));
+        int src = a.getResourceId(R.styleable.CircularImageView_src, -1);
 
         a.recycle();
 
         //Inflate the layout of the view.
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_circular_network_image_view, this, true);
+        inflater.inflate(R.layout.view_circular_image_view, this, true);
 
         //Get the card view and the network image view instances.
         CardView imageCircle = (CardView) getChildAt(0);
@@ -61,14 +59,17 @@ public class CircularNetworkImageView extends LinearLayout {
      * @param url URL of the image.
      */
     public void setImageUrl(String url) {
-        ImageLoader imageLoader = ControlyApplication.getInstance()
-                .getImageLoader();
-
-        ((NetworkImageView) mImageView).setImageUrl(url, imageLoader);
+        Picasso.with(getContext())
+                .load(url)
+                .into(mImageView);
     }
 
-    public void setImage(Bitmap bitmap) {
+    /**
+     * Set a bitmap to the circular image view.
+     *
+     * @param bitmap Bitmap to set.
+     */
+    public void setImageBitmap(Bitmap bitmap) {
         mImageView.setImageBitmap(bitmap);
-        mImageView.requestLayout();
     }
 }

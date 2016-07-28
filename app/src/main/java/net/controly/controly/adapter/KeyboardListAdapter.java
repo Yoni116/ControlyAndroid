@@ -1,7 +1,6 @@
 package net.controly.controly.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 import net.controly.controly.model.Keyboard;
-import net.controly.controly.view.CircularNetworkImageView;
+import net.controly.controly.view.CircularImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,7 @@ public class KeyboardListAdapter extends BaseAdapter {
 
         Keyboard keyboard = mKeyboards.get(position);
 
-        CircularNetworkImageView keyboardImage = (CircularNetworkImageView) convertView.findViewById(R.id.keyboard_image);
+        CircularImageView keyboardImage = (CircularImageView) convertView.findViewById(R.id.keyboard_image);
         TextView keyboardText = (TextView) convertView.findViewById(R.id.keyboard_text);
 
         String keyboardImageUrl = ControlyApplication.getInstance().getBaseUrl() + keyboard.getPictureUrl();

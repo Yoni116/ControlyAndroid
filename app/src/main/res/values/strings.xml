@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Controly</string>
 
+    <!--View-->
+    <string name="circular_image_view_content_description">This is the image view of the circular image view.</string>
+
     <!--Login page-->
     <string name="username">Username</string>
     <string name="password">Password</string>

@@ -3,13 +3,8 @@ package net.controly.controly;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
-import android.util.LruCache;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import net.controly.controly.activity.LoginActivity;
@@ -41,12 +36,6 @@ public class ControlyApplication extends Application {
      * The configuration of the relationship with the API.
      */
     private Retrofit retrofit;
-
-    /**
-     * Image loader for retrieving images from web.
-     */
-    private ImageLoader mImageLoader;
-
     /**
      * The currently authenticated user.
      */
@@ -97,31 +86,6 @@ public class ControlyApplication extends Application {
                 .addConverterFactory(GsonFactory.getGsonConverterFactory())
                 .client(client)
                 .build();
-
-        //Initialize web images
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        mImageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
-
-            private final int maxCacheSize = 10000;
-            private final LruCache<String, Bitmap> mCache = new LruCache<>(maxCacheSize);
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return mCache.get(url);
-            }
-
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-                mCache.put(url, bitmap);
-            }
-        });
-    }
-
-    /**
-     * @return The image loader object in order to retrieve images from web.
-     */
-    public ImageLoader getImageLoader() {
-        return mImageLoader;
     }
 
     /**
