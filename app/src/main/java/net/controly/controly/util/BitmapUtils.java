@@ -10,14 +10,15 @@ import android.graphics.Matrix;
 public class BitmapUtils {
 
     /**
-     * Rotate the given bitmap by 90 degress.
+     * Rotate the given bitmap by 90 degrees.
      *
-     * @param bitmap The bitmap to rotate.
+     * @param bitmap  The bitmap to rotate.
+     * @param degrees Degrees to rotate by.
      * @return The rotated bitmap.
      */
-    public static Bitmap rotate(Bitmap bitmap) {
+    public static Bitmap rotate(Bitmap bitmap, int degrees) {
         Matrix rotateMatrix = new Matrix();
-        rotateMatrix.postRotate(90);
+        rotateMatrix.preRotate(degrees);
 
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, false);
     }

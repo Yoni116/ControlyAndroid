@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;

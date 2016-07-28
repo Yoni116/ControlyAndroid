@@ -10,7 +10,30 @@
         android:layout_height="300dp"
         android:layout_centerInParent="true"
         app:radius="150dp"
-        app:circle_color="@android:color/white"
-        app:src="@drawable/ic_add_white"/>
+        app:circle_color="@color/backgroundColor"/>
+
+    <TextView
+        android:id="@+id/keyboard_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_keyboard_name"
+        android:layout_below="@+id/keyboard_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/create_a_new_keyboard"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/wizard_footer_buttons"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

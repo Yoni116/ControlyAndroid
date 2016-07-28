@@ -129,14 +129,14 @@ public class MainActivity extends BaseActivity {
                                         }
                                     }
                                 }).show();
-
                     case 1:
                         Toast.makeText(MainActivity.this, "Will lunch the publish activity.", Toast.LENGTH_SHORT)
                                 .show();
                         break;
                 }
 
-                return false;
+                //Return true to keep swipe menu open when clicking one of the buttons
+                return true;
             }
         });
 

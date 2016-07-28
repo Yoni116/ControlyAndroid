@@ -12,7 +12,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import net.controly.controly.R;
 import net.controly.controly.util.BitmapUtils;
@@ -34,11 +38,15 @@ public class CreateKeyboardActivity extends BaseActivity {
     private final int CAMERA_REQUEST_CODE = 0;
     private final int GALLERY_REQUEST_CODE = 1;
 
+    ////-------Views-------
+    private CircularImageView mKeyboardImage;
+    private TextView mKeyboardName;
+
+    private Button mPreviousbutton;
+    private Button mNextButton;
+
     //Path for storing the image
     private String mImageFilePath;
-
-    //The circular image view of the keyboard image
-    private CircularImageView mKeyboardImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,12 +54,16 @@ public class CreateKeyboardActivity extends BaseActivity {
         setContentView(R.layout.activity_create_keyboard);
 
         final Context context = this;
+        final String DEFAULT_KEYBOARD_IMAGE = "https://api.controly.net/ControlyApi/UserImages/defaultKeyboard.png"; //TODO This should be done offline.
+
+        mKeyboardName = (TextView) findViewById(R.id.keyboard_name);
 
         mKeyboardImage = (CircularImageView) findViewById(R.id.keyboard_image);
+        mKeyboardImage.setImageUrl(DEFAULT_KEYBOARD_IMAGE);
         mKeyboardImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] items = {"Take Photo", "Choose from library", "Cancel"};
+                final String[] items = {"Take photo", "Choose from library", "Change keyboard name", "Rotate", "Cancel"};
 
                 new AlertDialog.Builder(context)
                         .setTitle("Add Keyboard Image")
@@ -59,6 +71,8 @@ public class CreateKeyboardActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 switch (i) {
+
+                                    //Take a photo using the camera
                                     case 0:
                                         //TODO Make the text more user friendly
                                         if (!PermissionUtils.hasPermission(context, Manifest.permission.CAMERA)) {
@@ -90,8 +104,9 @@ public class CreateKeyboardActivity extends BaseActivity {
                                         }
 
                                         break;
-                                    case 1:
 
+                                    //Choose a photo from the gallery
+                                    case 1:
                                         //Set the intent for opening a photo with the gallery
                                         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
                                         galleryIntent.setType("image/*");
@@ -99,9 +114,45 @@ public class CreateKeyboardActivity extends BaseActivity {
                                         startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
                                         break;
 
+                                    //Change the keyboard name
+                                    case 2:
+                                        final EditText input = new EditText(context);
+                                        input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+
+                                        DialogInterface.OnClickListener onPositiveClick = new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                mKeyboardName.setText(input.getText().toString());
+                                            }
+                                        };
+
+                                        new AlertDialog.Builder(context)
+                                                .setTitle("Set the keyboard name")
+                                                .setView(input)
+                                                .setPositiveButton("OK", onPositiveClick)
+                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                    }
+                                                })
+                                                .show();
+                                        break;
+
+                                    //Rotate the image
+                                    case 3:
+                                        mKeyboardImage.rotate(90);
                                 }
                             }
                         }).show();
+            }
+        });
+
+        //On previous button click, finish the activity.
+        mPreviousbutton = (Button) findViewById(R.id.previous_button);
+        mPreviousbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
@@ -133,7 +184,7 @@ public class CreateKeyboardActivity extends BaseActivity {
                     break;
             }
 
-            //Preserver the photo dimensions and set the photo to the circular image view
+            //Preserve the photo dimensions and set the photo to the circular image view
             if (photo != null) {
                 photo = BitmapUtils.preserveMaxDimensions(photo);
                 mKeyboardImage.setImageBitmap(photo);

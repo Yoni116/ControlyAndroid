@@ -3,6 +3,8 @@ package net.controly.controly.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.LinearLayout;
 import com.squareup.picasso.Picasso;
 
 import net.controly.controly.R;
+import net.controly.controly.util.BitmapUtils;
 
 /**
  * This view is a circular shaped network image view.
@@ -26,7 +29,7 @@ public class CircularImageView extends LinearLayout {
         //Get the XML attributes of the view: radius, color of the circular border, offline image (optional).
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularImageView);
         float radius = a.getDimension(R.styleable.CircularImageView_radius, 150);
-        int backgroundColor = a.getColor(R.styleable.CircularImageView_circle_color, getResources().getColor(R.color.backgroundColor));
+        int backgroundColor = a.getColor(R.styleable.CircularImageView_circle_color, ContextCompat.getColor(context, R.color.backgroundColor));
         int src = a.getResourceId(R.styleable.CircularImageView_src, -1);
 
         a.recycle();
@@ -70,6 +73,18 @@ public class CircularImageView extends LinearLayout {
      * @param bitmap Bitmap to set.
      */
     public void setImageBitmap(Bitmap bitmap) {
+        mImageView.setImageBitmap(bitmap);
+    }
+
+    /**
+     * Rotate the circular image view.
+     *
+     * @param degrees Degrees to rotate by.
+     */
+    public void rotate(int degrees) {
+        BitmapDrawable drawable = (BitmapDrawable) mImageView.getDrawable();
+        Bitmap bitmap = BitmapUtils.rotate(drawable.getBitmap(), degrees);
+
         mImageView.setImageBitmap(bitmap);
     }
 }

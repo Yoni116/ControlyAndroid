@@ -18,4 +18,8 @@
     <string name="auto_login">Auto login</string>
     <string name="authentication_category">AUTHENTICATION</string>
     <string name="edit_profile">Edit Profile</string>
+
+    <!--Create Keyboard-->
+    <string name="default_keyboard_name">Untitled</string>
+    <string name="create_a_new_keyboard">Create a new keyboard</string>
 </resources>
