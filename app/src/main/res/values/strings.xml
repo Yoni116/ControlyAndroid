@@ -22,4 +22,9 @@
     <!--Create Keyboard-->
     <string name="default_keyboard_name">Untitled</string>
     <string name="create_a_new_keyboard">Create a new keyboard</string>
+
+    <!--Main activity-->
+    <string name="launch_menu">Main Menu</string>
+    <string name="search">Search</string>
+    <string name="search_bar_hint">Let\'s find a controller</string>
 </resources>

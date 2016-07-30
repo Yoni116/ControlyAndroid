@@ -21,7 +21,7 @@ import net.controly.controly.util.BitmapUtils;
  */
 public class CircularImageView extends LinearLayout {
 
-    private ImageView mImageView;
+    private final ImageView mImageView;
 
     public CircularImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -29,7 +29,7 @@ public class CircularImageView extends LinearLayout {
         //Get the XML attributes of the view: radius, color of the circular border, offline image (optional).
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularImageView);
         float radius = a.getDimension(R.styleable.CircularImageView_radius, 150);
-        int backgroundColor = a.getColor(R.styleable.CircularImageView_circle_color, ContextCompat.getColor(context, R.color.backgroundColor));
+        int backgroundColor = a.getColor(R.styleable.CircularImageView_circle_color, ContextCompat.getColor(context, R.color.background_color));
         int src = a.getResourceId(R.styleable.CircularImageView_src, -1);
 
         a.recycle();
@@ -74,6 +74,13 @@ public class CircularImageView extends LinearLayout {
      */
     public void setImageBitmap(Bitmap bitmap) {
         mImageView.setImageBitmap(bitmap);
+    }
+
+    /**
+     * @return {@link Bitmap} of the circular image view.
+     */
+    public Bitmap getBitmap() {
+        return BitmapUtils.getBitmap(mImageView);
     }
 
     /**

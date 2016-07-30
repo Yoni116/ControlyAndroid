@@ -1,23 +1,26 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="ControlyTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!--Colors-->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/backgroundColor</item>
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:editTextColor">@color/colorAccent</item>
-        <item name="android:textColorHint">@color/colorAccent</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:textColor">@color/color_accent</item>
+        <item name="android:editTextColor">@color/color_accent</item>
+        <item name="android:textColorHint">@color/color_accent</item>
 
         <item name="android:typeface">monospace</item>
         <item name="android:windowFullscreen">true</item>
+
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@android:color/darker_gray</item>
     </style>
 
     <style name="Theme.AppCompat.Translucent" parent="ControlyTheme">
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:background">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -26,11 +29,11 @@
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/color_accent</item>
     </style>
 
     <style name="Autocomplete" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:colorBackground">@color/backgroundColor</item>
+        <item name="android:colorBackground">@color/background_color</item>
         <item name="android:typeface">monospace</item>
     </style>
 

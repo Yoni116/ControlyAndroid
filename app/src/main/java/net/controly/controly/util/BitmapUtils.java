@@ -3,11 +3,23 @@ package net.controly.controly.util;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
 
 /**
  * This class contains an assortment of util methods for bitmaps.
  */
 public class BitmapUtils {
+
+    /**
+     * Get the bitmap from an {@link ImageView}.
+     *
+     * @param imageView Image view to get bitmap from.
+     * @return The bitmap of an {@link ImageView}.
+     */
+    public static Bitmap getBitmap(ImageView imageView) {
+        return ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+    }
 
     /**
      * Rotate the given bitmap by 90 degrees.

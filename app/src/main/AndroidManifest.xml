@@ -38,6 +38,8 @@
         <activity android:name=".activity.SettingsActivity" />
 
         <activity android:name=".activity.CreateKeyboardActivity" />
+
+        <activity android:name=".activity.ControllerActivity" />
     </application>
 
 </manifest>

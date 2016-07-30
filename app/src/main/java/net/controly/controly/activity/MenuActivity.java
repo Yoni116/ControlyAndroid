@@ -18,7 +18,6 @@ import net.controly.controly.util.UIUtils;
  */
 public class MenuActivity extends BaseActivity {
 
-    private FloatingActionButton mLogoutButton;
     private FloatingActionButton mSettingsButton;
     private FloatingActionButton mCreateKeyboardButton;
 
@@ -30,19 +29,6 @@ public class MenuActivity extends BaseActivity {
         final Context context = this;
 
         //Initialize the logout button
-        //TODO Change icon
-        mLogoutButton = (FloatingActionButton) findViewById(R.id.logout_button);
-        mLogoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logger.info("Logging out of the application");
-                ControlyApplication.getInstance()
-                        .logout(context);
-
-                UIUtils.startActivity(context, LoginActivity.class);
-            }
-        });
-
         mSettingsButton = (FloatingActionButton) findViewById(R.id.settings_button);
         mSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override

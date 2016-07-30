@@ -49,26 +49,24 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="1"
-                android:background="@color/backgroundColor"
+                android:background="@color/background_color"
                 android:hint="@string/login" />
 
             <Button
-                android:id="@+id/register_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_weight="1"
-                android:background="@color/backgroundColor"
+                android:background="@color/background_color"
                 android:hint="@string/register" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/backgroundColor"
+            android:background="@color/background_color"
             android:hint="@string/forgot_password"
             android:paddingBottom="5dp" />
 

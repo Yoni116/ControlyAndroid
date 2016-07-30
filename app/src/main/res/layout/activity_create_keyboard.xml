@@ -10,7 +10,7 @@
         android:layout_height="300dp"
         android:layout_centerInParent="true"
         app:radius="150dp"
-        app:circle_color="@color/backgroundColor"/>
+        app:circle_color="@color/background_color"/>
 
     <TextView
         android:id="@+id/keyboard_name"

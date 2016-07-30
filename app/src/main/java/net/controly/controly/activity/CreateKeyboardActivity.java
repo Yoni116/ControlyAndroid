@@ -17,17 +17,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
+import net.controly.controly.http.response.CreateKeyboardResponse;
+import net.controly.controly.http.service.KeyboardService;
 import net.controly.controly.util.BitmapUtils;
 import net.controly.controly.util.PermissionUtils;
 import net.controly.controly.view.CircularImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * This is the activity for creating a new keyboard.
@@ -42,7 +53,7 @@ public class CreateKeyboardActivity extends BaseActivity {
     private CircularImageView mKeyboardImage;
     private TextView mKeyboardName;
 
-    private Button mPreviousbutton;
+    private Button mPreviousButton;
     private Button mNextButton;
 
     //Path for storing the image
@@ -148,11 +159,45 @@ public class CreateKeyboardActivity extends BaseActivity {
         });
 
         //On previous button click, finish the activity.
-        mPreviousbutton = (Button) findViewById(R.id.previous_button);
-        mPreviousbutton.setOnClickListener(new View.OnClickListener() {
+        mPreviousButton = (Button) findViewById(R.id.previous_button);
+        mPreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(context, "NEXT BUTTON CLICK", Toast.LENGTH_SHORT)
+                        .show();
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                mKeyboardImage.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), byteArray);
+
+                Call<CreateKeyboardResponse> call = ControlyApplication.getInstance()
+                        .getService(KeyboardService.class)
+                        .createKeyboard(requestBody, mKeyboardName.getText().toString());
+
+                call.enqueue(new Callback<CreateKeyboardResponse>() {
+                    @Override
+                    public void onResponse(Call<CreateKeyboardResponse> call, Response<CreateKeyboardResponse> response) {
+                        Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<CreateKeyboardResponse> call, Throwable t) {
+                        Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
             }
         });
     }

@@ -8,6 +8,5 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="SPLASH ACTIVITY"
-        android:id="@+id/textView"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

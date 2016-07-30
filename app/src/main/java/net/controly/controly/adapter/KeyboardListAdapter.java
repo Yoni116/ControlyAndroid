@@ -83,4 +83,12 @@ public class KeyboardListAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    /**
+     * Clear the listview.
+     */
+    public void clear() {
+        mKeyboards.clear();
+        notifyDataSetChanged();
+    }
 }

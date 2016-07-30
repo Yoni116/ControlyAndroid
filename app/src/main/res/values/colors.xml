@@ -2,13 +2,14 @@
 <resources>
 
     <!--Theme-->
-    <color name="backgroundColor">#0d0d0d</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#43b7e3</color>
-    <color name="blackTransparent">#80000000</color>
+    <color name="background_color">#0d0d0d</color>
+    <color name="color_primary">#3F51B5</color>
+    <color name="color_primary_dark">#303F9F</color>
+    <color name="color_accent">#43b7e3</color>
+    <color name="black_transparent">#80000000</color>
 
     <!--Keyboard list swipe-->
     <color name="light_green">#1DCC3A</color>
     <color name="light_grey">#C7C7CC</color>
+    <color name="dark_grey">#FF282828</color>
 </resources>

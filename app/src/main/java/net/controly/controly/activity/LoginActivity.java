@@ -56,6 +56,9 @@ public class LoginActivity extends BaseActivity {
                     "The app needs a permission to read your contacts in order to use email autocomplete.");
         }
 
+        ControlyApplication.getInstance()
+                .logout();
+
         //Authenticate the user when he clicks on the login button.
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +105,9 @@ public class LoginActivity extends BaseActivity {
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
                         Logger.error("Error while trying to log in:");
                         Logger.error(t.getMessage());
+
+                        Toast.makeText(getApplicationContext(), "Controly encountered an error", Toast.LENGTH_SHORT)
+                                .show();
                     }
                 });
 

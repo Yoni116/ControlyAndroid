@@ -1,6 +1,5 @@
 package net.controly.controly.util;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +33,6 @@ public class UIUtils {
         }
 
         context.startActivity(intent);
-        ((Activity) context).finish();
     }
 
     public static String getViewId(View view) {
