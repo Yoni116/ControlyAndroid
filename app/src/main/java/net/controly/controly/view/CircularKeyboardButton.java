@@ -26,7 +26,7 @@ public class CircularKeyboardButton extends LinearLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularKeyboardButton);
         String keyboardName = a.getString(R.styleable.CircularKeyboardButton_keyboardName);
         float radius = a.getDimension(R.styleable.CircularKeyboardButton_radius, 150);
-        int textColor = a.getColor(R.styleable.CircularKeyboardButton_textColor, ContextCompat.getColor(context, R.color.background_color));
+        int textColor = a.getColor(R.styleable.CircularKeyboardButton_textColor, ContextCompat.getColor(context, android.R.color.white));
         int keyboardIcon = a.getResourceId(R.styleable.CircularKeyboardButton_keyboardIcon, -1);
 
         a.recycle();

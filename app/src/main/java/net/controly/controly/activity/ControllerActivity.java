@@ -3,6 +3,7 @@ package net.controly.controly.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -61,37 +62,17 @@ public class ControllerActivity extends BaseActivity {
         mMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Animation jumpInAnimation = null;
-                Animation rotateAnimation = null;
-                int visibility = View.VISIBLE;
-
                 switch (mControllerMenu.getVisibility()) {
-
                     //If the menu is visible, hide it.
                     case View.VISIBLE:
-                        jumpInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_down);
-                        rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counter_clockwise);
-                        visibility = View.GONE;
-
+                        hideControllerMenu();
                         break;
 
                     //If the menu is gone, show it.
                     case View.GONE:
-                        jumpInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_up);
-                        rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
-                        visibility = View.VISIBLE;
-
+                        showControllerMenu();
                         break;
                 }
-
-                //Keep the button rotated.
-                assert rotateAnimation != null;
-                rotateAnimation.setFillAfter(true);
-
-                mControllerMenu.startAnimation(jumpInAnimation);
-                mMenuButton.startAnimation(rotateAnimation);
-                mControllerMenu.setVisibility(visibility);
             }
         });
 
@@ -103,22 +84,38 @@ public class ControllerActivity extends BaseActivity {
                 finish();
             }
         });
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //On start load the layout
         loadLayout();
     }
 
     /**
      * Show the controller menu.
-     * TODO Implement.
      */
     private void showControllerMenu() {
+        Animation jumpInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_up);
+        Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
+
+        mControllerMenu.startAnimation(jumpInAnimation);
+        mMenuButton.startAnimation(rotateAnimation);
+        mControllerMenu.setVisibility(View.VISIBLE);
     }
 
     /**
      * Hide the controller menu.
-     * TODO Implement and call on create.
      */
     private void hideControllerMenu() {
+        Animation jumpInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_down);
+        Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counter_clockwise);
+
+        mControllerMenu.startAnimation(jumpInAnimation);
+        mMenuButton.startAnimation(rotateAnimation);
+        mControllerMenu.setVisibility(View.GONE);
     }
 
     private void loadLayout() {
@@ -173,12 +170,16 @@ public class ControllerActivity extends BaseActivity {
         float heightRatio = ((float) (actualScreenSize[1])) / ((float) (makersScreenSize[1]));
 
         for (Key key : response.getKeysLayout().getKeys()) {
+
+            //Declare a new button
             Button button = new Button(mContext);
             button.setText(key.getName());
 
+            //Set the width and height of the new button
             int width = (int) (key.getWidth() * widthRatio);
             int height = (int) (key.getHeight() * heightRatio);
 
+            //Set the position of the new button
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
             params.leftMargin = (int) (key.getX() * widthRatio) - (width / 2);
             params.topMargin = (int) (key.getY() * heightRatio) - (height / 2);
