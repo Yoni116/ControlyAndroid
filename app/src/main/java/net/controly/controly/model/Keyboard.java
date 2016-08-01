@@ -2,12 +2,13 @@ package net.controly.controly.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * This class represents a keyboard entity.
  */
-public class Keyboard {
+public class Keyboard implements Serializable {
 
     @SerializedName("KeyboardID")
     private long id;
@@ -117,8 +118,13 @@ public class Keyboard {
         this.color = color;
     }
 
-    public String getScreenSize() {
-        return screenSize;
+    /**
+     * @return The screen size of the keyboard's maker.
+     * The first value in the array is the width, and the second is the height.
+     */
+    public int[] getScreenSize() {
+        String[] sizes = screenSize.split("x");
+        return new int[]{Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1])};
     }
 
     public void setScreenSize(String screenSize) {

@@ -31,15 +31,9 @@
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main" />
 
-        <activity
-            android:name=".activity.MenuActivity"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-
+        <activity android:name=".activity.MenuActivity" />
         <activity android:name=".activity.SettingsActivity" />
-
         <activity android:name=".activity.CreateKeyboardActivity" />
-
         <activity android:name=".activity.ControllerActivity" />
     </application>
-
 </manifest>

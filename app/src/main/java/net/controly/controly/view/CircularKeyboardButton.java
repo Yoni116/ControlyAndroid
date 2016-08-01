@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import net.controly.controly.R;
 
 /**
- * Created by Itai on 30-Jul-16.
+ * This view represents a circular keyboard button.
  */
 public class CircularKeyboardButton extends LinearLayout {
 

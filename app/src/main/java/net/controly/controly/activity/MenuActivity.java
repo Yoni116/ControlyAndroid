@@ -8,10 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.MotionEvent;
 import android.view.View;
 
-import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
-import net.controly.controly.util.Logger;
-import net.controly.controly.util.UIUtils;
 
 /**
  * This activity is for the menu of the application.

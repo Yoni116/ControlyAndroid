@@ -19,11 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
-import net.controly.controly.http.response.CreateKeyboardResponse;
-import net.controly.controly.http.service.KeyboardService;
-import net.controly.controly.util.BitmapUtils;
+import net.controly.controly.util.GraphicUtils;
 import net.controly.controly.util.PermissionUtils;
 import net.controly.controly.view.CircularImageView;
 
@@ -36,9 +33,6 @@ import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * This is the activity for creating a new keyboard.
@@ -151,7 +145,7 @@ public class CreateKeyboardActivity extends BaseActivity {
 
                                     //Rotate the image
                                     case 3:
-                                        mKeyboardImage.rotate(90);
+                                        mKeyboardImage.rotate();
                                 }
                             }
                         }).show();
@@ -181,23 +175,7 @@ public class CreateKeyboardActivity extends BaseActivity {
 
                 RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), byteArray);
 
-                Call<CreateKeyboardResponse> call = ControlyApplication.getInstance()
-                        .getService(KeyboardService.class)
-                        .createKeyboard(requestBody, mKeyboardName.getText().toString());
-
-                call.enqueue(new Callback<CreateKeyboardResponse>() {
-                    @Override
-                    public void onResponse(Call<CreateKeyboardResponse> call, Response<CreateKeyboardResponse> response) {
-                        Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<CreateKeyboardResponse> call, Throwable t) {
-                        Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
+                //TODO Implement the request
             }
         });
     }
@@ -231,7 +209,7 @@ public class CreateKeyboardActivity extends BaseActivity {
 
             //Preserve the photo dimensions and set the photo to the circular image view
             if (photo != null) {
-                photo = BitmapUtils.preserveMaxDimensions(photo);
+                photo = GraphicUtils.preserveMaxDimensions(photo);
                 mKeyboardImage.setImageBitmap(photo);
             }
         }

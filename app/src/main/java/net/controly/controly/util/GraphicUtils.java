@@ -1,15 +1,35 @@
 package net.controly.controly.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 /**
- * This class contains an assortment of util methods for bitmaps.
+ * This class contains an assortment of util methods for graphics.
  */
-public class BitmapUtils {
+public class GraphicUtils {
+
+    /**
+     * Get the size of the screen.
+     * The first value of the array is the width, and the second one is the height.
+     *
+     * @param context Context of the application.
+     * @return Screen size in an array - first value is width, and second value is height.
+     */
+    public static int[] getScreenSize(Context context) {
+        Point size = new Point();
+
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        display.getSize(size);
+
+        return new int[]{size.x, size.y};
+    }
 
     /**
      * Get the bitmap from an {@link ImageView}.
@@ -24,8 +44,8 @@ public class BitmapUtils {
     /**
      * Rotate the given bitmap by 90 degrees.
      *
-     * @param bitmap  The bitmap to rotate.
-     * @param degrees Degrees to rotate by.
+     * @param bitmap  The bitmap to rotate_clockwise.
+     * @param degrees Degrees to rotate_clockwise by.
      * @return The rotated bitmap.
      */
     public static Bitmap rotate(Bitmap bitmap, int degrees) {

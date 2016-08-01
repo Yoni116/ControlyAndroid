@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import com.squareup.picasso.Picasso;
 
 import net.controly.controly.R;
-import net.controly.controly.util.BitmapUtils;
+import net.controly.controly.util.GraphicUtils;
 
 /**
  * This view is a circular shaped network image view.
@@ -80,17 +80,16 @@ public class CircularImageView extends LinearLayout {
      * @return {@link Bitmap} of the circular image view.
      */
     public Bitmap getBitmap() {
-        return BitmapUtils.getBitmap(mImageView);
+        return GraphicUtils.getBitmap(mImageView);
     }
 
     /**
      * Rotate the circular image view.
      *
-     * @param degrees Degrees to rotate by.
      */
-    public void rotate(int degrees) {
+    public void rotate() {
         BitmapDrawable drawable = (BitmapDrawable) mImageView.getDrawable();
-        Bitmap bitmap = BitmapUtils.rotate(drawable.getBitmap(), degrees);
+        Bitmap bitmap = GraphicUtils.rotate(drawable.getBitmap(), 90);
 
         mImageView.setImageBitmap(bitmap);
     }

@@ -77,6 +77,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 Intent controllerActivity = new Intent(mContext, ControllerActivity.class);
+                controllerActivity.putExtra(ControllerActivity.CONTROLLER_OBJECT_EXTRA, mKeyboardListAdapter.getItem(position));
+
                 startActivity(controllerActivity);
             }
         });
@@ -211,7 +213,7 @@ public class MainActivity extends BaseActivity {
 
                 //Avoid NullPointerException
                 if (response.body() == null || !response.body().hasSucceeded()) {
-                    onFailure(call, null);
+                    onFailure(call, new Exception("Problem while connecting to server"));
                     return;
                 }
 
