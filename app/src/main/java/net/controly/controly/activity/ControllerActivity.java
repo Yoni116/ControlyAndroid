@@ -3,7 +3,6 @@ package net.controly.controly.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -171,13 +170,36 @@ public class ControllerActivity extends BaseActivity {
 
         for (Key key : response.getKeysLayout().getKeys()) {
 
-            //Declare a new button
+            //Declare a new button and set its name
             Button button = new Button(mContext);
-            button.setText(key.getName());
+            button.setAllCaps(false);
 
-            //Set the width and height of the new button
-            int width = (int) (key.getWidth() * widthRatio);
-            int height = (int) (key.getHeight() * heightRatio);
+            //Set key name if exists
+            if (key.getName() != null) {
+                button.setText(key.getName());
+            }
+
+            //Set key text color if exists
+            if (key.getHexColor() != null) {
+                button.setTextColor(key.getColor());
+            }
+
+            //The width and height of the button
+            int width, height;
+
+            //Set the key's background and size according to its type
+            if (key.isCircle()) {
+                button.setBackgroundResource(R.drawable.circle_key_button);
+
+                //Set the width and height of the new button
+                width = (int) (key.getWidth() * Math.min(heightRatio, widthRatio));
+                height = (int) (key.getHeight() * Math.min(heightRatio, widthRatio));
+            } else {
+                button.setBackgroundResource(R.drawable.rectangle_key_button);
+
+                width = (int) (key.getWidth() * widthRatio);
+                height = (int) (key.getHeight() * heightRatio);
+            }
 
             //Set the position of the new button
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);

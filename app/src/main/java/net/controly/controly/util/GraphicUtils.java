@@ -2,13 +2,19 @@ package net.controly.controly.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import net.controly.controly.R;
 
 /**
  * This class contains an assortment of util methods for graphics.

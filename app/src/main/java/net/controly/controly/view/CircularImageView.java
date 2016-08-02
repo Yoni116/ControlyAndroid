@@ -46,7 +46,7 @@ public class CircularImageView extends LinearLayout {
         imageCircle.setCardBackgroundColor(backgroundColor);
 
         //Set the radius, width and height
-        //The width and height are equal to the diameter of the circle
+        //The width and height are equal to the diameter of the circle_key_button
         imageCircle.setRadius(radius);
         imageCircle.getLayoutParams().height = (int) (2 * radius);
         imageCircle.getLayoutParams().width = (int) (2 * radius);

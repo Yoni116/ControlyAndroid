@@ -2,12 +2,13 @@ package net.controly.controly.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import net.controly.controly.R;
 
@@ -16,35 +17,71 @@ import net.controly.controly.R;
  */
 public class CircularKeyboardButton extends LinearLayout {
 
-    private Button mButton;
-    private GradientDrawable mCircle;
+    private RelativeLayout mCircleView;
+    private RelativeLayout mKeyBackground;
+    private ImageView mKeyIcon;
+    private TextView mKeyName;
+
+    public CircularKeyboardButton(Context context) {
+        super(context);
+
+        initializeButton();
+    }
 
     public CircularKeyboardButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        //Get the XML attributes of the view: keyboard name, radius, text color and keyboard icon.
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularKeyboardButton);
-        String keyboardName = a.getString(R.styleable.CircularKeyboardButton_keyboardName);
-        float radius = a.getDimension(R.styleable.CircularKeyboardButton_radius, 150);
-        int textColor = a.getColor(R.styleable.CircularKeyboardButton_textColor, ContextCompat.getColor(context, android.R.color.white));
-        int keyboardIcon = a.getResourceId(R.styleable.CircularKeyboardButton_keyboardIcon, -1);
+        inflateLayout();
+    }
 
-        a.recycle();
+    private void inflateLayout() {
+        LayoutInflater.from(getContext())
+                .inflate(R.layout.view_circular_keyboard_button, this);
+    }
 
-        //Inflate the layout of the view.
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_circular_keyboard_button, this, true);
+    private void initializeButton() {
+/*        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircularKeyboardButton);
 
-        //Get the card view and the network image view instances.
-        mButton = (Button) getChildAt(0);
+        String keyName = a.getString(R.styleable.CircularKeyboardButton_keyName);
+        int keyColor = a.getColor(R.styleable.CircularKeyboardButton_keyColor, ContextCompat.getColor(getContext(), R.color.color_accent));
+        int keyboardIcon = a.getResourceId(R.styleable.CircularKeyboardButton_keyIcon, 0); //TODO Use null drawable
 
-        mButton.setText(keyboardName);
-        mButton.setWidth((int) (radius * 2));
-        mButton.setWidth((int) (radius * 2));
-        mButton.setTextColor(textColor);
+        a.recycle();*/
 
-        mCircle = (GradientDrawable) mButton.getBackground();
-        mCircle.setCornerRadius(radius);
-        mCircle.setSize((int) (2 * radius), (int) (2 * radius));
+        LayoutInflater.from(getContext())
+                .inflate(R.layout.view_circular_keyboard_button, this);
+
+        mCircleView = (RelativeLayout) this.findViewById(R.id.key_circle_view);
+        mKeyBackground = (RelativeLayout) this.findViewById(R.id.key_icon_background);
+        mKeyIcon = (ImageView) this.findViewById(R.id.key_icon_drawable);
+        mKeyName = (TextView) this.findViewById(R.id.key_name);
+
+/*        if (keyName != null) {
+            mKeyName.setText(keyName);
+            mKeyName.setTextColor(keyColor);
+        }
+
+        if (keyboardIcon != 0) {
+            mKeyIcon.setImageResource(keyboardIcon);
+            mKeyBackground.setBackgroundColor(keyColor);
+        }*/
+    }
+
+    public void setKeyName(String keyName) {
+        mKeyName.setText(keyName);
+    }
+
+    public void setKeyColor(int color) {
+        mKeyName.setTextColor(color);
+        mKeyBackground.setBackgroundColor(color);
+    }
+
+    public void setKeyIcon(int iconResId) {
+        mKeyIcon.setImageResource(iconResId);
+    }
+
+    public void setSize(int width, int height) {
+        mCircleView.getLayoutParams().height = height;
+        mCircleView.getLayoutParams().width = width;
     }
 }

@@ -27,4 +27,5 @@
     <string name="launch_menu">Main Menu</string>
     <string name="search">Search</string>
     <string name="search_bar_hint">Let\'s find a controller</string>
+    <string name="key_icon_content_description">This is the icon of the key button</string>
 </resources>

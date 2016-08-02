@@ -10,10 +10,9 @@
     </declare-styleable>
 
     <declare-styleable name="CircularKeyboardButton">
-        <attr name="radius" />
-        <attr name="keyboardName" format="string" />
-        <attr name="textColor" format="color" />
-        <attr name="keyboardIcon" format="reference" />
+        <attr name="keyName" format="string" />
+        <attr name="keyColor" format="color" />
+        <attr name="keyIcon" format="reference" />
     </declare-styleable>
 
 </resources>

@@ -1,5 +1,7 @@
 package net.controly.controly.model;
 
+import android.graphics.Color;
+
 /**
  * This class represents a keyboard button.
  */
@@ -64,6 +66,10 @@ public class Key {
         return hexColor;
     }
 
+    public int getColor() {
+        return Color.parseColor("#" + getHexColor());
+    }
+
     public void setHexColor(String hexColor) {
         this.hexColor = hexColor;
     }
@@ -98,5 +104,12 @@ public class Key {
 
     public void setView(String view) {
         this.view = view;
+    }
+
+    /**
+     * @return Whether the key is a circle_key_button type.
+     */
+    public boolean isCircle() {
+        return view.equals("circle");
     }
 }
