@@ -9,10 +9,4 @@
         <attr name="src" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="CircularKeyboardButton">
-        <attr name="keyName" format="string" />
-        <attr name="keyColor" format="color" />
-        <attr name="keyIcon" format="reference" />
-    </declare-styleable>
-
 </resources>

@@ -2,6 +2,8 @@ package net.controly.controly.model;
 
 import android.graphics.Color;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * This class represents a keyboard button.
  */
@@ -17,7 +19,9 @@ public class Key {
     private String iconName;
     private String image;
     private String name;
-    private String view;
+
+    @SerializedName("view")
+    private KeyType keyType;
 
     public Key() {
     }
@@ -98,18 +102,26 @@ public class Key {
         this.name = name;
     }
 
-    public String getView() {
-        return view;
+    public KeyType getKeyType() {
+        return keyType;
     }
 
-    public void setView(String view) {
-        this.view = view;
+    public void setView(KeyType keyType) {
+        this.keyType = keyType;
     }
 
-    /**
-     * @return Whether the key is a circle_key_button type.
-     */
-    public boolean isCircle() {
-        return view.equals("circle");
+    public enum KeyType {
+
+        @SerializedName("circle")
+        CIRCLE,
+
+        @SerializedName("colorPad")
+        COLOR_PAD,
+
+        @SerializedName("tempView")
+        LEVEL_CONTROL_KEY,
+
+        @SerializedName("key")
+        RECTANGLE
     }
 }

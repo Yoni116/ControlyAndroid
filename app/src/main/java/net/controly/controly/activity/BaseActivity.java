@@ -33,7 +33,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
+        if (hasFocus && enableImmersive()) {
             getWindow().getDecorView()
                     .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -47,7 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Show a progress dialog with the text "Loading" in the current activity.
      */
-    public final void showWaitDialog() {
+    final void showWaitDialog() {
         final String message = getString(R.string.message_loading);
 
         mWaitDialog = new ProgressDialog(this);
@@ -60,10 +60,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Dismiss the progress dialog if shown.
      */
-    public final void dismissDialog() {
+    final void dismissDialog() {
 
         if (mWaitDialog != null && mWaitDialog.isShowing()) {
             mWaitDialog.dismiss();
         }
+    }
+
+    boolean enableImmersive() {
+        return true;
     }
 }

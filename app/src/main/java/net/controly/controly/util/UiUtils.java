@@ -8,8 +8,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -35,8 +37,32 @@ public class UIUtils {
         context.startActivity(intent);
     }
 
-    public static String getViewId(View view) {
+    /**
+     * Get a given view's resource id.
+     *
+     * @param view The given view.
+     * @return String resource id of the given view.
+     */
+    private static String getViewId(View view) {
         return view.getResources().getResourceName(view.getId());
+    }
+
+    /**
+     * Add a given view to a given layout.
+     *
+     * @param layout The layout to add the view to.
+     * @param view   The view to add to the layout.
+     * @param x      The x location of the new view.
+     * @param y      The y location of the new view.
+     * @param width  The width of the new view.
+     * @param height The height of the new view.
+     */
+    public static void drawView(ViewGroup layout, View view, int x, int y, int width, int height) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+        params.leftMargin = x;
+        params.topMargin = y;
+
+        layout.addView(view, params);
     }
 
     /**

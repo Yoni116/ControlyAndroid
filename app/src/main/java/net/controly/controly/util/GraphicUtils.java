@@ -2,19 +2,13 @@ package net.controly.controly.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
-
-import net.controly.controly.R;
 
 /**
  * This class contains an assortment of util methods for graphics.
@@ -51,12 +45,11 @@ public class GraphicUtils {
      * Rotate the given bitmap by 90 degrees.
      *
      * @param bitmap  The bitmap to rotate_clockwise.
-     * @param degrees Degrees to rotate_clockwise by.
      * @return The rotated bitmap.
      */
-    public static Bitmap rotate(Bitmap bitmap, int degrees) {
+    public static Bitmap rotate(Bitmap bitmap) {
         Matrix rotateMatrix = new Matrix();
-        rotateMatrix.preRotate(degrees);
+        rotateMatrix.preRotate(90);
 
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix, false);
     }
@@ -64,7 +57,7 @@ public class GraphicUtils {
     /**
      * @return The maximum size of a texture.
      */
-    public static int getMaxTextureSize() {
+    private static int getMaxTextureSize() {
         Canvas canvas = new Canvas();
         return Math.max(canvas.getMaximumBitmapHeight(), canvas.getMaximumBitmapWidth()) / 8;
     }

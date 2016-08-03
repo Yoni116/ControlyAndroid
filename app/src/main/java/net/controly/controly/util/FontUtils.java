@@ -19,20 +19,18 @@ public final class FontUtils {
                                       String fontAssetName) {
         final Typeface regular = Typeface.createFromAsset(context.getAssets(),
                 fontAssetName);
-        replaceFont("MONOSPACE", regular);
+        replaceFont(regular);
     }
 
     /**
      * This method uses reflection to override the default font type.
      *
-     * @param staticTypefaceFieldName The type face of the font.
      * @param newTypeface             The new type face.
      */
-    private static void replaceFont(String staticTypefaceFieldName,
-                                    final Typeface newTypeface) {
+    private static void replaceFont(final Typeface newTypeface) {
         try {
 
-            final Field staticField = Typeface.class.getDeclaredField(staticTypefaceFieldName);
+            final Field staticField = Typeface.class.getDeclaredField("MONOSPACE");
             staticField.setAccessible(true);
             staticField.set(null, newTypeface);
 

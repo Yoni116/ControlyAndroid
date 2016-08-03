@@ -2,21 +2,102 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/controller_key_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/controller_menu"
-        layout="@layout/controller_sub_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone" />
+        <RelativeLayout
+            android:id="@+id/controller_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/background_color"
+            android:visibility="gone">
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/computer_remote_menu_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_row="0"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_settings_remote_white"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/light_grey" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_gravity="center"
+                    android:layout_row="0"
+                    android:text="00:00:00" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_row="0"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_keyboard_voice_white"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/light_grey" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/controller_menu_back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_row="1"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_arrow_back_white"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/light_grey" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_row="1"
+                    android:scaleType="center"
+                    android:src="@drawable/wifi"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/light_grey" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/edit_layout_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_row="1"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_mode_edit_white"
+                    app:fabSize="mini"
+                    app:rippleColor="@color/light_grey" />
+            </GridLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/controller_menu_button"
@@ -26,7 +107,6 @@
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:elevation="4dp"
         android:src="@drawable/ic_menu_white"
         app:borderWidth="0dp"
         app:fabSize="mini"

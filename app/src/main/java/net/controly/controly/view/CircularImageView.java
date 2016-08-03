@@ -89,7 +89,7 @@ public class CircularImageView extends LinearLayout {
      */
     public void rotate() {
         BitmapDrawable drawable = (BitmapDrawable) mImageView.getDrawable();
-        Bitmap bitmap = GraphicUtils.rotate(drawable.getBitmap(), 90);
+        Bitmap bitmap = GraphicUtils.rotate(drawable.getBitmap());
 
         mImageView.setImageBitmap(bitmap);
     }

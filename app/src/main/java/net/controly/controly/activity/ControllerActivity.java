@@ -1,12 +1,14 @@
 package net.controly.controly.activity;
 
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -18,6 +20,8 @@ import net.controly.controly.model.Key;
 import net.controly.controly.model.Keyboard;
 import net.controly.controly.util.GraphicUtils;
 import net.controly.controly.util.Logger;
+import net.controly.controly.util.UIUtils;
+import net.controly.controly.view.KeyboardButton;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,13 +36,17 @@ public class ControllerActivity extends BaseActivity {
     private Keyboard mKeyboard;
 
     private Context mContext;
+    private boolean editMode = false;
 
     //-------Views-------
     private RelativeLayout mControllerLayout;
     private View mControllerMenu;
     private FloatingActionButton mMenuButton;
 
+    //-------Controller Menu-------
     private FloatingActionButton mBackButton;
+    private FloatingActionButton mComputerRemoteButton;
+    private FloatingActionButton mEditLayoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,24 @@ public class ControllerActivity extends BaseActivity {
                 finish();
             }
         });
+
+        mComputerRemoteButton = (FloatingActionButton) findViewById(R.id.computer_remote_menu_button);
+        mComputerRemoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, ActivityComputerRemote.class);
+                startActivity(intent);
+            }
+        });
+
+        mEditLayoutButton = (FloatingActionButton) findViewById(R.id.edit_layout_button);
+        mEditLayoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editMode = !editMode;
+                Logger.info("Edit mode enabled: " + editMode);
+            }
+        });
     }
 
     @Override
@@ -117,6 +143,9 @@ public class ControllerActivity extends BaseActivity {
         mControllerMenu.setVisibility(View.GONE);
     }
 
+    /**
+     * Load the controller layout.
+     */
     private void loadLayout() {
         showWaitDialog();
 
@@ -171,42 +200,50 @@ public class ControllerActivity extends BaseActivity {
         for (Key key : response.getKeysLayout().getKeys()) {
 
             //Declare a new button and set its name
-            Button button = new Button(mContext);
-            button.setAllCaps(false);
-
-            //Set key name if exists
-            if (key.getName() != null) {
-                button.setText(key.getName());
-            }
-
-            //Set key text color if exists
-            if (key.getHexColor() != null) {
-                button.setTextColor(key.getColor());
-            }
+            final KeyboardButton button = new KeyboardButton(mContext, key);
 
             //The width and height of the button
             int width, height;
 
             //Set the key's background and size according to its type
-            if (key.isCircle()) {
-                button.setBackgroundResource(R.drawable.circle_key_button);
-
+            if (key.getKeyType() == Key.KeyType.CIRCLE || key.getKeyType() == Key.KeyType.COLOR_PAD
+                    || key.getKeyType() == Key.KeyType.LEVEL_CONTROL_KEY) {
                 //Set the width and height of the new button
                 width = (int) (key.getWidth() * Math.min(heightRatio, widthRatio));
                 height = (int) (key.getHeight() * Math.min(heightRatio, widthRatio));
             } else {
-                button.setBackgroundResource(R.drawable.rectangle_key_button);
-
                 width = (int) (key.getWidth() * widthRatio);
                 height = (int) (key.getHeight() * heightRatio);
             }
 
             //Set the position of the new button
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
-            params.leftMargin = (int) (key.getX() * widthRatio) - (width / 2);
-            params.topMargin = (int) (key.getY() * heightRatio) - (height / 2);
+            int x = (int) (key.getX() * widthRatio) - (width / 2);
+            int y = (int) (key.getY() * heightRatio) - (height / 2);
 
-            mControllerLayout.addView(button, params);
+            UIUtils.drawView(mControllerLayout, button, x, y, width, height);
+
+            button.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                    if (!editMode) {
+                        return false;
+                    }
+
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        button.getParent().requestDisallowInterceptTouchEvent(true);
+                        ClipData data = ClipData.newPlainText("", "");
+
+                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                        view.startDrag(data, shadowBuilder, view, 0);
+                        view.setVisibility(View.INVISIBLE);
+                        return true;
+                    } else {
+                        view.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                }
+            });
         }
     }
 }
