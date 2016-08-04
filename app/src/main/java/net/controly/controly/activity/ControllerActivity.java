@@ -1,10 +1,10 @@
 package net.controly.controly.activity;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -109,13 +109,8 @@ public class ControllerActivity extends BaseActivity {
                 Logger.info("Edit mode enabled: " + editMode);
             }
         });
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        //On start load the layout
+        //On create load the layout
         loadLayout();
     }
 
@@ -220,30 +215,56 @@ public class ControllerActivity extends BaseActivity {
             int x = (int) (key.getX() * widthRatio) - (width / 2);
             int y = (int) (key.getY() * heightRatio) - (height / 2);
 
-            UIUtils.drawView(mControllerLayout, button, x, y, width, height);
-
+            //When touching the button in edit mode, drag & drop the button.
             button.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
 
+                    //If we are not in edit mode, don't do anything.
                     if (!editMode) {
                         return false;
                     }
 
+                    //Start the drag & drop process
                     if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                        button.getParent().requestDisallowInterceptTouchEvent(true);
-                        ClipData data = ClipData.newPlainText("", "");
+                        ((KeyboardButton) view.getParent()).setVisibility(View.INVISIBLE);
 
-                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                        view.startDrag(data, shadowBuilder, view, 0);
-                        view.setVisibility(View.INVISIBLE);
+                        View.DragShadowBuilder shadow = new View.DragShadowBuilder(view);
+                        view.startDrag(null, shadow, view.getParent(), 0);
+
                         return true;
-                    } else {
-                        view.setVisibility(View.VISIBLE);
-                        return false;
                     }
+
+                    return false;
                 }
             });
+
+            //Add the new button to the layout
+            UIUtils.drawView(mControllerLayout, button, x, y, width, height);
         }
+
+        mControllerLayout.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+
+                //In case of drop - change the position of the button.
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DROP:
+                        KeyboardButton view = (KeyboardButton) event.getLocalState();
+                        view.setVisibility(View.VISIBLE);
+
+                        mControllerLayout.removeView(view);
+                        mControllerLayout.invalidate();
+
+                        int x = (int) (event.getX() - view.getWidth() / 2);
+                        int y = (int) (event.getY() - view.getHeight() / 2);
+
+                        UIUtils.drawView(mControllerLayout, view, x, y, view.getWidth(), view.getHeight());
+                        break;
+                }
+
+                return true;
+            }
+        });
     }
 }

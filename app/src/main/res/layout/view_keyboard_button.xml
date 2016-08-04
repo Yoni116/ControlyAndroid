@@ -7,8 +7,9 @@
         android:layout_height="match_parent"
         android:background="@drawable/key_button"
         android:clickable="true"
-        android:focusable="true"
-        android:descendantFocusability="blocksDescendants">
+        android:clipChildren="false"
+        android:descendantFocusability="blocksDescendants"
+        android:focusable="true">
 
         <LinearLayout
             android:id="@+id/key_icon_layout"

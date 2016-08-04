@@ -63,6 +63,7 @@ public class UIUtils {
         params.topMargin = y;
 
         layout.addView(view, params);
+        layout.invalidate();
     }
 
     /**
