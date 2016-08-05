@@ -6,11 +6,15 @@ import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.controly.controly.R;
 import net.controly.controly.model.Key;
@@ -28,6 +32,11 @@ public class KeyboardButton extends LinearLayout {
     private RelativeLayout mKeyBackground; //The key color
     private ImageView mKeyIcon; //The icon of the key
     private TextView mKeyName; //The key text
+
+    private ScaleGestureDetector mScaleDetector;
+    private float mScaleFactor = 1f;
+
+    private GestureDetector mGestureDetector;
 
     public KeyboardButton(Context context) {
         super(context);
@@ -97,6 +106,9 @@ public class KeyboardButton extends LinearLayout {
         if (mKey.getIconName() != null) {
             setKeyIcon(mKey.getIconName());
         }
+
+        mScaleDetector = new ScaleGestureDetector(mContext, new ScaleListener());
+        mGestureDetector = new GestureDetector(mContext, new GestureListener());
     }
 
     @Override
@@ -121,6 +133,12 @@ public class KeyboardButton extends LinearLayout {
     public void setOnDragListener(OnDragListener l) {
         super.setOnDragListener(l);
         mKeyView.setOnDragListener(l);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mScaleDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     /**
@@ -159,5 +177,28 @@ public class KeyboardButton extends LinearLayout {
                 .replace("-", "_");
 
         mKeyIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", mContext.getPackageName()));
+    }
+
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            mScaleFactor *= detector.getScaleFactor();
+
+            // Don't let the object get too small or too large.
+            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f));
+            setScaleX(mScaleFactor);
+            setScaleY(mScaleFactor);
+            invalidate();
+
+            return true;
+        }
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Toast.makeText(mContext, "Edit mode", Toast.LENGTH_SHORT).show();
+            return super.onDoubleTap(e);
+        }
     }
 }

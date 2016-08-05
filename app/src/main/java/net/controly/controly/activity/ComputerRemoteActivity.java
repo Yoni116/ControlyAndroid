@@ -10,7 +10,7 @@ import net.controly.controly.R;
 /**
  * Created by Itai on 03-Aug-16.
  */
-public class ActivityComputerRemote extends BaseActivity {
+public class ComputerRemoteActivity extends BaseActivity {
 
     private TextView mLastTypedText;
 

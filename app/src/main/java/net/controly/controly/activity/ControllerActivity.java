@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.view.DragEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -22,6 +25,7 @@ import net.controly.controly.util.GraphicUtils;
 import net.controly.controly.util.Logger;
 import net.controly.controly.util.UIUtils;
 import net.controly.controly.view.KeyboardButton;
+import net.controly.controly.view.OnDoubleClickListener;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,17 +40,28 @@ public class ControllerActivity extends BaseActivity {
     private Keyboard mKeyboard;
 
     private Context mContext;
-    private boolean editMode = false;
+    private boolean mEditMode = false;
 
     //-------Views-------
     private RelativeLayout mControllerLayout;
-    private View mControllerMenu;
+    private FrameLayout mMenuButtonContainer; //We need this view since there is no other way to make a FloatingActionButton invisible.
     private FloatingActionButton mMenuButton;
 
-    //-------Controller Menu-------
+    //-------Menus-------
+    private View mControllerMenu;
+    private View mEditMenu;
+
+    //-------Keyboard Menu-------
     private FloatingActionButton mBackButton;
     private FloatingActionButton mComputerRemoteButton;
-    private FloatingActionButton mEditLayoutButton;
+    private FloatingActionButton mEnableEditButton;
+
+    //-------Edit Menu-------
+    private FloatingActionButton mDisableEditButton;
+
+    //These are the first drag points of a view
+    private float firstDragX = 0;
+    private float firstDragY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +76,13 @@ public class ControllerActivity extends BaseActivity {
             mKeyboard = (Keyboard) extras.getSerializable(CONTROLLER_OBJECT_EXTRA);
         }
 
-        mControllerLayout = (RelativeLayout) findViewById(R.id.controller_key_layout);
-        mControllerMenu = findViewById(R.id.controller_menu);
+        mControllerLayout = (RelativeLayout) findViewById(R.id.keyboard_key_layout);
+        mControllerMenu = findViewById(R.id.keyboard_menu);
+
+        mEditMenu = findViewById(R.id.edit_menu);
 
         //Show controller menu on button click
-        mMenuButton = (FloatingActionButton) findViewById(R.id.controller_menu_button);
+        mMenuButton = (FloatingActionButton) findViewById(R.id.keyboard_menu_button);
         mMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,7 +100,9 @@ public class ControllerActivity extends BaseActivity {
             }
         });
 
-        //On back button click return to main activity
+        mMenuButtonContainer = (FrameLayout) findViewById(R.id.menu_button_container);
+
+        //On back button click - return to main activity
         mBackButton = (FloatingActionButton) findViewById(R.id.controller_menu_back_button);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,17 +115,24 @@ public class ControllerActivity extends BaseActivity {
         mComputerRemoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, ActivityComputerRemote.class);
+                Intent intent = new Intent(mContext, ComputerRemoteActivity.class);
                 startActivity(intent);
             }
         });
 
-        mEditLayoutButton = (FloatingActionButton) findViewById(R.id.edit_layout_button);
-        mEditLayoutButton.setOnClickListener(new View.OnClickListener() {
+        mEnableEditButton = (FloatingActionButton) findViewById(R.id.enable_edit_button);
+        mEnableEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editMode = !editMode;
-                Logger.info("Edit mode enabled: " + editMode);
+                turnOnEditMode();
+            }
+        });
+
+        mDisableEditButton = (FloatingActionButton) findViewById(R.id.disable_edit_button);
+        mDisableEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                turnOffEditMode();
             }
         });
 
@@ -136,6 +162,34 @@ public class ControllerActivity extends BaseActivity {
         mControllerMenu.startAnimation(jumpInAnimation);
         mMenuButton.startAnimation(rotateAnimation);
         mControllerMenu.setVisibility(View.GONE);
+    }
+
+    /**
+     * When edit mode is turned on, the menu floating action button and the keyboard menu will disappear.
+     * Instead, the keyboard edit menu will appear.
+     */
+    private void turnOnEditMode() {
+        Logger.info("Enabling edit mode");
+        mEditMode = true;
+
+        mMenuButtonContainer.setVisibility(View.GONE);
+        mControllerMenu.setVisibility(View.GONE);
+
+        mEditMenu.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * When edit mode is turned on, the menu floating action button and the keyboard menu will disappear.
+     * Instead, the keyboard edit menu will appear.
+     */
+    private void turnOffEditMode() {
+        Logger.info("Disabling edit mode");
+        mEditMode = false;
+
+        mMenuButtonContainer.setVisibility(View.VISIBLE);
+        mControllerMenu.setVisibility(View.VISIBLE);
+
+        mEditMenu.setVisibility(View.GONE);
     }
 
     /**
@@ -221,50 +275,89 @@ public class ControllerActivity extends BaseActivity {
                 public boolean onTouch(View view, MotionEvent motionEvent) {
 
                     //If we are not in edit mode, don't do anything.
-                    if (!editMode) {
+                    if (!mEditMode) {
                         return false;
                     }
 
+                    //This is the button that was clicked
+                    KeyboardButton target = ((KeyboardButton) view.getParent());
+                    target.onTouchEvent(motionEvent);
+
                     //Start the drag & drop process
-                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                        ((KeyboardButton) view.getParent()).setVisibility(View.INVISIBLE);
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            firstDragX = motionEvent.getX();
+                            firstDragY = motionEvent.getY();
+                            return true;
 
-                        View.DragShadowBuilder shadow = new View.DragShadowBuilder(view);
-                        view.startDrag(null, shadow, view.getParent(), 0);
+                        case MotionEvent.ACTION_MOVE:
+                            //This is the difference between the current touch point and the previous touch point.
+                            float dx = motionEvent.getX() - firstDragX;
+                            float dy = motionEvent.getY() - firstDragY;
 
-                        return true;
+                            //This is the point to move to.
+                            float newX = target.getX() + dx;
+                            float newY = target.getY() + dy;
+
+                            UIUtils.moveView(target, newX, newY);
+
+                            return true;
                     }
 
                     return false;
                 }
             });
 
+            button.setOnClickListener(new OnDoubleClickListener() {
+                @Override
+                public void onDoubleClick(final View view) {
+
+                    if (!mEditMode) {
+                        return;
+                    }
+
+                    int[] screenSize = GraphicUtils.getScreenSize(mContext);
+
+                    //The position to move to
+                    final float x = screenSize[0] / 2 - view.getWidth() / 2;
+                    final float y = view.getHeight() / 8;
+
+                    //The difference in position
+                    final float dx = x - view.getX();
+                    final float dy = y - view.getY();
+
+                    TranslateAnimation animation = new TranslateAnimation(0, dx, 0, dy);
+                    animation.setDuration(200);
+                    animation.setFillAfter(false);
+
+                    animation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            UIUtils.moveView(view, x, y);
+                        }
+                    });
+
+                    if (view.getAnimation() == null) {
+                        view.startAnimation(animation);
+
+                        LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View v = vi.inflate(R.layout.key_quick_action_menu, null);
+
+                        ((ViewGroup) view).addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                    }
+                }
+            });
+
             //Add the new button to the layout
             UIUtils.drawView(mControllerLayout, button, x, y, width, height);
         }
-
-        mControllerLayout.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-
-                //In case of drop - change the position of the button.
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DROP:
-                        KeyboardButton view = (KeyboardButton) event.getLocalState();
-                        view.setVisibility(View.VISIBLE);
-
-                        mControllerLayout.removeView(view);
-                        mControllerLayout.invalidate();
-
-                        int x = (int) (event.getX() - view.getWidth() / 2);
-                        int y = (int) (event.getY() - view.getHeight() / 2);
-
-                        UIUtils.drawView(mControllerLayout, view, x, y, view.getWidth(), view.getHeight());
-                        break;
-                }
-
-                return true;
-            }
-        });
     }
 }

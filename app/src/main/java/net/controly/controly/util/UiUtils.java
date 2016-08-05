@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -58,12 +57,24 @@ public class UIUtils {
      * @param height The height of the new view.
      */
     public static void drawView(ViewGroup layout, View view, int x, int y, int width, int height) {
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
-        params.leftMargin = x;
-        params.topMargin = y;
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, height);
+
+        view.setX(x);
+        view.setY(y);
 
         layout.addView(view, params);
-        layout.invalidate();
+    }
+
+    /**
+     * This method moves a view to the given location.
+     *
+     * @param view The view to move.
+     * @param x    The x coordinate of the new location.
+     * @param y    The y coordinate of the new location.
+     */
+    public static void moveView(View view, float x, float y) {
+        view.setX(x);
+        view.setY(y);
     }
 
     /**
