@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:text="@string/settings"
             android:textColor="@color/color_accent"
             android:textSize="15sp" />
@@ -47,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:text="@string/create"
             android:textColor="@color/color_accent"
             android:textSize="15sp" />
@@ -74,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:text="@string/download"
             android:textColor="@color/color_accent"
             android:textSize="15sp" />

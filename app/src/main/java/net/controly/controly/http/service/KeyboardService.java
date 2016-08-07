@@ -4,6 +4,7 @@ import net.controly.controly.http.response.CreateKeyboardResponse;
 import net.controly.controly.http.response.DeleteKeyboardResponse;
 import net.controly.controly.http.response.GetKeyboardLayoutResponse;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -24,12 +25,16 @@ public interface KeyboardService {
     @Multipart
     @POST("createKeyboard")
     Call<CreateKeyboardResponse> createKeyboard(@Part("userId") long userId, @Part("keyboardName") String keyboardName,
-                                                @Part("hasTag") String hashTag, @Part("portrait") int portrait,
+                                                @Part("hashTag") String hashTag, @Part("portrait") int portrait,
                                                 @Part("screenSize") String screenSize, @Part("hasPic") int hasPic,
-                                                @Part("keyboardPic") RequestBody keyboardPicture, @Part("hasBackground") int hasBackground,
+                                                @Part MultipartBody.Part keyboardPic, @Part("hasBackground") int hasBackground,
                                                 @Part("backgroundImage") RequestBody backgroundImage);
 
     @POST("getKeyboardLayoutById")
     @FormUrlEncoded
     Call<GetKeyboardLayoutResponse> getKeyboardLayout(@Field("keyboardId") long keyboardId);
+
+    @POST("getKeyboardById")
+    @FormUrlEncoded
+    Call<GetKeyboardByIdResponse> getKeyboardById(@Field("keyboardId") String keyboardId);
 }

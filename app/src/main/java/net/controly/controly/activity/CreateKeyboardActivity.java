@@ -10,21 +10,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
+import net.controly.controly.http.response.CreateKeyboardResponse;
+import net.controly.controly.http.service.GetKeyboardByIdResponse;
+import net.controly.controly.http.service.KeyboardService;
 import net.controly.controly.util.GraphicUtils;
 import net.controly.controly.util.PermissionUtils;
 import net.controly.controly.view.CircularImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -32,34 +36,48 @@ import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * This is the activity for creating a new keyboard.
  */
 public class CreateKeyboardActivity extends BaseActivity {
 
+    private Context mContext;
+
     //-------Request codes-------
     private final int CAMERA_REQUEST_CODE = 0;
     private final int GALLERY_REQUEST_CODE = 1;
 
     ////-------Views-------
+    private Toolbar mToolbar;
     private CircularImageView mKeyboardImage;
     private TextView mKeyboardName;
-
-    private Button mPreviousButton;
-    private Button mNextButton;
 
     //Path for storing the image
     private String mImageFilePath;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_keyboard);
 
-        final Context context = this;
+        mContext = this;
         final String DEFAULT_KEYBOARD_IMAGE = "https://api.controly.net/ControlyApi/UserImages/defaultKeyboard.png"; //TODO This should be done offline.
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitleTextColor(ContextCompat.getColor(this.mContext, android.R.color.white));
+        mToolbar.setTitle("New Keyboard");
+        setSupportActionBar(mToolbar);
+
+        //Show back button in toolbar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mKeyboardName = (TextView) findViewById(R.id.keyboard_name);
 
@@ -70,7 +88,7 @@ public class CreateKeyboardActivity extends BaseActivity {
             public void onClick(View view) {
                 final String[] items = {"Take photo", "Choose from library", "Change keyboard name", "Rotate", "Cancel"};
 
-                new AlertDialog.Builder(context)
+                new AlertDialog.Builder(mContext)
                         .setTitle("Add Keyboard Image")
                         .setItems(items, new DialogInterface.OnClickListener() {
                             @Override
@@ -80,15 +98,15 @@ public class CreateKeyboardActivity extends BaseActivity {
                                     //Take a photo using the camera
                                     case 0:
                                         //TODO Make the text more user friendly
-                                        if (!PermissionUtils.hasPermission(context, Manifest.permission.CAMERA)) {
-                                            PermissionUtils.requestPermission(context, Manifest.permission.CAMERA, "We need a permission to access your camera so you can take a photo of your keyboard...");
+                                        if (!PermissionUtils.hasPermission(mContext, Manifest.permission.CAMERA)) {
+                                            PermissionUtils.requestPermission(mContext, Manifest.permission.CAMERA, "We need a permission to access your camera so you can take a photo of your keyboard...");
                                         }
 
                                         //Get the intent for capturing an image with the camera
                                         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                                         //Ensure the the user gave permission to the camera, and that there's a camera activity for handling the intent.
-                                        if (PermissionUtils.hasPermission(context, Manifest.permission.CAMERA) &&
+                                        if (PermissionUtils.hasPermission(mContext, Manifest.permission.CAMERA) &&
                                                 cameraIntent.resolveActivity(getPackageManager()) != null) {
                                             final String PACKAGE_NAME = getApplicationContext().getPackageName();
 
@@ -121,7 +139,7 @@ public class CreateKeyboardActivity extends BaseActivity {
 
                                     //Change the keyboard name
                                     case 2:
-                                        final EditText input = new EditText(context);
+                                        final EditText input = new EditText(mContext);
                                         input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
 
                                         DialogInterface.OnClickListener onPositiveClick = new DialogInterface.OnClickListener() {
@@ -131,7 +149,7 @@ public class CreateKeyboardActivity extends BaseActivity {
                                             }
                                         };
 
-                                        new AlertDialog.Builder(context)
+                                        new AlertDialog.Builder(mContext)
                                                 .setTitle("Set the keyboard name")
                                                 .setView(input)
                                                 .setPositiveButton("OK", onPositiveClick)
@@ -151,33 +169,74 @@ public class CreateKeyboardActivity extends BaseActivity {
                         }).show();
             }
         });
+    }
 
-        //On previous button click, finish the activity.
-        mPreviousButton = (Button) findViewById(R.id.previous_button);
-        mPreviousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.create_keybaord_menu, menu);
+        return true;
+    }
 
-        mNextButton = (Button) findViewById(R.id.next_button);
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
 
-                Toast.makeText(context, "NEXT BUTTON CLICK", Toast.LENGTH_SHORT)
-                        .show();
+            //When clicking on the create keyboard button
+            case R.id.create_keyboard_accept:
+                byte[] byteArray = GraphicUtils.bitmapToByteArray(mKeyboardImage.getBitmap());
 
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                mKeyboardImage.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
+                RequestBody imageRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), byteArray);
+                MultipartBody.Part imagePart = MultipartBody.Part.createFormData("upload", new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                        .format(new Date()) + ".png", imageRequestBody);
 
-                RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), byteArray);
+                long userId = ControlyApplication.getInstance()
+                        .getAuthenticatedUser()
+                        .getId();
 
-                //TODO Implement the request
-            }
-        });
+                String keyboardName = mKeyboardName.getText().toString();
+
+                int[] screenSizeArray = GraphicUtils.getScreenSize(mContext);
+                String screenSize = screenSizeArray[0] + "x" + screenSizeArray[1];
+
+                Call<CreateKeyboardResponse> call = ControlyApplication.getInstance().getService(KeyboardService.class)
+                        .createKeyboard(userId, keyboardName, "", 1, screenSize, 1, imagePart, 0, null);
+
+                call.enqueue(new Callback<CreateKeyboardResponse>() {
+                    @Override
+                    public void onResponse(Call<CreateKeyboardResponse> call, Response<CreateKeyboardResponse> response) {
+                        String keyboardId = String.valueOf(response.body().getKeyboardId());
+
+                        Call<GetKeyboardByIdResponse> getKeyboardByIdResponseCall = ControlyApplication.getInstance()
+                                .getService(KeyboardService.class)
+                                .getKeyboardById(keyboardId);
+
+                        getKeyboardByIdResponseCall.enqueue(new Callback<GetKeyboardByIdResponse>() {
+                            @Override
+                            public void onResponse(Call<GetKeyboardByIdResponse> call, Response<GetKeyboardByIdResponse> response) {
+                                Intent intent = new Intent(mContext, KeyboardActivity.class);
+                                intent.putExtra(KeyboardActivity.CONTROLLER_OBJECT_EXTRA, response.body().getKeyboard());
+                                startActivity(intent);
+
+                                finish();
+                            }
+
+                            @Override
+                            public void onFailure(Call<GetKeyboardByIdResponse> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call<CreateKeyboardResponse> call, Throwable t) {
+                    }
+                });
+        }
+
+        return true;
     }
 
     @Override

@@ -31,11 +31,18 @@
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main" />
 
+        <activity android:name=".activity.CreateKeyboardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+
         <activity android:name=".activity.MenuActivity" />
         <activity android:name=".activity.SettingsActivity" />
-        <activity android:name=".activity.CreateKeyboardActivity" />
-        <activity android:name=".activity.ControllerActivity" />
-        <activity android:name=".activity.ComputerRemoteActivity" />
+        <activity android:name=".activity.KeyboardActivity" />
+        <activity
+            android:name=".activity.ComputerRemoteActivity"
+            android:windowSoftInputMode="stateAlwaysVisible" />
 
     </application>
 </manifest>

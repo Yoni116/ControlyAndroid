@@ -4,16 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.bowyer.app.fabtoolbar.FabToolbar;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
@@ -21,6 +21,7 @@ import net.controly.controly.http.response.GetKeyboardLayoutResponse;
 import net.controly.controly.http.service.KeyboardService;
 import net.controly.controly.model.Key;
 import net.controly.controly.model.Keyboard;
+import net.controly.controly.model.KeysLayout;
 import net.controly.controly.util.GraphicUtils;
 import net.controly.controly.util.Logger;
 import net.controly.controly.util.UIUtils;
@@ -34,8 +35,9 @@ import retrofit2.Response;
 /**
  * This is the controller activity.
  */
-public class ControllerActivity extends BaseActivity {
+public class KeyboardActivity extends BaseActivity {
 
+    //-------Keyboard Data-------
     public static final String CONTROLLER_OBJECT_EXTRA = "CONTROLLER_ID";
     private Keyboard mKeyboard;
 
@@ -44,20 +46,19 @@ public class ControllerActivity extends BaseActivity {
 
     //-------Views-------
     private RelativeLayout mControllerLayout;
-    private FrameLayout mMenuButtonContainer; //We need this view since there is no other way to make a FloatingActionButton invisible.
     private FloatingActionButton mMenuButton;
 
-    //-------Menus-------
-    private View mControllerMenu;
-    private View mEditMenu;
+    //-------Fab Toolbars-------
+    private FabToolbar mKeyboardToolbar;
+    private FabToolbar mEditKeyboardToolbar;
 
-    //-------Keyboard Menu-------
-    private FloatingActionButton mBackButton;
-    private FloatingActionButton mComputerRemoteButton;
-    private FloatingActionButton mEnableEditButton;
+    //-------Keyboard Toolbar Buttons-------
+    private ImageButton mBackButton;
+    private ImageButton mComputerRemoteButton;
+    private ImageButton mEnableEditButton;
 
-    //-------Edit Menu-------
-    private FloatingActionButton mDisableEditButton;
+    //-------Edit Keyboard Toolbar Buttons-------
+    private ImageButton mDisableEditButton;
 
     //These are the first drag points of a view
     private float firstDragX = 0;
@@ -67,51 +68,47 @@ public class ControllerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_controller);
-
         mContext = this;
 
-        //Get the keyboard id
+        //Get the keyboard data from the bundle object
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mKeyboard = (Keyboard) extras.getSerializable(CONTROLLER_OBJECT_EXTRA);
         }
 
+        //This is the parent layout of the keyboard
         mControllerLayout = (RelativeLayout) findViewById(R.id.keyboard_key_layout);
-        mControllerMenu = findViewById(R.id.keyboard_menu);
 
-        mEditMenu = findViewById(R.id.edit_menu);
-
-        //Show controller menu on button click
+        //Show keyboard menu on button click
         mMenuButton = (FloatingActionButton) findViewById(R.id.keyboard_menu_button);
+        mKeyboardToolbar = (FabToolbar) findViewById(R.id.keyboard_toolbar);
+        mKeyboardToolbar.setFab(mMenuButton);
         mMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (mControllerMenu.getVisibility()) {
-                    //If the menu is visible, hide it.
-                    case View.VISIBLE:
-                        hideControllerMenu();
-                        break;
-
-                    //If the menu is gone, show it.
-                    case View.GONE:
-                        showControllerMenu();
-                        break;
-                }
+                mKeyboardToolbar.expandFab();
             }
         });
 
-        mMenuButtonContainer = (FrameLayout) findViewById(R.id.menu_button_container);
+        mControllerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mKeyboardToolbar.contractFab();
+            }
+        });
 
         //On back button click - return to main activity
-        mBackButton = (FloatingActionButton) findViewById(R.id.controller_menu_back_button);
+        mBackButton = (ImageButton) findViewById(R.id.controller_menu_back_button);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                 finish();
             }
         });
 
-        mComputerRemoteButton = (FloatingActionButton) findViewById(R.id.computer_remote_menu_button);
+        //When clicking on computer remote button, lunch the activity
+        mComputerRemoteButton = (ImageButton) findViewById(R.id.computer_remote_menu_button);
         mComputerRemoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,19 +117,31 @@ public class ControllerActivity extends BaseActivity {
             }
         });
 
-        mEnableEditButton = (FloatingActionButton) findViewById(R.id.enable_edit_button);
+        //Initialize 'edit mode'
+        mEditKeyboardToolbar = (FabToolbar) findViewById(R.id.edit_keyboard_toolbar);
+
+        mEnableEditButton = (ImageButton) findViewById(R.id.enable_edit_button);
         mEnableEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                turnOnEditMode();
+                //Turn on edit mode
+                mEditMode = true;
+
+                //Show the edit toolbar
+                mKeyboardToolbar.hide();
+                mEditKeyboardToolbar.setFab(mMenuButton);
+                mEditKeyboardToolbar.show();
             }
         });
 
-        mDisableEditButton = (FloatingActionButton) findViewById(R.id.disable_edit_button);
+        //Initialize the edit mode disable button
+        mDisableEditButton = (ImageButton) findViewById(R.id.disable_edit_button);
         mDisableEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                turnOffEditMode();
+                mEditMode = false;
+
+                mEditKeyboardToolbar.contractFab();
             }
         });
 
@@ -140,56 +149,10 @@ public class ControllerActivity extends BaseActivity {
         loadLayout();
     }
 
-    /**
-     * Show the controller menu.
-     */
-    private void showControllerMenu() {
-        Animation jumpInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_up);
-        Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
-
-        mControllerMenu.startAnimation(jumpInAnimation);
-        mMenuButton.startAnimation(rotateAnimation);
-        mControllerMenu.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Hide the controller menu.
-     */
-    private void hideControllerMenu() {
-        Animation jumpInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.bottom_down);
-        Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counter_clockwise);
-
-        mControllerMenu.startAnimation(jumpInAnimation);
-        mMenuButton.startAnimation(rotateAnimation);
-        mControllerMenu.setVisibility(View.GONE);
-    }
-
-    /**
-     * When edit mode is turned on, the menu floating action button and the keyboard menu will disappear.
-     * Instead, the keyboard edit menu will appear.
-     */
-    private void turnOnEditMode() {
-        Logger.info("Enabling edit mode");
-        mEditMode = true;
-
-        mMenuButtonContainer.setVisibility(View.GONE);
-        mControllerMenu.setVisibility(View.GONE);
-
-        mEditMenu.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * When edit mode is turned on, the menu floating action button and the keyboard menu will disappear.
-     * Instead, the keyboard edit menu will appear.
-     */
-    private void turnOffEditMode() {
-        Logger.info("Disabling edit mode");
-        mEditMode = false;
-
-        mMenuButtonContainer.setVisibility(View.VISIBLE);
-        mControllerMenu.setVisibility(View.VISIBLE);
-
-        mEditMenu.setVisibility(View.GONE);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
     }
 
     /**
@@ -239,8 +202,16 @@ public class ControllerActivity extends BaseActivity {
      * @param response The response object.
      */
     private void drawLayout(GetKeyboardLayoutResponse response) {
+        KeysLayout keysLayout = response.getKeysLayout();
+
+        //Avoid NullPointerException
+        if (keysLayout == null) {
+            Logger.info("No key layout!");
+            return;
+        }
+
         int[] actualScreenSize = GraphicUtils.getScreenSize(mContext);
-        int[] makersScreenSize = response.getKeysLayout().getScreenSize();
+        int[] makersScreenSize = keysLayout.getScreenSize();
 
         //Calculate the ratios between maker's screen size and actual screen size.
         float widthRatio = ((float) (actualScreenSize[0])) / ((float) (makersScreenSize[0]));
@@ -348,10 +319,20 @@ public class ControllerActivity extends BaseActivity {
                     if (view.getAnimation() == null) {
                         view.startAnimation(animation);
 
-                        LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View v = vi.inflate(R.layout.key_quick_action_menu, null);
+                        float buttonsY = y + view.getHeight() + GraphicUtils.convertDpToPixels(10, mContext);
+                        float buttonMargin = GraphicUtils.convertDpToPixels(150, mContext);
 
-                        ((ViewGroup) view).addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        Button b1 = new Button(mContext);
+                        UIUtils.drawView(mControllerLayout, b1, x - view.getWidth() / 2, buttonsY, 200, 200);
+
+                        Button b2 = new Button(mContext);
+                        UIUtils.drawView(mControllerLayout, b2, x - view.getWidth() / 2 + buttonMargin, buttonsY, 200, 200);
+
+                        Button b3 = new Button(mContext);
+                        UIUtils.drawView(mControllerLayout, b3, x - view.getWidth() / 2 + 2 * buttonMargin, buttonsY, 200, 200);
+
+                        Button b4 = new Button(mContext);
+                        UIUtils.drawView(mControllerLayout, b4, x - view.getWidth() / 2 + 3 * buttonMargin, buttonsY, 200, 200);
                     }
                 }
             });

@@ -2,13 +2,12 @@ package net.controly.controly.activity;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import net.controly.controly.R;
 
 /**
- * Created by Itai on 03-Aug-16.
+ * This activity is for controlling pc remotely.
  */
 public class ComputerRemoteActivity extends BaseActivity {
 
@@ -23,16 +22,13 @@ public class ComputerRemoteActivity extends BaseActivity {
     }
 
     @Override
-    protected boolean enableImmersive() {
-        return false;
+    public void onBackPressed() {
+        finish();
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
+    protected boolean enableImmersive() {
+        return false;
     }
 
     @Override

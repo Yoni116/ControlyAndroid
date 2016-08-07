@@ -51,12 +51,12 @@ public class UIUtils {
      *
      * @param layout The layout to add the view to.
      * @param view   The view to add to the layout.
-     * @param x      The x location of the new view.
-     * @param y      The y location of the new view.
+     * @param x      The x location of the new view - in px.
+     * @param y      The y location of the new view - in px.
      * @param width  The width of the new view.
      * @param height The height of the new view.
      */
-    public static void drawView(ViewGroup layout, View view, int x, int y, int width, int height) {
+    public static void drawView(ViewGroup layout, View view, float x, float y, int width, int height) {
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width, height);
 
         view.setX(x);

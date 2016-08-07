@@ -1,19 +1,63 @@
 package net.controly.controly.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * This class contains an assortment of util methods for graphics.
  */
 public class GraphicUtils {
+
+    /**
+     * This method converts dp unit to equivalent pixels, depending on device density.
+     *
+     * @param dp      A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @param context Context to get resources and device specific display metrics
+     * @return A float value to represent px equivalent to dp depending on device density
+     */
+    public static float convertDpToPixels(float dp, Context context) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+
+        return dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    /**
+     * This method converts device specific pixels to density independent pixels.
+     *
+     * @param px      A value in px (pixels) unit. Which we need to convert into db
+     * @param context Context to get resources and device specific display metrics
+     * @return A float value to represent dp equivalent to px value
+     */
+    public static float convertPixelsToDp(float px, Context context) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        return px / ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
+    /**
+     * Convert a bitmap to byte array.
+     *
+     * @param bitmap The bitmap to convert.
+     * @return A byte array from the given bitmap.
+     */
+    public static byte[] bitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+        return stream.toByteArray();
+    }
 
     /**
      * Get the size of the screen.
@@ -44,7 +88,7 @@ public class GraphicUtils {
     /**
      * Rotate the given bitmap by 90 degrees.
      *
-     * @param bitmap  The bitmap to rotate_clockwise.
+     * @param bitmap The bitmap to rotate_clockwise.
      * @return The rotated bitmap.
      */
     public static Bitmap rotate(Bitmap bitmap) {

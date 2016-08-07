@@ -6,7 +6,6 @@ import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.controly.controly.R;
 import net.controly.controly.model.Key;
@@ -35,8 +33,6 @@ public class KeyboardButton extends LinearLayout {
 
     private ScaleGestureDetector mScaleDetector;
     private float mScaleFactor = 1f;
-
-    private GestureDetector mGestureDetector;
 
     public KeyboardButton(Context context) {
         super(context);
@@ -108,7 +104,6 @@ public class KeyboardButton extends LinearLayout {
         }
 
         mScaleDetector = new ScaleGestureDetector(mContext, new ScaleListener());
-        mGestureDetector = new GestureDetector(mContext, new GestureListener());
     }
 
     @Override
@@ -191,14 +186,6 @@ public class KeyboardButton extends LinearLayout {
             invalidate();
 
             return true;
-        }
-    }
-
-    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            Toast.makeText(mContext, "Edit mode", Toast.LENGTH_SHORT).show();
-            return super.onDoubleTap(e);
         }
     }
 }
