@@ -14,9 +14,6 @@
         android:id="@+id/keyboard_list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:listSelector="@android:color/transparent"
-        android:scrollbarSize="10dp"
-        android:scrollbarThumbVertical="@drawable/scrollbar" />
+        android:layout_below="@+id/toolbar" />
 
 </RelativeLayout>

@@ -20,7 +20,7 @@ public class GetKeyboardByIdResponse extends BaseResponse {
 
     public Keyboard getKeyboard() {
         return GsonFactory.getGson()
-                .fromJson(keyboard, Keyboard.class);
+                .fromJson(keyboard, Keyboard[].class)[0];
     }
 
     public void setKeyboard(Keyboard keyboard) {

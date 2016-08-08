@@ -28,6 +28,8 @@ import net.controly.controly.util.UIUtils;
 import net.controly.controly.view.KeyboardButton;
 import net.controly.controly.view.OnDoubleClickListener;
 
+import java.util.HashSet;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +50,8 @@ public class KeyboardActivity extends BaseActivity {
     private RelativeLayout mControllerLayout;
     private FloatingActionButton mMenuButton;
 
+    private HashSet<KeyboardButton> mKeyboardButtonsSet;
+
     //-------Fab Toolbars-------
     private FabToolbar mKeyboardToolbar;
     private FabToolbar mEditKeyboardToolbar;
@@ -58,7 +62,8 @@ public class KeyboardActivity extends BaseActivity {
     private ImageButton mEnableEditButton;
 
     //-------Edit Keyboard Toolbar Buttons-------
-    private ImageButton mDisableEditButton;
+    private ImageButton mCancelEditButton;
+    private ImageButton mAddKeyButton;
 
     //These are the first drag points of a view
     private float firstDragX = 0;
@@ -78,6 +83,9 @@ public class KeyboardActivity extends BaseActivity {
 
         //This is the parent layout of the keyboard
         mControllerLayout = (RelativeLayout) findViewById(R.id.keyboard_key_layout);
+
+        //This the set of keyboard buttons showing on screen
+        mKeyboardButtonsSet = new HashSet<>();
 
         //Show keyboard menu on button click
         mMenuButton = (FloatingActionButton) findViewById(R.id.keyboard_menu_button);
@@ -102,8 +110,7 @@ public class KeyboardActivity extends BaseActivity {
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-                finish();
+                onBackPressed();
             }
         });
 
@@ -135,13 +142,31 @@ public class KeyboardActivity extends BaseActivity {
         });
 
         //Initialize the edit mode disable button
-        mDisableEditButton = (ImageButton) findViewById(R.id.disable_edit_button);
-        mDisableEditButton.setOnClickListener(new View.OnClickListener() {
+        mCancelEditButton = (ImageButton) findViewById(R.id.cancel_edit_button);
+        mCancelEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mEditMode = false;
 
                 mEditKeyboardToolbar.contractFab();
+
+                for (KeyboardButton keyboardButton : mKeyboardButtonsSet) {
+                    int[] originalPosition = keyboardButton.getKeyPositionOnScreen();
+
+                    UIUtils.moveView(keyboardButton, originalPosition[0], originalPosition[1]);
+
+                    keyboardButton.setScaleX(1);
+                    keyboardButton.setScaleY(1);
+                }
+            }
+        });
+
+        mAddKeyButton = (ImageButton) findViewById(R.id.add_key_button);
+        mAddKeyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, SelectDeviceActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -152,7 +177,7 @@ public class KeyboardActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 
     /**
@@ -197,48 +222,26 @@ public class KeyboardActivity extends BaseActivity {
     }
 
     /**
-     * This method gets the {@link GetKeyboardLayoutResponse} and draws the keyboard layout according to it.
+     * This method gets the response from the API and draws the layout according to it.
      *
      * @param response The response object.
      */
     private void drawLayout(GetKeyboardLayoutResponse response) {
         KeysLayout keysLayout = response.getKeysLayout();
 
-        //Avoid NullPointerException
+        //If the response did not return any key layout
         if (keysLayout == null) {
             Logger.info("No key layout!");
             return;
         }
 
-        int[] actualScreenSize = GraphicUtils.getScreenSize(mContext);
-        int[] makersScreenSize = keysLayout.getScreenSize();
-
-        //Calculate the ratios between maker's screen size and actual screen size.
-        float widthRatio = ((float) (actualScreenSize[0])) / ((float) (makersScreenSize[0]));
-        float heightRatio = ((float) (actualScreenSize[1])) / ((float) (makersScreenSize[1]));
-
         for (Key key : response.getKeysLayout().getKeys()) {
 
             //Declare a new button and set its name
-            final KeyboardButton button = new KeyboardButton(mContext, key);
+            final KeyboardButton button = new KeyboardButton(mContext, key, keysLayout.getScreenSize());
 
-            //The width and height of the button
-            int width, height;
-
-            //Set the key's background and size according to its type
-            if (key.getKeyType() == Key.KeyType.CIRCLE || key.getKeyType() == Key.KeyType.COLOR_PAD
-                    || key.getKeyType() == Key.KeyType.LEVEL_CONTROL_KEY) {
-                //Set the width and height of the new button
-                width = (int) (key.getWidth() * Math.min(heightRatio, widthRatio));
-                height = (int) (key.getHeight() * Math.min(heightRatio, widthRatio));
-            } else {
-                width = (int) (key.getWidth() * widthRatio);
-                height = (int) (key.getHeight() * heightRatio);
-            }
-
-            //Set the position of the new button
-            int x = (int) (key.getX() * widthRatio) - (width / 2);
-            int y = (int) (key.getY() * heightRatio) - (height / 2);
+            int[] size = button.getKeySizeOnScreen();
+            int[] position = button.getKeyPositionOnScreen();
 
             //When touching the button in edit mode, drag & drop the button.
             button.setOnTouchListener(new View.OnTouchListener() {
@@ -338,7 +341,8 @@ public class KeyboardActivity extends BaseActivity {
             });
 
             //Add the new button to the layout
-            UIUtils.drawView(mControllerLayout, button, x, y, width, height);
+            UIUtils.drawView(mControllerLayout, button, position[0], position[1], size[0], size[1]);
+            mKeyboardButtonsSet.add(button);
         }
     }
 }

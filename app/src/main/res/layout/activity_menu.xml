@@ -26,7 +26,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:text="@string/settings"
-            android:textColor="@color/color_accent"
+            android:textColor="#FFF"
             android:textSize="15sp" />
 
     </LinearLayout>
@@ -50,7 +50,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:text="@string/create"
-            android:textColor="@color/color_accent"
+            android:textColor="#FFF"
             android:textSize="15sp" />
 
     </LinearLayout>
@@ -78,7 +78,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:text="@string/download"
-            android:textColor="@color/color_accent"
+            android:textColor="#FFF"
             android:textSize="15sp" />
 
     </LinearLayout>

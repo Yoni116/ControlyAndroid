@@ -44,5 +44,8 @@
             android:name=".activity.ComputerRemoteActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
 
+        <activity android:name=".activity.SelectDeviceActivity" />
+        <activity android:name=".activity.SelectActionActivity" />
+
     </application>
 </manifest>

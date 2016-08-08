@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity {
                 controllerActivity.putExtra(KeyboardActivity.CONTROLLER_OBJECT_EXTRA, mKeyboardListAdapter.getItem(position));
 
                 startActivity(controllerActivity);
-                overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+                overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             }
         });
 
@@ -211,6 +211,11 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onResponse(Call<GetAllUserKeyboardsResponse> call, Response<GetAllUserKeyboardsResponse> response) {
                 dismissDialog();
+
+                if (response.body().getKeyboards() == null) {
+                    Logger.info("User has no keyboards");
+                    return;
+                }
 
                 //Avoid NullPointerException
                 if (response.body() == null || !response.body().hasSucceeded()) {

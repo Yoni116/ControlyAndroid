@@ -36,4 +36,7 @@
     <string name="create">Create</string>
     <string name="download">Download</string>
     <string name="create_cap">CREATE</string>
+
+    <!--Add Key-->
+    <string name="done_cap">DONE</string>
 </resources>

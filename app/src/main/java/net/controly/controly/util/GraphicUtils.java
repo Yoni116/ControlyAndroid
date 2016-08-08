@@ -54,7 +54,7 @@ public class GraphicUtils {
      */
     public static byte[] bitmapToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
 
         return stream.toByteArray();
     }

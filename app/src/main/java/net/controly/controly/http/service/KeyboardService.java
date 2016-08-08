@@ -2,7 +2,9 @@ package net.controly.controly.http.service;
 
 import net.controly.controly.http.response.CreateKeyboardResponse;
 import net.controly.controly.http.response.DeleteKeyboardResponse;
+import net.controly.controly.http.response.GetAllDevicesResponse;
 import net.controly.controly.http.response.GetKeyboardLayoutResponse;
+import net.controly.controly.http.response.GetKeysForDeviceResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -37,4 +39,11 @@ public interface KeyboardService {
     @POST("getKeyboardById")
     @FormUrlEncoded
     Call<GetKeyboardByIdResponse> getKeyboardById(@Field("keyboardId") String keyboardId);
+
+    @POST("getAllDevices")
+    Call<GetAllDevicesResponse> getAllDevices();
+
+    @POST("getKeysForDevice")
+    @FormUrlEncoded
+    Call<GetKeysForDeviceResponse> getKeysForDevice(@Field("deviceId") long deviceId);
 }

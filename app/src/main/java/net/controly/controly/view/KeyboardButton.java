@@ -16,14 +16,16 @@ import android.widget.TextView;
 
 import net.controly.controly.R;
 import net.controly.controly.model.Key;
+import net.controly.controly.util.GraphicUtils;
 
 /**
  * This view represents a circular keyboard button.
  */
 public class KeyboardButton extends LinearLayout {
 
-    private Key mKey;
     private Context mContext;
+    private Key mKey;
+    private int[] mMakersScreenSize;
 
     //-------Views-------
     private RelativeLayout mKeyView; //The shape drawable
@@ -46,7 +48,7 @@ public class KeyboardButton extends LinearLayout {
      * Initialize a new keyboard button.
      *
      * @param context The context of the application.
-     * @param key     The button data.
+     * @param key     The key to draw.
      */
     public KeyboardButton(Context context, Key key) {
         super(context);
@@ -55,6 +57,18 @@ public class KeyboardButton extends LinearLayout {
         this.mKey = key;
 
         initializeButton();
+    }
+
+    /**
+     * Initialize a new keyboard button.
+     *
+     * @param context      The context of the application.
+     * @param key          The key to draw.
+     * @param makersScreen The screen size of the person who created the key button.
+     */
+    public KeyboardButton(Context context, Key key, int[] makersScreen) {
+        this(context, key);
+        this.mMakersScreenSize = makersScreen;
     }
 
     /**
@@ -106,34 +120,18 @@ public class KeyboardButton extends LinearLayout {
         mScaleDetector = new ScaleGestureDetector(mContext, new ScaleListener());
     }
 
-    @Override
-    public void setOnLongClickListener(OnLongClickListener l) {
-        super.setOnLongClickListener(l);
-        mKeyView.setOnLongClickListener(l);
+    /**
+     * @return The key data.
+     */
+    public Key getKeyButton() {
+        return mKey;
     }
 
-    @Override
-    public void setOnClickListener(OnClickListener l) {
-        super.setOnClickListener(l);
-        mKeyView.setOnClickListener(l);
-    }
-
-    @Override
-    public void setOnTouchListener(OnTouchListener l) {
-        super.setOnTouchListener(l);
-        mKeyView.setOnTouchListener(l);
-    }
-
-    @Override
-    public void setOnDragListener(OnDragListener l) {
-        super.setOnDragListener(l);
-        mKeyView.setOnDragListener(l);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mScaleDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+    /**
+     * @return The maker's screen size.
+     */
+    public int[] getMakersScreenSize() {
+        return mMakersScreenSize;
     }
 
     /**
@@ -174,12 +172,101 @@ public class KeyboardButton extends LinearLayout {
         mKeyIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", mContext.getPackageName()));
     }
 
+    /**
+     * This method calculates the position that the key should be put on the user's screen.
+     *
+     * @return The first element of the array is the X coordinate, and the second element of the array is the Y coordinate.
+     */
+    public int[] getKeyPositionOnScreen() {
+
+        float[] widthAndHeightRatio = getWidthAndHeightRatio();
+        int[] size = getKeySizeOnScreen();
+
+        int x = (int) (mKey.getX() * widthAndHeightRatio[0]) - (size[0] / 2);
+        int y = (int) (mKey.getY() * widthAndHeightRatio[1]) - (size[1] / 2);
+
+        return new int[]{x, y};
+    }
+
+    /**
+     * This method calculates the size of the keyboard button considering the user's screen size.
+     *
+     * @return The first element of the array is the width of the button, and the second element is height of the button.
+     */
+    public int[] getKeySizeOnScreen() {
+        float[] widthAndHeightRatio = getWidthAndHeightRatio();
+
+        //The width and height of the button
+        int width, height;
+
+        //Set the key's size according to its type
+        if (mKey.getKeyType() == Key.KeyType.CIRCLE || mKey.getKeyType() == Key.KeyType.COLOR_PAD
+                || mKey.getKeyType() == Key.KeyType.LEVEL_CONTROL_KEY) {
+            //Set the width and height of the new button
+            width = (int) (mKey.getWidth() * Math.min(widthAndHeightRatio[0], widthAndHeightRatio[1]));
+            height = (int) (mKey.getHeight() * Math.min(widthAndHeightRatio[0], widthAndHeightRatio[1]));
+        } else {
+            width = (int) (mKey.getWidth() * widthAndHeightRatio[0]);
+            height = (int) (mKey.getHeight() * widthAndHeightRatio[1]);
+        }
+
+        return new int[]{width, height};
+    }
+
+    /**
+     * This method calculates the ratio between the width and height of the screen size of the
+     * person who created the key button and of the actual user screen.
+     *
+     * @return The first element of the array is the width ratio, and the second element is the height ratio.
+     */
+    private float[] getWidthAndHeightRatio() {
+
+        int[] actualScreenSize = GraphicUtils.getScreenSize(mContext);
+
+        //Calculate the ratio between maker's screen size and actual screen size.
+        float widthRatio = ((float) (actualScreenSize[0])) / ((float) (mMakersScreenSize[0]));
+        float heightRatio = ((float) (actualScreenSize[1])) / ((float) (mMakersScreenSize[1]));
+
+        return new float[]{widthRatio, heightRatio};
+    }
+
+    @Override
+    public void setOnLongClickListener(OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        mKeyView.setOnLongClickListener(l);
+    }
+
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        super.setOnClickListener(l);
+        mKeyView.setOnClickListener(l);
+    }
+
+    @Override
+    public void setOnTouchListener(OnTouchListener l) {
+        super.setOnTouchListener(l);
+        mKeyView.setOnTouchListener(l);
+    }
+
+    @Override
+    public void setOnDragListener(OnDragListener l) {
+        super.setOnDragListener(l);
+        mKeyView.setOnDragListener(l);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mScaleDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             mScaleFactor *= detector.getScaleFactor();
 
             // Don't let the object get too small or too large.
+            //TODO Maybe we should try to find a way to actually change the view size instead of scaling it.
             mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f));
             setScaleX(mScaleFactor);
             setScaleY(mScaleFactor);

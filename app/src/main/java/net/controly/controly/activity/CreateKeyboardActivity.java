@@ -70,7 +70,7 @@ public class CreateKeyboardActivity extends BaseActivity {
         final String DEFAULT_KEYBOARD_IMAGE = "https://api.controly.net/ControlyApi/UserImages/defaultKeyboard.png"; //TODO This should be done offline.
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitleTextColor(ContextCompat.getColor(this.mContext, android.R.color.white));
+        mToolbar.setTitleTextColor(ContextCompat.getColor(mContext, android.R.color.white));
         mToolbar.setTitle("New Keyboard");
         setSupportActionBar(mToolbar);
 

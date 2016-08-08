@@ -25,6 +25,7 @@
         android:layout_below="@+id/keyboard_image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:text="@string/default_keyboard_name" />
+        android:text="@string/default_keyboard_name"
+        android:textColor="#FFFF" />
 
 </RelativeLayout>
