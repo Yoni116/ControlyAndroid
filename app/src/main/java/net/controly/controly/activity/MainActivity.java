@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -47,6 +48,7 @@ public class MainActivity extends BaseActivity {
     //-------Views-------
     private Toolbar mToolbar;
     private SearchView mSearchView;
+    private TextView mKeyboardListEmptyText;
 
     private SwipeMenuListView mKeyboardList;
     private KeyboardListAdapter mKeyboardListAdapter;
@@ -71,6 +73,9 @@ public class MainActivity extends BaseActivity {
         mKeyboardListAdapter = new KeyboardListAdapter(this);
 
         mKeyboardList.setAdapter(mKeyboardListAdapter);
+
+        mKeyboardListEmptyText = (TextView) findViewById(R.id.keyboard_list_empty_text);
+        mKeyboardList.setEmptyView(mKeyboardListEmptyText);
 
         //Set on click listener for keyboard list.
         mKeyboardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

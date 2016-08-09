@@ -1,4 +1,4 @@
-package net.controly.controly.http.service;
+package net.controly.controly.http.response;
 
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
@@ -8,7 +8,7 @@ import net.controly.controly.model.Keyboard;
 import net.controly.controly.util.GsonFactory;
 
 /**
- * Created by Itai on 07-Aug-16.
+ * This class represents a response from the API for receiving a keyboard by its id.
  */
 public class GetKeyboardByIdResponse extends BaseResponse {
 

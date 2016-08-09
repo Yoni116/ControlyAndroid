@@ -3,6 +3,7 @@ package net.controly.controly.http.service;
 import net.controly.controly.http.response.CreateKeyboardResponse;
 import net.controly.controly.http.response.DeleteKeyboardResponse;
 import net.controly.controly.http.response.GetAllDevicesResponse;
+import net.controly.controly.http.response.GetKeyboardByIdResponse;
 import net.controly.controly.http.response.GetKeyboardLayoutResponse;
 import net.controly.controly.http.response.GetKeysForDeviceResponse;
 

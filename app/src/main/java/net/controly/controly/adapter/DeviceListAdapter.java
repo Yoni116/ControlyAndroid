@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Itai on 08-Aug-16.
+ * This is a list adapter for a list view of devices.
  */
 public class DeviceListAdapter extends BaseAdapter {
 

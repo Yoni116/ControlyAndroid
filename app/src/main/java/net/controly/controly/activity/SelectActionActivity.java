@@ -20,7 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Itai on 08-Aug-16.
+ * This activity is for choosing an action to create a key for the keyboard.
  */
 public class SelectActionActivity extends BaseActivity {
 

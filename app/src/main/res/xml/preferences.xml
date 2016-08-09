@@ -13,4 +13,16 @@
 
     </PreferenceCategory>
 
+    <Preference android:title="Privacy Policy">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://controly.net/wordpress/privacy-policy/" />
+    </Preference>
+
+    <Preference android:title="Beta Agreement">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://controly.net/wordpress/beta-testing-agreement/" />
+    </Preference>
+
 </PreferenceScreen>

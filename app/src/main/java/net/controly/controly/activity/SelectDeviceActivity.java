@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Itai on 08-Aug-16.
+ * This activity is used to select a device to create a key for in the activity.
  */
 public class SelectDeviceActivity extends BaseActivity {
 

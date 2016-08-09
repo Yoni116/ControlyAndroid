@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import net.controly.controly.model.Device;
 
 /**
- * Created by Itai on 08-Aug-16.
+ * This is class represents a response from the API for receiving all of the devices that the platform integrates with.
  */
 public class GetAllDevicesResponse extends BaseResponse {
 

@@ -23,7 +23,7 @@ import android.widget.TextView;
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 import net.controly.controly.http.response.CreateKeyboardResponse;
-import net.controly.controly.http.service.GetKeyboardByIdResponse;
+import net.controly.controly.http.response.GetKeyboardByIdResponse;
 import net.controly.controly.http.service.KeyboardService;
 import net.controly.controly.util.GraphicUtils;
 import net.controly.controly.util.PermissionUtils;
@@ -105,7 +105,7 @@ public class CreateKeyboardActivity extends BaseActivity {
                                         //Get the intent for capturing an image with the camera
                                         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                                        //Ensure the the user gave permission to the camera, and that there's a camera activity for handling the intent.
+                                        //Ensure that the user gave permission to the camera, and that there's a camera activity for handling the intent.
                                         if (PermissionUtils.hasPermission(mContext, Manifest.permission.CAMERA) &&
                                                 cameraIntent.resolveActivity(getPackageManager()) != null) {
                                             final String PACKAGE_NAME = getApplicationContext().getPackageName();

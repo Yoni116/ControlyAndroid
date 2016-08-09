@@ -27,7 +27,7 @@ public class ComputerRemoteActivity extends BaseActivity {
     }
 
     @Override
-    protected boolean enableImmersive() {
+    protected boolean enableImmersiveMode() {
         return false;
     }
 

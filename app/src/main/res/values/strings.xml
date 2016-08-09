@@ -30,6 +30,7 @@
     <string name="launch_menu">Main Menu</string>
     <string name="search">Search</string>
     <string name="search_bar_hint">Let\'s find a controller</string>
+    <string name="keyboard_list_empty">You have no keyboards</string>
 
     <!--Menu-->
     <string name="settings">Settings</string>

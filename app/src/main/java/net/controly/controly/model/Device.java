@@ -3,7 +3,7 @@ package net.controly.controly.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Itai on 08-Aug-16.
+ * This class represents a device that can perform actions and that can have controllers in the app.
  */
 public class Device {
 

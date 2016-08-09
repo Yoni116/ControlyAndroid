@@ -10,12 +10,8 @@ import android.widget.TextView;
 import net.controly.controly.R;
 import net.controly.controly.model.Action;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * Created by Itai on 08-Aug-16.
+ * This is a list view adapter for a list of actions.
  */
 public class ActionListAdapter extends BaseAdapter {
     private final Context mContext;

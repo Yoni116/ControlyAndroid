@@ -3,7 +3,7 @@ package net.controly.controly.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Itai on 08-Aug-16.
+ * This class represents a device action.
  */
 public class Action {
 
