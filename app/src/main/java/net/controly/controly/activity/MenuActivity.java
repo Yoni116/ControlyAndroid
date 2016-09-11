@@ -15,9 +15,6 @@ import net.controly.controly.R;
  */
 public class MenuActivity extends BaseActivity {
 
-    private FloatingActionButton mSettingsButton;
-    private FloatingActionButton mCreateKeyboardButton;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +23,8 @@ public class MenuActivity extends BaseActivity {
         final Context context = this;
 
         //Initialize the logout button
-        mSettingsButton = (FloatingActionButton) findViewById(R.id.settings_button);
-        mSettingsButton.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton settingsButton = (FloatingActionButton) findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent settingsActivity = new Intent(context, SettingsActivity.class);
@@ -35,11 +32,20 @@ public class MenuActivity extends BaseActivity {
             }
         });
 
-        mCreateKeyboardButton = (FloatingActionButton) findViewById(R.id.create_keyboard_button);
-        mCreateKeyboardButton.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton createKeyboardButton = (FloatingActionButton) findViewById(R.id.create_keyboard_button);
+        createKeyboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, CreateKeyboardActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        FloatingActionButton eventsButton = (FloatingActionButton) findViewById(R.id.events_button);
+        eventsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, EventsActivity.class);
                 startActivity(intent);
             }
         });

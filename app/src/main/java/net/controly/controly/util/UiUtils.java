@@ -7,10 +7,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
@@ -108,5 +112,18 @@ public class UIUtils {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, emailsCollection);
         view.setAdapter(adapter);
+    }
+
+    /**
+     * Sets the text color of the given {@link SearchView}.
+     * @param context The context of the application.
+     * @param searchView The search view to set the text color for.
+     */
+    public static void setSearchBarTextColor(Context context, SearchView searchView) {
+        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
+        searchEditText.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+        searchEditText.setHintTextColor(ContextCompat.getColor(context, android.R.color.white));
+        searchEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 }

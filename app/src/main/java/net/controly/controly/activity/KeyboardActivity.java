@@ -40,7 +40,7 @@ import retrofit2.Response;
 public class KeyboardActivity extends BaseActivity {
 
     //-------Keyboard Data-------
-    public static final String CONTROLLER_OBJECT_EXTRA = "CONTROLLER_ID";
+    public static final String KEYBOARD_OBJECT_EXTRA = "KEYBOARD_DATA";
     private Keyboard mKeyboard;
 
     private Context mContext;
@@ -48,13 +48,13 @@ public class KeyboardActivity extends BaseActivity {
 
     //-------Views-------
     private RelativeLayout mControllerLayout;
-    private FloatingActionButton mMenuButton;
+    private FloatingActionButton mMenuFab;
 
     private HashSet<KeyboardButton> mKeyboardButtonsSet;
 
     //-------Fab Toolbars-------
-    private FabToolbar mKeyboardToolbar;
-    private FabToolbar mEditKeyboardToolbar;
+    private FabToolbar mKeyboardFabToolbar;
+    private FabToolbar mEditKeyboardFabToolbar;
 
     //-------Keyboard Toolbar Buttons-------
     private ImageButton mBackButton;
@@ -64,6 +64,7 @@ public class KeyboardActivity extends BaseActivity {
     //-------Edit Keyboard Toolbar Buttons-------
     private ImageButton mCancelEditButton;
     private ImageButton mAddKeyButton;
+    private ImageButton mConnectButton;
 
     //These are the first drag points of a view
     private float firstDragX = 0;
@@ -78,7 +79,7 @@ public class KeyboardActivity extends BaseActivity {
         //Get the keyboard data from the bundle object
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mKeyboard = (Keyboard) extras.getSerializable(CONTROLLER_OBJECT_EXTRA);
+            mKeyboard = (Keyboard) extras.getSerializable(KEYBOARD_OBJECT_EXTRA);
         }
 
         //This is the parent layout of the keyboard
@@ -88,20 +89,20 @@ public class KeyboardActivity extends BaseActivity {
         mKeyboardButtonsSet = new HashSet<>();
 
         //Show keyboard menu on button click
-        mMenuButton = (FloatingActionButton) findViewById(R.id.keyboard_menu_button);
-        mKeyboardToolbar = (FabToolbar) findViewById(R.id.keyboard_toolbar);
-        mKeyboardToolbar.setFab(mMenuButton);
-        mMenuButton.setOnClickListener(new View.OnClickListener() {
+        mMenuFab = (FloatingActionButton) findViewById(R.id.keyboard_menu_button);
+        mKeyboardFabToolbar = (FabToolbar) findViewById(R.id.keyboard_toolbar);
+        mKeyboardFabToolbar.setFab(mMenuFab);
+        mMenuFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mKeyboardToolbar.expandFab();
+                mKeyboardFabToolbar.expandFab();
             }
         });
 
         mControllerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mKeyboardToolbar.contractFab();
+                mKeyboardFabToolbar.contractFab();
             }
         });
 
@@ -124,20 +125,23 @@ public class KeyboardActivity extends BaseActivity {
             }
         });
 
+        mConnectButton = (ImageButton) findViewById(R.id.connect_button);
+        mConnectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ConnectDeviceActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //Initialize 'edit mode'
-        mEditKeyboardToolbar = (FabToolbar) findViewById(R.id.edit_keyboard_toolbar);
+        mEditKeyboardFabToolbar = (FabToolbar) findViewById(R.id.edit_keyboard_toolbar);
 
         mEnableEditButton = (ImageButton) findViewById(R.id.enable_edit_button);
         mEnableEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Turn on edit mode
-                mEditMode = true;
-
-                //Show the edit toolbar
-                mKeyboardToolbar.hide();
-                mEditKeyboardToolbar.setFab(mMenuButton);
-                mEditKeyboardToolbar.show();
+                enableEditMode();
             }
         });
 
@@ -146,18 +150,7 @@ public class KeyboardActivity extends BaseActivity {
         mCancelEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mEditMode = false;
-
-                mEditKeyboardToolbar.contractFab();
-
-                for (KeyboardButton keyboardButton : mKeyboardButtonsSet) {
-                    int[] originalPosition = keyboardButton.getKeyPositionOnScreen();
-
-                    UIUtils.moveView(keyboardButton, originalPosition[0], originalPosition[1]);
-
-                    keyboardButton.setScaleX(1);
-                    keyboardButton.setScaleY(1);
-                }
+                disableEditMode();
             }
         });
 
@@ -176,8 +169,41 @@ public class KeyboardActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
+
+        //If keyboard toolbar is expanded, close it.
+        if (mKeyboardFabToolbar.isFabExpanded()) {
+            mKeyboardFabToolbar.contractFab();
+        } else if (mEditMode) { //If edit mode is enabled, disable it.
+            disableEditMode();
+        } else { //Return back to the main menu.
+            super.onBackPressed();
+            overridePendingTransition(R.anim.nothing, R.anim.slide_out);
+        }
+    }
+
+    private void enableEditMode() {
+        //Turn on edit mode
+        mEditMode = true;
+
+        //Show the edit toolbar
+        mKeyboardFabToolbar.hide();
+        mEditKeyboardFabToolbar.setFab(mMenuFab);
+        mEditKeyboardFabToolbar.show();
+    }
+
+    private void disableEditMode() {
+        mEditMode = false;
+
+        mEditKeyboardFabToolbar.contractFab();
+
+        for (KeyboardButton keyboardButton : mKeyboardButtonsSet) {
+            int[] originalPosition = keyboardButton.getKeyPositionOnScreen();
+
+            UIUtils.moveView(keyboardButton, originalPosition[0], originalPosition[1]);
+
+            keyboardButton.setScaleX(1);
+            keyboardButton.setScaleY(1);
+        }
     }
 
     /**
@@ -322,8 +348,8 @@ public class KeyboardActivity extends BaseActivity {
                     if (view.getAnimation() == null) {
                         view.startAnimation(animation);
 
-                        float buttonsY = y + view.getHeight() + GraphicUtils.convertDpToPixels(10, mContext);
-                        float buttonMargin = GraphicUtils.convertDpToPixels(150, mContext);
+                        float buttonsY = y + view.getHeight() + GraphicUtils.convertDpToPixels(mContext, 10);
+                        float buttonMargin = GraphicUtils.convertDpToPixels(mContext, 150);
 
                         Button b1 = new Button(mContext);
                         UIUtils.drawView(mControllerLayout, b1, x - view.getWidth() / 2, buttonsY, 200, 200);

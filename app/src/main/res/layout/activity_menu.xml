@@ -5,81 +5,138 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <LinearLayout
+    <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="35dp"
-        android:layout_marginStart="35dp"
-        android:orientation="vertical">
+        android:layout_centerInParent="true">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/settings_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/settings"
-            app:borderWidth="0dp" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:text="@string/settings"
-            android:textColor="#FFF"
-            android:textSize="15sp" />
+            android:layout_column="0"
+            android:layout_row="0"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
 
-    </LinearLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/events_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_arrow_downward_white"
+                app:borderWidth="0dp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="@string/events"
+                android:textColor="#FFF"
+                android:textSize="15sp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/create_keyboard_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_add_white"
-            app:borderWidth="0dp" />
+        </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:text="@string/create"
-            android:textColor="#FFF"
-            android:textSize="15sp" />
+            android:layout_column="2"
+            android:layout_row="0"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
 
-    </LinearLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_arrow_downward_white"
+                app:borderWidth="0dp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="35dp"
-        android:layout_marginRight="35dp"
-        android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="@string/my_places"
+                android:textColor="#FFF"
+                android:textSize="15sp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/download_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_arrow_downward_white"
-            app:borderWidth="0dp" />
+        </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:text="@string/download"
-            android:textColor="#FFF"
-            android:textSize="15sp" />
+            android:layout_column="0"
+            android:layout_row="1"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
 
-    </LinearLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/settings_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/settings"
+                app:borderWidth="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="@string/settings"
+                android:textColor="#FFF"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/create_keyboard_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_add_white"
+                app:borderWidth="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="@string/create"
+                android:textColor="#FFF"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/download_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_arrow_downward_white"
+                app:borderWidth="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="@string/download"
+                android:textColor="#FFF"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+    </GridLayout>
 </RelativeLayout>

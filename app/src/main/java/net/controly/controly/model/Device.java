@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * This class represents a device that can perform actions and that can have controllers in the app.
  */
-public class Device {
+public class Device implements BoxListItem {
 
     @SerializedName("DeviceID")
     private long id;
@@ -71,5 +71,10 @@ public class Device {
 
     public void setProtocol(String protocol) {
         this.protocol = protocol;
+    }
+
+    @Override
+    public String getTitle() {
+        return name;
     }
 }

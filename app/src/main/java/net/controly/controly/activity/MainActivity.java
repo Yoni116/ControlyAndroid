@@ -5,17 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -46,9 +41,7 @@ public class MainActivity extends BaseActivity {
     private Context mContext;
 
     //-------Views-------
-    private Toolbar mToolbar;
     private SearchView mSearchView;
-    private TextView mKeyboardListEmptyText;
 
     private SwipeMenuListView mKeyboardList;
     private KeyboardListAdapter mKeyboardListAdapter;
@@ -61,28 +54,22 @@ public class MainActivity extends BaseActivity {
         mContext = this;
 
         //Set toolbar text and color
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitleTextColor(ContextCompat.getColor(mContext, android.R.color.white));
-        setSupportActionBar(mToolbar);
-
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle("Controly");
+        configureToolbar(ControlyApplication.getInstance()
+                .getAppName());
 
         //Set the keyboard list and it's adapter.
         mKeyboardList = (SwipeMenuListView) findViewById(R.id.keyboard_list);
         mKeyboardListAdapter = new KeyboardListAdapter(this);
 
         mKeyboardList.setAdapter(mKeyboardListAdapter);
-
-        mKeyboardListEmptyText = (TextView) findViewById(R.id.keyboard_list_empty_text);
-        mKeyboardList.setEmptyView(mKeyboardListEmptyText);
+        mKeyboardList.setEmptyView(findViewById(R.id.keyboard_list_empty_text));
 
         //Set on click listener for keyboard list.
         mKeyboardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 Intent controllerActivity = new Intent(mContext, KeyboardActivity.class);
-                controllerActivity.putExtra(KeyboardActivity.CONTROLLER_OBJECT_EXTRA, mKeyboardListAdapter.getItem(position));
+                controllerActivity.putExtra(KeyboardActivity.KEYBOARD_OBJECT_EXTRA, mKeyboardListAdapter.getItem(position));
 
                 startActivity(controllerActivity);
                 overridePendingTransition(R.anim.slide_in, R.anim.nothing);
@@ -141,38 +128,7 @@ public class MainActivity extends BaseActivity {
                                                 break;
 
                                             case 1:
-                                                Keyboard keyboardToDelete = mKeyboardListAdapter.getItem(index);
-                                                User user = ControlyApplication.getInstance()
-                                                        .getAuthenticatedUser();
-
-                                                Logger.info("Deleting keyboard with id #" + keyboardToDelete.getId());
-                                                Call<DeleteKeyboardResponse> call = ControlyApplication.getInstance()
-                                                        .getService(KeyboardService.class)
-                                                        .deleteKeyboard(user.getId(), keyboardToDelete.getId());
-
-                                                call.enqueue(new Callback<DeleteKeyboardResponse>() {
-                                                    @Override
-                                                    public void onResponse(Call<DeleteKeyboardResponse> call, Response<DeleteKeyboardResponse> response) {
-                                                        if (response.body().hasSucceeded()) {
-                                                            Logger.info("Keyboard delete succeeded");
-                                                            loadKeyboards();
-                                                        } else {
-                                                            onFailure(call, null);
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<DeleteKeyboardResponse> call, Throwable t) {
-                                                        Logger.error("Keyboard delete failed");
-                                                        Toast.makeText(mContext, "Could not delete the keyboard", Toast.LENGTH_SHORT)
-                                                                .show();
-
-                                                        if (t != null) {
-                                                            Logger.error(t.getMessage());
-                                                        }
-                                                    }
-                                                });
-
+                                                deleteKeyboard(index);
                                                 break;
                                         }
                                     }
@@ -193,10 +149,49 @@ public class MainActivity extends BaseActivity {
         loadKeyboards();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        //Set search bar hint text
+        mSearchView = (SearchView) menu.findItem(R.id.search_bar).getActionView();
+        mSearchView.setQueryHint(getString(R.string.main_activity_search_bar_hint));
+
+        //Set search bar text and hint colors
+        UIUtils.setSearchBarTextColor(this, mSearchView);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            //Start main menu on button click
+            case R.id.main_menu_button:
+                Intent mainMenu = new Intent(mContext, MenuActivity.class);
+                startActivity(mainMenu);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        //If search bar is expanded, collapse it on back click
+        if (!mSearchView.isIconified()) {
+            mSearchView.setIconified(true);
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
     /**
      * This method loads the keyboards from the API asynchronously.
      */
-    public void loadKeyboards() {
+    private void loadKeyboards() {
         //Show a wait dialog while loading the keyboards.
         showWaitDialog();
 
@@ -248,45 +243,39 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+    private void deleteKeyboard(int keyboardIndex) {
+        Keyboard keyboardToDelete = mKeyboardListAdapter.getItem(keyboardIndex);
+        User user = ControlyApplication.getInstance()
+                .getAuthenticatedUser();
 
-        //Set search bar hint text
-        mSearchView = (SearchView) menu.findItem(R.id.search_bar).getActionView();
-        mSearchView.setQueryHint(getString(R.string.search_bar_hint));
+        Logger.info("Deleting keyboard with id #" + keyboardToDelete.getId());
+        Call<DeleteKeyboardResponse> call = ControlyApplication.getInstance()
+                .getService(KeyboardService.class)
+                .deleteKeyboard(user.getId(), keyboardToDelete.getId());
 
-        //Set search bar text and hint colors
-        EditText searchEditText = (EditText) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchEditText.setTextColor(ContextCompat.getColor(mContext, android.R.color.white));
-        searchEditText.setHintTextColor(ContextCompat.getColor(mContext, android.R.color.white));
-        searchEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        call.enqueue(new Callback<DeleteKeyboardResponse>() {
+            @Override
+            public void onResponse(Call<DeleteKeyboardResponse> call, Response<DeleteKeyboardResponse> response) {
+                if (response.body().hasSucceeded()) {
+                    Logger.info("Keyboard delete succeeded");
+                    loadKeyboards();
+                } else {
+                    onFailure(call, null);
+                }
+            }
 
-        return true;
+            @Override
+            public void onFailure(Call<DeleteKeyboardResponse> call, Throwable t) {
+                Logger.error("Keyboard delete failed");
+                Toast.makeText(mContext, "Could not delete the keyboard", Toast.LENGTH_SHORT)
+                        .show();
+
+                if (t != null) {
+                    Logger.error(t.getMessage());
+                }
+            }
+        });
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            //Start main menu on button click
-            case R.id.main_menu_button:
-                Intent mainMenu = new Intent(mContext, MenuActivity.class);
-                startActivity(mainMenu);
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        //If search bar is expanded, collapse it on back click
-        if (!mSearchView.isIconified()) {
-            mSearchView.setIconified(true);
-            return;
-        }
-
-        super.onBackPressed();
-    }
 }

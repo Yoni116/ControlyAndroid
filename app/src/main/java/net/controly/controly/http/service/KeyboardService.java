@@ -5,7 +5,7 @@ import net.controly.controly.http.response.DeleteKeyboardResponse;
 import net.controly.controly.http.response.GetAllDevicesResponse;
 import net.controly.controly.http.response.GetKeyboardByIdResponse;
 import net.controly.controly.http.response.GetKeyboardLayoutResponse;
-import net.controly.controly.http.response.GetKeysForDeviceResponse;
+import net.controly.controly.http.response.GetActionsForDeviceResponse;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -46,5 +46,5 @@ public interface KeyboardService {
 
     @POST("getKeysForDevice")
     @FormUrlEncoded
-    Call<GetKeysForDeviceResponse> getKeysForDevice(@Field("deviceId") long deviceId);
+    Call<GetActionsForDeviceResponse> getKeysForDevice(@Field("deviceId") long deviceId);
 }

@@ -46,6 +46,9 @@
 
         <activity android:name=".activity.SelectDeviceActivity" />
         <activity android:name=".activity.SelectActionActivity" />
+        <activity android:name=".activity.ConnectDeviceActivity" />
+        <activity android:name=".activity.EventsActivity" />
+        <activity android:name=".activity.SelectTriggerActivity" />
 
     </application>
 </manifest>

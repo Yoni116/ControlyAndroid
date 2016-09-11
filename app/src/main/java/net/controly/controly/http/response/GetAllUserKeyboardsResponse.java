@@ -14,12 +14,12 @@ public class GetAllUserKeyboardsResponse extends BaseResponse {
     @SerializedName("data")
     private List<Keyboard> keyboards;
 
-    public List<Keyboard> getKeyboards() {
-        return keyboards;
+    public GetAllUserKeyboardsResponse(List<Keyboard> keyboards) {
+        this.keyboards = keyboards;
     }
 
-    public void setKeyboards(List<Keyboard> keyboards) {
-        this.keyboards = keyboards;
+    public List<Keyboard> getKeyboards() {
+        return keyboards;
     }
 
     @Override

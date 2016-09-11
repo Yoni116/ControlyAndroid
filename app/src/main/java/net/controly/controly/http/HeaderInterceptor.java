@@ -27,6 +27,12 @@ public class HeaderInterceptor implements Interceptor {
                     .build();
         }
 
-        return chain.proceed(request);
+        Response response = chain.proceed(request);
+
+        if (response.isSuccessful()) {
+            return response;
+        }
+
+        throw new IOException("Network error. User might not be authenticated.");
     }
 }

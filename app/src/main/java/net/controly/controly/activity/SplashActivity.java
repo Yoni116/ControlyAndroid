@@ -13,6 +13,9 @@ import net.controly.controly.util.UIUtils;
  */
 public class SplashActivity extends BaseActivity {
 
+    /**
+     * The duration of the splash activity.
+     */
     private static final long SPLASH_DURATION = 1200;
 
     @Override

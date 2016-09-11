@@ -10,9 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,8 +51,6 @@ public class CreateKeyboardActivity extends BaseActivity {
     private final int CAMERA_REQUEST_CODE = 0;
     private final int GALLERY_REQUEST_CODE = 1;
 
-    ////-------Views-------
-    private Toolbar mToolbar;
     private CircularImageView mKeyboardImage;
     private TextView mKeyboardName;
 
@@ -69,10 +65,7 @@ public class CreateKeyboardActivity extends BaseActivity {
         mContext = this;
         final String DEFAULT_KEYBOARD_IMAGE = "https://api.controly.net/ControlyApi/UserImages/defaultKeyboard.png"; //TODO This should be done offline.
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitleTextColor(ContextCompat.getColor(mContext, android.R.color.white));
-        mToolbar.setTitle("New Keyboard");
-        setSupportActionBar(mToolbar);
+        configureToolbar("New Keyboard");
 
         //Show back button in toolbar
         if (getSupportActionBar() != null) {
@@ -217,7 +210,7 @@ public class CreateKeyboardActivity extends BaseActivity {
                             @Override
                             public void onResponse(Call<GetKeyboardByIdResponse> call, Response<GetKeyboardByIdResponse> response) {
                                 Intent intent = new Intent(mContext, KeyboardActivity.class);
-                                intent.putExtra(KeyboardActivity.CONTROLLER_OBJECT_EXTRA, response.body().getKeyboard());
+                                intent.putExtra(KeyboardActivity.KEYBOARD_OBJECT_EXTRA, response.body().getKeyboard());
                                 startActivity(intent);
 
                                 finish();

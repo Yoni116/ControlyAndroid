@@ -6,7 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import net.controly.controly.R;
@@ -65,6 +67,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mWaitDialog != null && mWaitDialog.isShowing()) {
             mWaitDialog.dismiss();
         }
+    }
+
+    /**
+     * Configure the toolbar to the color of the app.
+     */
+    final Toolbar configureToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
+
+        setSupportActionBar(toolbar);
+
+        return toolbar;
+    }
+
+    /**
+     * Configure the toolbar to the color of the app.
+     *
+     * @param title The title to show on the toolbar
+     */
+    final Toolbar configureToolbar(String title) {
+        Toolbar toolbar = configureToolbar();
+
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setTitle(title);
+
+        return toolbar;
     }
 
     boolean enableImmersiveMode() {

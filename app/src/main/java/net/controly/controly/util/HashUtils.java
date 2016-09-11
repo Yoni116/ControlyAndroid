@@ -9,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
  */
 public class HashUtils {
 
-
     /**
      * This method is used to calculate the MD5 hash of a given string.
      *

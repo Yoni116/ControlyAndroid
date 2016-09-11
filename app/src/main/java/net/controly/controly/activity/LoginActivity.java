@@ -33,7 +33,6 @@ public class LoginActivity extends BaseActivity {
     //-------Views-------
     private AutoCompleteTextView mEmailEditText;
     private EditText mPasswordEditText;
-    private Button mLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class LoginActivity extends BaseActivity {
         //Configure the views of the layout.
         mEmailEditText = (AutoCompleteTextView) findViewById(R.id.email_field);
         mPasswordEditText = (EditText) findViewById(R.id.password_field);
-        mLoginButton = (Button) findViewById(R.id.login_button);
 
         //If we have the read contacts permission setup email auto complete. If not, request it from the user.
         if (PermissionUtils.hasPermission(context, READ_CONTACTS)) {
@@ -60,7 +58,8 @@ public class LoginActivity extends BaseActivity {
                 .logout();
 
         //Authenticate the user when he clicks on the login button.
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
+        Button loginButton = (Button) findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

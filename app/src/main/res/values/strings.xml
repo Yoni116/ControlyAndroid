@@ -26,10 +26,10 @@
     <!--Create Keyboard-->
     <string name="default_keyboard_name">Untitled</string>
 
-    <!--Main activity-->
+    <!--Main Activity-->
     <string name="launch_menu">Main Menu</string>
     <string name="search">Search</string>
-    <string name="search_bar_hint">Let\'s find a controller</string>
+    <string name="main_activity_search_bar_hint">Let\'s find a controller</string>
     <string name="keyboard_list_empty">You have no keyboards</string>
 
     <!--Menu-->
@@ -37,7 +37,13 @@
     <string name="create">Create</string>
     <string name="download">Download</string>
     <string name="create_cap">CREATE</string>
+    <string name="my_places">My Places</string>
+    <string name="events">Events</string>
 
     <!--Add Key-->
     <string name="done_cap">DONE</string>
+    <string name="create_event">Create Event</string>
+
+    <!--Events Activity-->
+    <string name="events_activity_search_bar_hint">Search Events</string>
 </resources>

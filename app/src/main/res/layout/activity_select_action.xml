@@ -16,8 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:divider="@color/background_color"
         android:dividerHeight="10sp"
         android:listSelector="@android:color/transparent"
-        tools:listitem="@layout/list_item_devices" />
+        tools:listitem="@layout/list_item_boxes" />
 
 </LinearLayout>

@@ -12,31 +12,22 @@ public class CreateKeyboardResponse extends BaseResponse {
     private String backgroundImage;
     private int keyboardId;
 
-    public CreateKeyboardResponse() {
+    public CreateKeyboardResponse(String keyboardPicture, String backgroundImage, int keyboardId) {
+        this.keyboardPicture = keyboardPicture;
+        this.backgroundImage = backgroundImage;
+        this.keyboardId = keyboardId;
     }
 
     public String getKeyboardPicture() {
         return keyboardPicture;
     }
 
-    public void setKeyboardPicture(String keyboardPicture) {
-        this.keyboardPicture = keyboardPicture;
-    }
-
     public String getBackgroundImage() {
         return backgroundImage;
     }
 
-    public void setBackgroundImage(String backgroundImage) {
-        this.backgroundImage = backgroundImage;
-    }
-
     public int getKeyboardId() {
         return keyboardId;
-    }
-
-    public void setKeyboardId(int keyboardId) {
-        this.keyboardId = keyboardId;
     }
 
     @Override

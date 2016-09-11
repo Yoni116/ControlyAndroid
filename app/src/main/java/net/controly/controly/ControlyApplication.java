@@ -14,6 +14,7 @@ import net.controly.controly.util.GsonFactory;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * This is the main class of the application.
@@ -81,9 +82,13 @@ public class ControlyApplication extends Application {
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL + "Receiver.php/")
-                .addConverterFactory(GsonFactory.getGsonConverterFactory())
+                .addConverterFactory(GsonConverterFactory.create(GsonFactory.getGson()))
                 .client(client)
                 .build();
+    }
+
+    public String getAppName() {
+        return "Controly";
     }
 
     /**

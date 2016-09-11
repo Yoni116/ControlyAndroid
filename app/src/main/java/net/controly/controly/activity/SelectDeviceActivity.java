@@ -2,87 +2,71 @@ package net.controly.controly.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
-import net.controly.controly.adapter.DeviceListAdapter;
+import net.controly.controly.adapter.BoxListAdapter;
 import net.controly.controly.http.response.GetAllDevicesResponse;
 import net.controly.controly.http.service.KeyboardService;
+import net.controly.controly.model.Device;
+import net.controly.controly.util.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * This activity is used to select a device to create a key for in the activity.
+ * This activity is used to select a device to create a key for in the keyboard activity.
  */
 public class SelectDeviceActivity extends BaseActivity {
 
     private Context mContext;
 
-    private Toolbar mToolbar;
-
-    private DeviceListAdapter mDevicesListAdapter;
-    private ListView mDevicesList;
+    private BoxListAdapter<Device> mDevicesListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_device);
 
-        this.mContext = this;
+        mContext = this;
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setTitle("Select a device");
-        setSupportActionBar(mToolbar);
+        configureToolbar("Select a device");
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mDevicesList = (ListView) findViewById(R.id.devices_list);
-        mDevicesListAdapter = new DeviceListAdapter(this);
-        mDevicesList.setAdapter(mDevicesListAdapter);
+        mDevicesListAdapter = new BoxListAdapter<>(this, true);
+        ListView devicesList = (ListView) findViewById(R.id.devices_list);
+        devicesList.setAdapter(mDevicesListAdapter);
 
-        mDevicesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //Set a click listener for selecting a device.
+        devicesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView adapterView, View view, int i, long l) {
                 if (i == 0) {
                     return;
                 }
 
+                //When clicking a device, move to the select action activity.
                 Intent intent = new Intent(mContext, SelectActionActivity.class);
                 intent.putExtra(SelectActionActivity.DEVICE_ID_EXTRA, mDevicesListAdapter.getItem(i).getId());
                 startActivity(intent);
 
+                //Show a slide animation.
                 overridePendingTransition(R.anim.slide_in, R.anim.nothing);
             }
         });
 
-        Call<GetAllDevicesResponse> call = ControlyApplication.getInstance()
-                .getService(KeyboardService.class)
-                .getAllDevices();
-
-        call.enqueue(new Callback<GetAllDevicesResponse>() {
-            @Override
-            public void onResponse(Call<GetAllDevicesResponse> call, Response<GetAllDevicesResponse> response) {
-                mDevicesListAdapter.addAll(response.body().getDevices());
-            }
-
-            @Override
-            public void onFailure(Call<GetAllDevicesResponse> call, Throwable t) {
-
-            }
-        });
+        loadDevices();
     }
 
     @Override
@@ -100,5 +84,27 @@ public class SelectDeviceActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+    private void loadDevices() {
+        Call<GetAllDevicesResponse> call = ControlyApplication.getInstance()
+                .getService(KeyboardService.class)
+                .getAllDevices();
+
+        call.enqueue(new Callback<GetAllDevicesResponse>() {
+            @Override
+            public void onResponse(Call<GetAllDevicesResponse> call, Response<GetAllDevicesResponse> response) {
+                mDevicesListAdapter.addFirstItem(0, new Device(0, "My Automations", null, null, null));
+                mDevicesListAdapter.addAll(response.body().getDevices());
+            }
+
+            @Override
+            public void onFailure(Call<GetAllDevicesResponse> call, Throwable t) {
+                Logger.error("Problem while trying to load devices.\n" + t.getMessage());
+
+                Toast.makeText(getApplicationContext(), "Controly encountered an error", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 }

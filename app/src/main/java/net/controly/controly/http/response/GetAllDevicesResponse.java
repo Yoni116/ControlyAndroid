@@ -12,11 +12,11 @@ public class GetAllDevicesResponse extends BaseResponse {
     @SerializedName("data")
     private Device[] devices;
 
-    public Device[] getDevices() {
-        return devices;
+    public GetAllDevicesResponse(Device[] devices) {
+        this.devices = devices;
     }
 
-    public void setDevices(Device[] devices) {
-        this.devices = devices;
+    public Device[] getDevices() {
+        return devices;
     }
 }
