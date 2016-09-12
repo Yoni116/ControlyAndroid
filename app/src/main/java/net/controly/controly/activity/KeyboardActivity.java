@@ -111,7 +111,7 @@ public class KeyboardActivity extends BaseActivity {
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                returnToMainMenu();
             }
         });
 
@@ -176,9 +176,13 @@ public class KeyboardActivity extends BaseActivity {
         } else if (mEditMode) { //If edit mode is enabled, disable it.
             disableEditMode();
         } else { //Return back to the main menu.
-            super.onBackPressed();
-            overridePendingTransition(R.anim.nothing, R.anim.slide_out);
+            returnToMainMenu();
         }
+    }
+
+    private void returnToMainMenu() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.nothing, R.anim.slide_out);
     }
 
     private void enableEditMode() {

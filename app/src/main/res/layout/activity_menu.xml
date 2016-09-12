@@ -14,15 +14,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
+            android:layout_margin="5dp"
             android:layout_row="0"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/events_button"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_arrow_downward_white"
+                android:src="@drawable/ic_today_white_24dp"
                 app:borderWidth="0dp" />
 
             <TextView
@@ -40,9 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
+            android:layout_margin="5dp"
             android:layout_row="0"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="50dp"
@@ -65,9 +65,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
+            android:layout_margin="5dp"
             android:layout_row="1"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/settings_button"
@@ -91,9 +91,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
+            android:layout_margin="5dp"
             android:layout_row="1"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/create_keyboard_button"
@@ -117,9 +117,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
+            android:layout_margin="5dp"
             android:layout_row="1"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/download_button"

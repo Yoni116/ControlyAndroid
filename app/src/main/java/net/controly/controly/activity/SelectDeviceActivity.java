@@ -38,11 +38,7 @@ public class SelectDeviceActivity extends BaseActivity {
 
         mContext = this;
 
-        configureToolbar("Select a device");
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        configureToolbar("Select a device", true, false);
 
         mDevicesListAdapter = new BoxListAdapter<>(this, true);
         ListView devicesList = (ListView) findViewById(R.id.devices_list);

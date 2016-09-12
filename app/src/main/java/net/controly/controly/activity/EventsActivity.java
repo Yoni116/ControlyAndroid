@@ -36,14 +36,10 @@ public class EventsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
 
-        configureToolbar("Events");
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        configureToolbar("Events", true, false);
 
         mEventListAdapter = new BoxListAdapter<>(this);
-        ListView eventsListView = (ListView) findViewById(R.id.event_list);
+        ListView eventsListView = (ListView) findViewById(R.id.events_list);
         eventsListView.setAdapter(mEventListAdapter);
 
         loadEvents("");
@@ -123,7 +119,7 @@ public class EventsActivity extends BaseActivity {
         User authenticated = application.getAuthenticatedUser();
 
         Call<GetEventsResponse> call = application.getService(EventService.class)
-                .getEvent(authenticated.getId(), query, 0);
+                .searchEvents(authenticated.getId(), query, 0, 2);
         call.enqueue(new Callback<GetEventsResponse>() {
             @Override
             public void onResponse(Call<GetEventsResponse> call, Response<GetEventsResponse> response) {

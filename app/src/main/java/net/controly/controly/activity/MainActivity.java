@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity {
 
         //Set toolbar text and color
         configureToolbar(ControlyApplication.getInstance()
-                .getAppName());
+                .getAppName(), false, false);
 
         //Set the keyboard list and it's adapter.
         mKeyboardList = (SwipeMenuListView) findViewById(R.id.keyboard_list);

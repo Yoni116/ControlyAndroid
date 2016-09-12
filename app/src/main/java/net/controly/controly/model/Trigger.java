@@ -2,10 +2,12 @@ package net.controly.controly.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * This class represents a trigger for an event.
  */
-public class Trigger implements BoxListItem {
+public class Trigger implements BoxListItem, Serializable {
 
     @SerializedName("TriggerID")
     private int triggerId;

@@ -45,11 +45,7 @@ public class SelectActionActivity extends BaseActivity {
 
         deviceId = extras.getLong(DEVICE_ID_EXTRA);
 
-        configureToolbar("Select an action");
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        configureToolbar("Select an action", true, false);
 
         mActionsListAdapter = new BoxListAdapter<>(this);
         ListView actionsListView = (ListView) findViewById(R.id.actions_list);

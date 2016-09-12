@@ -3,10 +3,10 @@ package net.controly.controly.activity;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -63,22 +63,18 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Dismiss the progress dialog if shown.
      */
     final void dismissDialog() {
-
         if (mWaitDialog != null && mWaitDialog.isShowing()) {
             mWaitDialog.dismiss();
         }
     }
 
     /**
-     * Configure the toolbar to the color of the app.
+     * Show the back button on the toolbar.
      */
-    final Toolbar configureToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
-
-        setSupportActionBar(toolbar);
-
-        return toolbar;
+    final void showBackButton() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     /**
@@ -86,9 +82,24 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @param title The title to show on the toolbar
      */
-    final Toolbar configureToolbar(String title) {
-        Toolbar toolbar = configureToolbar();
+    final Toolbar configureToolbar(String title, boolean backButton, boolean light) {
 
+        //Set background and title colors according to the toolbar theme.
+        int backgroundColor = light ? Color.WHITE : Color.DKGRAY;
+        int titleColor = light ? Color.DKGRAY : Color.WHITE;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(titleColor);
+        toolbar.setBackgroundColor(backgroundColor);
+
+        setSupportActionBar(toolbar);
+
+        //Show back button if enabled.
+        if (backButton) {
+            showBackButton();
+        }
+
+        //Configure title.
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(title);
 

@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+
     <application
         android:name=".ControlyApplication"
         android:allowBackup="true"
@@ -14,7 +18,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/ControlyTheme">
-
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,33 +25,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.LoginActivity"
             android:exported="true" />
-
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main" />
-
         <activity android:name=".activity.CreateKeyboardActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
-
         <activity android:name=".activity.MenuActivity" />
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.KeyboardActivity" />
         <activity
             android:name=".activity.ComputerRemoteActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
-
         <activity android:name=".activity.SelectDeviceActivity" />
         <activity android:name=".activity.SelectActionActivity" />
         <activity android:name=".activity.ConnectDeviceActivity" />
         <activity android:name=".activity.EventsActivity" />
         <activity android:name=".activity.SelectTriggerActivity" />
+        <activity android:name=".activity.SelectLocationActivity" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity android:name=".activity.CreateLocationActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.controly.controly.activity.SelectLocationActivity" />
+        </activity>
     </application>
+
 </manifest>

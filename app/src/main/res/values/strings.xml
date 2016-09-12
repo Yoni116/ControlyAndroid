@@ -46,4 +46,10 @@
 
     <!--Events Activity-->
     <string name="events_activity_search_bar_hint">Search Events</string>
+
+    <!--SelectLocationActivity-->
+    <string name="locations_activity_search_bar_hint">Search my locations</string>
+    <string name="locations_activity_toolbar_title">Event location</string>
+    <string name="locations_activity_crate_location">Create location</string>
+    <string name="title_activity_locations">Map</string>
 </resources>

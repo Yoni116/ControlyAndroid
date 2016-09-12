@@ -1,12 +1,15 @@
 package net.controly.controly.util;
 
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
@@ -115,8 +118,9 @@ public class UIUtils {
     }
 
     /**
-     * Sets the text color of the given {@link SearchView}.
-     * @param context The context of the application.
+     * Sets the text color of the given {@link SearchView} to white.
+     *
+     * @param context    The context of the application.
      * @param searchView The search view to set the text color for.
      */
     public static void setSearchBarTextColor(Context context, SearchView searchView) {
@@ -125,5 +129,22 @@ public class UIUtils {
         searchEditText.setTextColor(ContextCompat.getColor(context, android.R.color.white));
         searchEditText.setHintTextColor(ContextCompat.getColor(context, android.R.color.white));
         searchEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+    }
+
+    /**
+     * Change the icon color of the given {@link FloatingActionButton}
+     *
+     * @param fab   The FAB to change the icon color of.
+     * @param color The color to change to.
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void changeFabIconColor(FloatingActionButton fab, int color) {
+        Drawable newDrawable = fab.getDrawable()
+                .getConstantState()
+                .newDrawable()
+                .mutate();
+
+        newDrawable.setTint(color);
+        fab.setImageDrawable(newDrawable);
     }
 }

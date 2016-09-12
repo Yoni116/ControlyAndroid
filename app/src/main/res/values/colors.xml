@@ -2,7 +2,7 @@
 <resources>
 
     <!--Theme-->
-    <color name="background_color">#0d0d0d</color>
+    <color name="background_color">#000</color>
     <color name="color_primary">#3F51B5</color>
     <color name="color_primary_dark">#303F9F</color>
     <color name="color_accent">#43b7e3</color>

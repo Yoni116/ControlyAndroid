@@ -46,7 +46,7 @@ public class LoginActivity extends BaseActivity {
         mPasswordEditText = (EditText) findViewById(R.id.password_field);
 
         //If we have the read contacts permission setup email auto complete. If not, request it from the user.
-        if (PermissionUtils.hasPermission(context, READ_CONTACTS)) {
+        if (PermissionUtils.hasPermissions(context, READ_CONTACTS)) {
             UIUtils.setupEmailAutoComplete(getApplicationContext(), mEmailEditText);
         } else {
             //TODO Write a user friendly message.
@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PermissionUtils.READ_CONTACTS_REQUEST_CODE:
+            case PermissionUtils.GRANT_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     UIUtils.setupEmailAutoComplete(getApplicationContext(), mEmailEditText);
                 }

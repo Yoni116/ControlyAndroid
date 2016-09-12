@@ -65,12 +65,7 @@ public class CreateKeyboardActivity extends BaseActivity {
         mContext = this;
         final String DEFAULT_KEYBOARD_IMAGE = "https://api.controly.net/ControlyApi/UserImages/defaultKeyboard.png"; //TODO This should be done offline.
 
-        configureToolbar("New Keyboard");
-
-        //Show back button in toolbar
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        configureToolbar("New Keyboard", true, false);
 
         mKeyboardName = (TextView) findViewById(R.id.keyboard_name);
 
@@ -91,7 +86,7 @@ public class CreateKeyboardActivity extends BaseActivity {
                                     //Take a photo using the camera
                                     case 0:
                                         //TODO Make the text more user friendly
-                                        if (!PermissionUtils.hasPermission(mContext, Manifest.permission.CAMERA)) {
+                                        if (!PermissionUtils.hasPermissions(mContext, Manifest.permission.CAMERA)) {
                                             PermissionUtils.requestPermission(mContext, Manifest.permission.CAMERA, "We need a permission to access your camera so you can take a photo of your keyboard...");
                                         }
 
@@ -99,7 +94,7 @@ public class CreateKeyboardActivity extends BaseActivity {
                                         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                                         //Ensure that the user gave permission to the camera, and that there's a camera activity for handling the intent.
-                                        if (PermissionUtils.hasPermission(mContext, Manifest.permission.CAMERA) &&
+                                        if (PermissionUtils.hasPermissions(mContext, Manifest.permission.CAMERA) &&
                                                 cameraIntent.resolveActivity(getPackageManager()) != null) {
                                             final String PACKAGE_NAME = getApplicationContext().getPackageName();
 

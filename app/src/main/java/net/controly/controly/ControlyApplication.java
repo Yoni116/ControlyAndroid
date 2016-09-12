@@ -35,6 +35,7 @@ public class ControlyApplication extends Application {
      * The configuration of the relationship with the API.
      */
     private Retrofit retrofit;
+
     /**
      * The currently authenticated user.
      */
