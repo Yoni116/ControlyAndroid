@@ -53,16 +53,17 @@ public class PermissionUtils {
     }
 
     /**
-     * This method returns whether we have the given permissions.
+     * This method returns whether we have all of the given permissions.
      *
      * @param context     The context of the application.
      * @param permissions The permissions to check.
-     * @return Whether we have the given permission.
+     * @return Whether we have the given permissions.
      */
     public static boolean hasPermissions(Context context, String... permissions) {
         for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(context, permission)
-                    == PackageManager.PERMISSION_DENIED) {
+
+            //If user did not give permissions.
+            if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED) {
                 return false;
             }
         }

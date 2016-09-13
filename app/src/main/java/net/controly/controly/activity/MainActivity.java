@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity {
                 switch (index) {
                     case 0:
                         final String[] options = {"Edit", "Delete"};
-                        new AlertDialog.Builder(mContext)
+                        new AlertDialog.Builder(mContext, R.style.AlertDialogTheme)
                                 .setTitle("Choose an option")
                                 .setItems(options, new DialogInterface.OnClickListener() {
                                     @Override

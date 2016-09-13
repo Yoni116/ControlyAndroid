@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -146,5 +147,42 @@ public class UIUtils {
 
         newDrawable.setTint(color);
         fab.setImageDrawable(newDrawable);
+    }
+
+    /**
+     * Gets the on click listener of a give view.
+     *
+     * @param view The view.
+     * @return The view's OnClickListener.
+     */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    public static View.OnClickListener getOnClickListener(View view) {
+        View.OnClickListener retrievedListener = null;
+        String viewStr = "android.view.View";
+        String lInfoStr = "android.view.View$ListenerInfo";
+
+        try {
+            Field listenerField = Class.forName(viewStr).getDeclaredField("mListenerInfo");
+            Object listenerInfo = null;
+
+            if (listenerField != null) {
+                listenerField.setAccessible(true);
+                listenerInfo = listenerField.get(view);
+            }
+
+            Field clickListenerField = Class.forName(lInfoStr).getDeclaredField("mOnClickListener");
+
+            if (clickListenerField != null && listenerInfo != null) {
+                retrievedListener = (View.OnClickListener) clickListenerField.get(listenerInfo);
+            }
+        } catch (NoSuchFieldException ex) {
+            Logger.error("Reflection: No Such Field.");
+        } catch (IllegalAccessException ex) {
+            Logger.error("Reflection: Illegal Access.");
+        } catch (ClassNotFoundException ex) {
+            Logger.error("Reflection: Class Not Found.");
+        }
+
+        return retrievedListener;
     }
 }

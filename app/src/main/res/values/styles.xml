@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="ControlyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ControlyTheme.Dark" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!--Colors-->
         <item name="colorPrimary">@color/color_primary</item>
@@ -16,6 +16,7 @@
         <item name="android:windowFullscreen">true</item>
 
         <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:windowTitleStyle">@style/AlertDialogTheme</item>
 
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:colorControlHighlight" tools:targetApi="lollipop">
@@ -31,9 +32,19 @@
         <item name="android:actionMenuTextColor">#FFF</item>
     </style>
 
-    <style name="AlertDialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+    <style name="ControlyTheme.Light" parent="ControlyTheme.Dark">
+        <!--Colors-->
+        <item name="colorAccent">@android:color/black</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:editTextColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/black</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="android:textColorPrimary">@android:color/black</item>
         <item name="android:textColor">@android:color/black</item>
+        <item name="colorAccent">@android:color/black</item>
         <item name="android:windowMinWidthMinor">90%</item>
         <item name="android:windowMinWidthMajor">65%</item>
     </style>

@@ -2,12 +2,13 @@ package net.controly.controly.activity;
 
 import android.Manifest;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -19,25 +20,28 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
+import net.controly.controly.http.service.EventService;
 import net.controly.controly.model.Location;
+import net.controly.controly.model.User;
 import net.controly.controly.util.LocationsUtils;
 import net.controly.controly.util.Logger;
 import net.controly.controly.util.PermissionUtils;
 import net.controly.controly.util.UIUtils;
 
-public class CreateLocationActivity extends BaseActivity implements OnMapReadyCallback {
+import retrofit2.Call;
 
+public class CreateLocationActivity extends BaseActivity implements OnMapReadyCallback {
     public static final String LOCATIONS_LIST_EXTRA = "LOCATIONS_LIST";
     private Context mContext;
 
     private GoogleMap mMap;
     private Location[] mLocations;
-    private boolean focusingOnCurrentLocation = false;
-
-    private FloatingActionButton myLocationFab;
+    private Marker mLastMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,43 +55,12 @@ public class CreateLocationActivity extends BaseActivity implements OnMapReadyCa
             mLocations = (Location[]) extras.get(LOCATIONS_LIST_EXTRA);
         }
 
-        //Request both of the permissions to access the user's location.
-        PermissionUtils.requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, "");
-        PermissionUtils.requestPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION, "");
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                Logger.info("Place '" + place.getName() + "' was selected.");
-
-                focusingOnCurrentLocation = false;
-
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(place.getLatLng())
-                        .title(place.getName().toString());
-
-                mMap.addMarker(markerOptions);
-                zoomCamera(place.getLatLng(), 20, 2000);
-            }
-
-            @Override
-            public void onError(Status status) {
-            }
-        });
-
-        myLocationFab = (FloatingActionButton) findViewById(R.id.my_location_fab);
-        myLocationFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                focusCameraOnCurrentLocation();
-            }
-        });
+        initializePlacesAutoComplete();
     }
 
     /**
@@ -98,6 +71,7 @@ public class CreateLocationActivity extends BaseActivity implements OnMapReadyCa
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @SuppressWarnings("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -111,46 +85,127 @@ public class CreateLocationActivity extends BaseActivity implements OnMapReadyCa
             mMap.addMarker(markerOptions);
         }
 
-        //Focus camera on current location if user gave permission.
+        //Set compass button in map.
+        mMap.setPadding(0, 300, 0, 0);
+        mMap.getUiSettings().setCompassEnabled(true);
+
+        //If user has location permissions, zoom on his location and show button.
+        //If not, request both of the permissions to access the user's location.
         if (PermissionUtils.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
             focusCameraOnCurrentLocation();
-        }
 
-        //Set icon color back to black when focusing on current location, only if API is updated.
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                if (!focusingOnCurrentLocation && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    UIUtils.changeFabIconColor(myLocationFab, Color.parseColor("#FF000000"));
-                }
-            }
-        });
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.setMyLocationEnabled(true);
+        } else {
+            PermissionUtils.requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, "");
+            PermissionUtils.requestPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION, "");
+        }
     }
 
     /**
      * Wait for the permission to access device's location to be granted. Then, move the map's camera to the location.
      */
     @Override
+    @SuppressWarnings("MissingPermission")
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PermissionUtils.GRANT_PERMISSION_REQUEST_CODE:
                 if (PermissionUtils.permissionGranted(grantResults)) {
                     focusCameraOnCurrentLocation();
+
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    mMap.setMyLocationEnabled(true);
                 }
         }
+    }
+
+    private void initializePlacesAutoComplete() {
+        //Set a listener for selecting a place from the auto complete.
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                //Log the place that was selected.
+                Logger.info("Place '" + place.getName() + "' was selected.");
+
+                //Add a marker of the selected place.
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(place.getLatLng())
+                        .title(place.getName().toString());
+
+                mLastMarker = mMap.addMarker(markerOptions);
+                mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(final Marker marker) {
+                        final EditText input = new EditText(mContext);
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+
+                        input.setLayoutParams(layoutParams);
+
+                        AlertDialog alertBuilder = new AlertDialog.Builder(mContext, R.style.AlertDialogTheme)
+                                .setTitle("Would you like to create this location?")
+                                .setView(input)
+                                .setNegativeButton("Cancel", null)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        createNewLocation(marker.getPosition(), input.getText().toString());
+                                    }
+                                })
+                                .create();
+                        alertBuilder.show();
+                        return false;
+                    }
+                });
+
+                //Zoom camera to new place.
+                zoomCamera(place.getLatLng(), 20, 1500);
+            }
+
+            @Override
+            public void onError(Status status) {
+            }
+        });
+
+        //When clearing the text from the auto complete view, remove the added marker.
+        View parentView = autocompleteFragment.getView();
+        if (parentView != null) {
+            final View clearButton = parentView.findViewById(R.id.place_autocomplete_clear_button);
+            final View.OnClickListener defaultClick = UIUtils.getOnClickListener(clearButton);
+
+            if (clearButton != null) {
+                clearButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        defaultClick.onClick(clearButton);
+
+                        mLastMarker.remove();
+                        mLastMarker = null;
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * Save the new location.
+     *
+     * @param position The position of the new location.
+     * @param title    The title of the new location.
+     */
+    private void createNewLocation(LatLng position, String title) {
+        ControlyApplication instance = ControlyApplication.getInstance();
+
+        User authenticated = instance.getAuthenticatedUser();
+        Call call = instance.getService(EventService.class)
+                .createNewLocation(authenticated.getId(), position.latitude, position.longitude, title);
     }
 
     /**
      * Focus the camera on the current device location.
      */
     private void focusCameraOnCurrentLocation() {
-        focusingOnCurrentLocation = true;
-        zoomCamera(LocationsUtils.getCurrentLocation(mContext), 10, 2000);
-
-        //Set icon color to blue when focusing on current location, only if API is updated.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            UIUtils.changeFabIconColor(myLocationFab, getResources().getColor(R.color.color_accent));
-        }
+        zoomCamera(LocationsUtils.getCurrentLocation(mContext), 10, 1500);
     }
 
     /**
@@ -163,14 +218,5 @@ public class CreateLocationActivity extends BaseActivity implements OnMapReadyCa
     private void zoomCamera(LatLng location, int zoom, int duration) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location, zoom);
         mMap.animateCamera(cameraUpdate, duration, null);
-
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                if (focusingOnCurrentLocation) {
-                    focusingOnCurrentLocation = false;
-                }
-            }
-        });
     }
 }

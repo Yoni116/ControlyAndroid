@@ -26,4 +26,9 @@ public interface EventService {
 
     @POST("getAllTriggers")
     Call<GetAllTriggersResponse> getAllTriggers();
+
+    @POST("addNewLocation")
+    @FormUrlEncoded
+    Call createNewLocation(@Field("userId") long userId, @Field("Latitude") double latitude,
+                           @Field("Longitude") double longitude, @Field("Description") String description);
 }
