@@ -1,15 +1,17 @@
 package net.controly.controly.http.service;
 
+import net.controly.controly.http.response.BaseResponse;
 import net.controly.controly.http.response.CreateKeyboardResponse;
-import net.controly.controly.http.response.DeleteKeyboardResponse;
 import net.controly.controly.http.response.GetAllDevicesResponse;
 import net.controly.controly.http.response.GetKeyboardByIdResponse;
 import net.controly.controly.http.response.GetKeyboardLayoutResponse;
 import net.controly.controly.http.response.GetActionsForDeviceResponse;
+import net.controly.controly.model.KeysLayout;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
@@ -23,7 +25,7 @@ public interface KeyboardService {
 
     @POST("deleteKeyboard")
     @FormUrlEncoded
-    Call<DeleteKeyboardResponse> deleteKeyboard(@Field("userId") long userId, @Field("keyboardId") long keyboardId);
+    Call<BaseResponse> deleteKeyboard(@Field("userId") long userId, @Field("keyboardId") long keyboardId);
 
     @Multipart
     @POST("createKeyboard")
@@ -47,4 +49,8 @@ public interface KeyboardService {
     @POST("getKeysForDevice")
     @FormUrlEncoded
     Call<GetActionsForDeviceResponse> getKeysForDevice(@Field("deviceId") long deviceId);
+
+    @POST("updateKeyboardLayoutById")
+    @FormUrlEncoded
+    Call<BaseResponse> updateKeysLayout(@Field("keyboardId") long keyboardId, @Field("keysLayout") String keysLayout);
 }

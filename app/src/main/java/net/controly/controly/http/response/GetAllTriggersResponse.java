@@ -1,4 +1,4 @@
-package net.controly.controly.http.service;
+package net.controly.controly.http.response;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -50,12 +50,20 @@ public class KeyView {
         this.x = x;
     }
 
+    public void setX(float x) {
+        this.x = String.valueOf(x);
+    }
+
     public float getY() {
         return Float.parseFloat(y);
     }
 
     public void setY(String y) {
         this.y = y;
+    }
+
+    public void setY(float y) {
+        this.y = String.valueOf(y);
     }
 
     public String getCommandId() {

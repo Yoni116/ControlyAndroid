@@ -3,7 +3,7 @@ package net.controly.controly.http.response;
 /**
  * This class represents a base response.
  */
-public abstract class BaseResponse {
+public class BaseResponse {
 
     protected String reason;
     protected String status;

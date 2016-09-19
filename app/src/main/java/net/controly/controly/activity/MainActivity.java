@@ -21,7 +21,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 import net.controly.controly.adapter.KeyboardListAdapter;
-import net.controly.controly.http.response.DeleteKeyboardResponse;
+import net.controly.controly.http.response.BaseResponse;
 import net.controly.controly.http.response.GetAllUserKeyboardsResponse;
 import net.controly.controly.http.service.KeyboardService;
 import net.controly.controly.http.service.UserService;
@@ -256,13 +256,13 @@ public class MainActivity extends BaseActivity {
                 .getAuthenticatedUser();
 
         Logger.info("Deleting keyboard with id #" + keyboardToDelete.getId());
-        Call<DeleteKeyboardResponse> call = ControlyApplication.getInstance()
+        Call<BaseResponse> call = ControlyApplication.getInstance()
                 .getService(KeyboardService.class)
                 .deleteKeyboard(user.getId(), keyboardToDelete.getId());
 
-        call.enqueue(new Callback<DeleteKeyboardResponse>() {
+        call.enqueue(new Callback<BaseResponse>() {
             @Override
-            public void onResponse(Call<DeleteKeyboardResponse> call, Response<DeleteKeyboardResponse> response) {
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                 if (response.body().hasSucceeded()) {
                     Logger.info("Keyboard delete succeeded");
                     loadKeyboards();
@@ -272,7 +272,7 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<DeleteKeyboardResponse> call, Throwable t) {
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
                 Logger.error("Keyboard delete failed");
                 Toast.makeText(mContext, "Could not delete the keyboard", Toast.LENGTH_SHORT)
                         .show();

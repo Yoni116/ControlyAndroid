@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import net.controly.controly.R;
 import net.controly.controly.util.GraphicUtils;
+import net.controly.controly.util.UIUtils;
 
 /**
  * This view represents a circular keyboard button.
@@ -70,58 +71,40 @@ public class KeyboardButton extends LinearLayout {
         this.mMakersScreenSize = makersScreen;
     }
 
-    /**
-     * Initialize the new button layout.
-     */
-    private void initializeButton() {
-        LayoutInflater.from(getContext()).inflate(R.layout.view_keyboard_button, this);
+    @Override
+    public void setOnLongClickListener(OnLongClickListener l) {
+        super.setOnLongClickListener(l);
+        mKeyView.setOnLongClickListener(l);
+    }
 
-        mKeyView = (RelativeLayout) this.findViewById(R.id.key_shape_drawable);
-        mKeyBackground = (RelativeLayout) this.findViewById(R.id.key_icon_color);
-        mKeyIcon = (ImageView) this.findViewById(R.id.key_icon_drawable);
-        mKeyName = (TextView) this.findViewById(R.id.key_name);
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        super.setOnClickListener(l);
+        mKeyView.setOnClickListener(l);
+    }
 
-        //Set the button layout if it's a rectangle.
-        if (mKey.getKeyType() == KeyView.KeyType.RECTANGLE) {
-            StateListDrawable drawable = (StateListDrawable) mKeyView.getBackground();
-            Drawable[] drawables = ((DrawableContainer.DrawableContainerState) drawable.getConstantState()).getChildren();
+    @Override
+    public void setOnTouchListener(OnTouchListener l) {
+        super.setOnTouchListener(l);
+        mKeyView.setOnTouchListener(l);
+    }
 
-            GradientDrawable selected = (GradientDrawable) drawables[0].mutate();
-            GradientDrawable notSelected = (GradientDrawable) drawables[1].mutate();
+    @Override
+    public void setOnDragListener(OnDragListener l) {
+        super.setOnDragListener(l);
+        mKeyView.setOnDragListener(l);
+    }
 
-            selected.setShape(GradientDrawable.RECTANGLE);
-            selected.setCornerRadius(15);
-
-            selected.invalidateSelf();
-
-            notSelected.setShape(GradientDrawable.RECTANGLE);
-            notSelected.setCornerRadius(15);
-
-            notSelected.invalidateSelf();
-        }
-
-        //Set the button name.
-        if (mKey.getName() != null) {
-            setKeyName(mKey.getName());
-        }
-
-        //Set the button color.
-        if (mKey.getHexColor() != null) {
-            setKeyColor(mKey.getColor());
-        }
-
-        //Set the button text.
-        if (mKey.getIconName() != null) {
-            setKeyIcon(mKey.getIconName());
-        }
-
-        mScaleDetector = new ScaleGestureDetector(mContext, new ScaleListener());
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mScaleDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     /**
      * @return The key data.
      */
-    public KeyView getKeyButton() {
+    public KeyView getKeyView() {
         return mKey;
     }
 
@@ -133,41 +116,22 @@ public class KeyboardButton extends LinearLayout {
     }
 
     /**
-     * This method receives the button name and sets it to the button.
+     * Moves the keyboard button to the new given position.
      *
-     * @param keyName The name of the key.
+     * @param x The x coordinate to move to.
+     * @param y The y coordinate to move to.
      */
-    private void setKeyName(String keyName) {
-        mKeyName.setText(keyName);
+    public void move(float x, float y) {
+        UIUtils.moveView(this, x, y);
 
-        if (mKeyName.getText().equals("")) {
-            mKeyName.setVisibility(GONE);
-        } else {
-            mKeyName.setVisibility(VISIBLE);
-        }
-    }
+        float[] widthAndHeightRatio = getWidthAndHeightRatio();
+        float[] size = getKeySizeOnScreen();
 
-    /**
-     * This method receives a color and sets it to the button.
-     *
-     * @param color The color of the key.
-     */
-    private void setKeyColor(int color) {
-        mKeyName.setTextColor(color);
-        mKeyBackground.setBackgroundColor(color);
-    }
+        float relativeX = (int) (x + (size[0] / 2)) / widthAndHeightRatio[0];
+        float relativeY = (int) (y + (size[1] / 2)) / widthAndHeightRatio[1];
 
-    /**
-     * This method receives an icon name, and sets it to the key.
-     *
-     * @param iconName The name of the icon.
-     */
-    private void setKeyIcon(String iconName) {
-        //Change the name to the format in the Android platform.
-        iconName = iconName.toLowerCase()
-                .replace("-", "_");
-
-        mKeyIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", mContext.getPackageName()));
+        mKey.setX(relativeX);
+        mKey.setY(relativeY);
     }
 
     /**
@@ -181,23 +145,6 @@ public class KeyboardButton extends LinearLayout {
 
         float x = (int) (mKey.getX() * widthAndHeightRatio[0]) - (size[0] / 2);
         float y = (int) (mKey.getY() * widthAndHeightRatio[1]) - (size[1] / 2);
-
-        return new float[]{x, y};
-    }
-
-    /**
-     * This method calculates the key's position relative to the maker's screen.
-     *
-     * @return The first element of the array is the X coordinate, and the second element of the array is the Y coordinate.
-     */
-    public float[] getKeyPositionOnMakersScreen() {
-        float[] widthAndHeightRatio = getWidthAndHeightRatio();
-        float[] size = getKeySizeOnScreen();
-
-        float[] currPosition = getKeyPositionOnScreen();
-
-        float x = (int) (currPosition[0] + (size[0] / 2)) / widthAndHeightRatio[0];
-        float y = (int) (currPosition[1] + (size[1] / 2)) / widthAndHeightRatio[1];
 
         return new float[]{x, y};
     }
@@ -250,6 +197,92 @@ public class KeyboardButton extends LinearLayout {
     }
 
     /**
+     * Initialize the new button layout.
+     */
+    private void initializeButton() {
+        LayoutInflater.from(getContext()).inflate(R.layout.view_keyboard_button, this);
+
+        mKeyView = (RelativeLayout) this.findViewById(R.id.key_shape_drawable);
+        mKeyBackground = (RelativeLayout) this.findViewById(R.id.key_icon_color);
+        mKeyIcon = (ImageView) this.findViewById(R.id.key_icon_drawable);
+        mKeyName = (TextView) this.findViewById(R.id.key_name);
+
+        //Set the button layout if it's a rectangle.
+        if (mKey.getKeyType() == KeyView.KeyType.RECTANGLE) {
+            StateListDrawable drawable = (StateListDrawable) mKeyView.getBackground();
+            Drawable[] drawables = ((DrawableContainer.DrawableContainerState) drawable.getConstantState()).getChildren();
+
+            GradientDrawable selected = (GradientDrawable) drawables[0].mutate();
+            GradientDrawable notSelected = (GradientDrawable) drawables[1].mutate();
+
+            selected.setShape(GradientDrawable.RECTANGLE);
+            selected.setCornerRadius(15);
+
+            selected.invalidateSelf();
+
+            notSelected.setShape(GradientDrawable.RECTANGLE);
+            notSelected.setCornerRadius(15);
+
+            notSelected.invalidateSelf();
+        }
+
+        //Set the button name.
+        if (mKey.getName() != null) {
+            setKeyName(mKey.getName());
+        }
+
+        //Set the button color.
+        if (mKey.getHexColor() != null) {
+            setKeyColor(mKey.getColor());
+        }
+
+        //Set the button text.
+        if (mKey.getIconName() != null) {
+            setKeyIcon(mKey.getIconName());
+        }
+
+        mScaleDetector = new ScaleGestureDetector(mContext, new ScaleListener());
+    }
+
+    /**
+     * This method receives the button name and sets it to the button.
+     *
+     * @param keyName The name of the key.
+     */
+    private void setKeyName(String keyName) {
+        mKeyName.setText(keyName);
+
+        if (mKeyName.getText().equals("")) {
+            mKeyName.setVisibility(GONE);
+        } else {
+            mKeyName.setVisibility(VISIBLE);
+        }
+    }
+
+    /**
+     * This method receives a color and sets it to the button.
+     *
+     * @param color The color of the key.
+     */
+    private void setKeyColor(int color) {
+        mKeyName.setTextColor(color);
+        mKeyBackground.setBackgroundColor(color);
+    }
+
+    /**
+     * This method receives an icon name, and sets it to the key.
+     *
+     * @param iconName The name of the icon.
+     */
+    private void setKeyIcon(String iconName) {
+        //Change the name to the format in the Android platform.
+        iconName = iconName.toLowerCase()
+                .replace("-", "_");
+
+        mKeyIcon.setImageResource(getResources().getIdentifier(iconName, "drawable", mContext.getPackageName()));
+    }
+
+    /**
      * This method calculates the ratio between the width and height of the screen size of the
      * person who created the key button and of the actual user screen.
      *
@@ -264,36 +297,6 @@ public class KeyboardButton extends LinearLayout {
         float heightRatio = ((float) (actualScreenSize[1])) / ((float) (mMakersScreenSize[1]));
 
         return new float[]{widthRatio, heightRatio};
-    }
-
-    @Override
-    public void setOnLongClickListener(OnLongClickListener l) {
-        super.setOnLongClickListener(l);
-        mKeyView.setOnLongClickListener(l);
-    }
-
-    @Override
-    public void setOnClickListener(OnClickListener l) {
-        super.setOnClickListener(l);
-        mKeyView.setOnClickListener(l);
-    }
-
-    @Override
-    public void setOnTouchListener(OnTouchListener l) {
-        super.setOnTouchListener(l);
-        mKeyView.setOnTouchListener(l);
-    }
-
-    @Override
-    public void setOnDragListener(OnDragListener l) {
-        super.setOnDragListener(l);
-        mKeyView.setOnDragListener(l);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mScaleDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {

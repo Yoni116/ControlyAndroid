@@ -124,7 +124,7 @@ public class Keyboard implements Serializable {
      */
     public int[] getScreenSize() {
         String[] sizes = screenSize.split("x");
-        return new int[]{Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1])};
+        return new int[]{(int) Float.parseFloat(sizes[0]), (int) Float.parseFloat(sizes[1])};
     }
 
     public void setScreenSize(String screenSize) {

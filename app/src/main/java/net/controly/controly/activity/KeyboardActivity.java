@@ -17,12 +17,14 @@ import com.bowyer.app.fabtoolbar.FabToolbar;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
+import net.controly.controly.http.response.BaseResponse;
 import net.controly.controly.http.response.GetKeyboardLayoutResponse;
 import net.controly.controly.http.service.KeyboardService;
 import net.controly.controly.model.Keyboard;
 import net.controly.controly.model.KeysLayout;
 import net.controly.controly.util.EventCreationUtils;
 import net.controly.controly.util.GraphicUtils;
+import net.controly.controly.util.GsonFactory;
 import net.controly.controly.util.Logger;
 import net.controly.controly.util.UIUtils;
 import net.controly.controly.view.KeyView;
@@ -266,7 +268,7 @@ public class KeyboardActivity extends BaseActivity {
             return;
         }
 
-        for (KeyView keyView : response.getKeysLayout().getKeys()) {
+        for (final KeyView keyView : response.getKeysLayout().getKeys()) {
 
             //Declare a new button and set its name
             final KeyboardButton button = new KeyboardButton(mContext, keyView, keysLayout.getScreenSize());
@@ -304,8 +306,7 @@ public class KeyboardActivity extends BaseActivity {
                             float newX = target.getX() + dx;
                             float newY = target.getY() + dy;
 
-                            UIUtils.moveView(target, newX, newY);
-
+                            target.move(newX, newY);
                             return true;
                     }
 
@@ -377,12 +378,41 @@ public class KeyboardActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Applies the keyboard edit. Updates with API.
+     */
     private void applyEdit() {
-        float[] widthHeightRatio;
-
-        for (KeyboardButton keyboardButton : mKeyboardButtonsSet) {
-            float[] size = keyboardButton.getSizeOnMakersScreen();
-            float[] position = keyboardButton.getKeyPositionOnMakersScreen();
+        if (!mEditMode) {
+            return;
         }
+
+        int i = 0;
+        KeyView[] keyViews = new KeyView[mKeyboardButtonsSet.size()];
+        for (KeyboardButton keyboardButton : mKeyboardButtonsSet) {
+            keyViews[i] = (keyboardButton.getKeyView());
+            i++;
+        }
+
+        String screenSize = mKeyboard.getScreenSize()[0] + "x" + mKeyboard.getScreenSize()[1];
+        KeysLayout keysLayout = new KeysLayout(keyViews, screenSize);
+
+        Call<BaseResponse> call = ControlyApplication.getInstance()
+                .getService(KeyboardService.class)
+                .updateKeysLayout(mKeyboard.getId(), GsonFactory.getGson().toJson(keysLayout));
+
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                Logger.info("Keyboard layout updated successfully.");
+                disableEditMode();
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                Logger.info("Keyboard layout update failed.");
+                Toast.makeText(mContext, "Controly encountered an error.", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
 }

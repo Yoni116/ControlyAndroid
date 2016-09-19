@@ -17,7 +17,7 @@ import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 import net.controly.controly.adapter.BoxListAdapter;
 import net.controly.controly.http.service.EventService;
-import net.controly.controly.http.service.GetAllTriggersResponse;
+import net.controly.controly.http.response.GetAllTriggersResponse;
 import net.controly.controly.model.EventBuilder;
 import net.controly.controly.model.Trigger;
 import net.controly.controly.model.User;

@@ -22,7 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
-import net.controly.controly.http.response.AddNewLocationResponse;
+import net.controly.controly.http.response.BaseResponse;
 import net.controly.controly.http.service.EventService;
 import net.controly.controly.model.User;
 import net.controly.controly.util.Logger;
@@ -129,7 +129,7 @@ public class CreateLocationActivity extends BaseLocationMapActivity {
         });
 
         View snackbarView = snackbar.getView();
-        TextView snackbarText = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView snackbarText = (TextView) snackbarView.findViewById(R.id.snackbar_text);
         snackbarText.setTextColor(Color.WHITE);
 
         snackbar.show();
@@ -169,12 +169,12 @@ public class CreateLocationActivity extends BaseLocationMapActivity {
         ControlyApplication instance = ControlyApplication.getInstance();
 
         User authenticated = instance.getAuthenticatedUser();
-        Call<AddNewLocationResponse> call = instance.getService(EventService.class)
+        Call<BaseResponse> call = instance.getService(EventService.class)
                 .createNewLocation(authenticated.getId(), position.latitude, position.longitude, description);
 
-        call.enqueue(new Callback<AddNewLocationResponse>() {
+        call.enqueue(new Callback<BaseResponse>() {
             @Override
-            public void onResponse(Call<AddNewLocationResponse> call, Response<AddNewLocationResponse> response) {
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                 Logger.info("New location creation has succeeded.");
                 Toast.makeText(mContext, "Added new location", Toast.LENGTH_SHORT)
                         .show();
@@ -182,7 +182,7 @@ public class CreateLocationActivity extends BaseLocationMapActivity {
             }
 
             @Override
-            public void onFailure(Call<AddNewLocationResponse> call, Throwable t) {
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
                 Logger.error("New Location creation has failed.\n" + t.getMessage());
             }
         });
