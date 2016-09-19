@@ -10,8 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import net.controly.controly.R;
+import net.controly.controly.util.FontUtils;
+
+import java.util.ArrayList;
 
 /**
  * This class defines the base activity of the application.
@@ -79,10 +83,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * Configure the toolbar to the color of the app.
-     *
-     * @param title The title to show on the toolbar
      */
-    final Toolbar configureToolbar(String title, boolean backButton, boolean light) {
+    final void configureToolbar(boolean backButton, boolean light) {
 
         //Set background and title colors according to the toolbar theme.
         int backgroundColor = light ? Color.WHITE : Color.DKGRAY;
@@ -99,11 +101,39 @@ public abstract class BaseActivity extends AppCompatActivity {
             showBackButton();
         }
 
-        //Configure title.
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(title);
+        //Change toolbar font
+        TextView titleView = getToolbarTextView();
+        if (titleView != null) {
+            titleView.setTextColor(titleColor);
+            FontUtils.setTextViewFont(titleView);
+        }
+    }
 
-        return toolbar;
+    /**
+     * @return The text view that the toolbar contains.
+     */
+    private TextView getToolbarTextView() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        //If we defined a custom textview in the toolbar, return it.
+        TextView customTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        if (customTextView != null) {
+            customTextView.setText(toolbar.getTitle());
+            toolbar.setTitle("");
+            setSupportActionBar(toolbar);
+
+            return customTextView;
+        }
+
+        //Return the default textview in the toolbar.
+        ArrayList<View> titleViews = new ArrayList<>(1);
+        toolbar.findViewsWithText(titleViews, toolbar.getTitle().toString(), View.FIND_VIEWS_WITH_TEXT);
+
+        if (!titleViews.isEmpty()) {
+            return (TextView) titleViews.get(0);
+        }
+
+        return null;
     }
 
     boolean enableImmersiveMode() {

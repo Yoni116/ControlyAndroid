@@ -63,20 +63,19 @@ public class CreateKeyboardActivity extends BaseActivity {
         setContentView(R.layout.activity_create_keyboard);
 
         mContext = this;
-        final String DEFAULT_KEYBOARD_IMAGE = "https://api.controly.net/ControlyApi/UserImages/defaultKeyboard.png"; //TODO This should be done offline.
 
-        configureToolbar("New Keyboard", true, false);
+        configureToolbar(true, false);
 
         mKeyboardName = (TextView) findViewById(R.id.keyboard_name);
 
         mKeyboardImage = (CircularImageView) findViewById(R.id.keyboard_image);
-        mKeyboardImage.setImageUrl(DEFAULT_KEYBOARD_IMAGE);
+        mKeyboardImage.setImageUrl(getString(R.string.default_keyboard_image));
         mKeyboardImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] items = {"Take photo", "Choose from library", "Change keyboard name", "Rotate", "Cancel"};
+                final String[] items = {"Take photo", "Choose from library", "Change keyboard name", "Rotate", getString(R.string.cancel)};
 
-                new AlertDialog.Builder(mContext)
+                new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Light_Dialog)
                         .setTitle("Add Keyboard Image")
                         .setItems(items, new DialogInterface.OnClickListener() {
                             @Override
@@ -137,11 +136,11 @@ public class CreateKeyboardActivity extends BaseActivity {
                                             }
                                         };
 
-                                        new AlertDialog.Builder(mContext)
+                                        new AlertDialog.Builder(mContext, R.style.ControlyDialog_Light_Dialog)
                                                 .setTitle("Set the keyboard name")
                                                 .setView(input)
-                                                .setPositiveButton("OK", onPositiveClick)
-                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                .setPositiveButton(getString(R.string.ok), onPositiveClick)
+                                                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialogInterface, int i) {
                                                     }
@@ -173,7 +172,7 @@ public class CreateKeyboardActivity extends BaseActivity {
                 break;
 
             //When clicking on the create keyboard button
-            case R.id.create_keyboard_accept:
+            case R.id.create_keyboard_menu_save:
                 byte[] byteArray = GraphicUtils.bitmapToByteArray(mKeyboardImage.getBitmap());
 
                 RequestBody imageRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), byteArray);

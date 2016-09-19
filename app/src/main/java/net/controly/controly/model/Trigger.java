@@ -2,6 +2,8 @@ package net.controly.controly.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.controly.controly.util.EventCreationUtils;
+
 import java.io.Serializable;
 
 /**
@@ -10,10 +12,10 @@ import java.io.Serializable;
 public class Trigger implements BoxListItem, Serializable {
 
     @SerializedName("TriggerID")
-    private int triggerId;
+    private final int triggerId;
 
     @SerializedName("TriggerType")
-    private String triggerType;
+    private final String triggerType;
 
     public Trigger(int triggerId, String triggerType) {
         this.triggerId = triggerId;
@@ -24,12 +26,20 @@ public class Trigger implements BoxListItem, Serializable {
         return triggerId;
     }
 
-    public String getTriggerType() {
+    public String getTriggerTitle() {
         return triggerType;
     }
 
     @Override
     public String getTitle() {
         return triggerType;
+    }
+
+    public EventCreationUtils.EventType getTriggerType() {
+        if (triggerType.contains("location")) {
+            return EventCreationUtils.EventType.LOCATION;
+        }
+
+        return EventCreationUtils.EventType.TIME;
     }
 }

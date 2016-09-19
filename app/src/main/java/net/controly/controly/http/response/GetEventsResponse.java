@@ -13,7 +13,7 @@ public class GetEventsResponse extends BaseResponse {
      * The events received from the request.
      */
     @SerializedName("data")
-    private Event[] events;
+    private final Event[] events;
 
     public GetEventsResponse(Event[] events) {
         this.events = events;

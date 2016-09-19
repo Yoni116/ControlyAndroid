@@ -19,12 +19,13 @@ import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 import net.controly.controly.http.response.GetKeyboardLayoutResponse;
 import net.controly.controly.http.service.KeyboardService;
-import net.controly.controly.model.Key;
 import net.controly.controly.model.Keyboard;
 import net.controly.controly.model.KeysLayout;
+import net.controly.controly.util.EventCreationUtils;
 import net.controly.controly.util.GraphicUtils;
 import net.controly.controly.util.Logger;
 import net.controly.controly.util.UIUtils;
+import net.controly.controly.view.KeyView;
 import net.controly.controly.view.KeyboardButton;
 import net.controly.controly.view.OnDoubleClickListener;
 
@@ -55,16 +56,6 @@ public class KeyboardActivity extends BaseActivity {
     //-------Fab Toolbars-------
     private FabToolbar mKeyboardFabToolbar;
     private FabToolbar mEditKeyboardFabToolbar;
-
-    //-------Keyboard Toolbar Buttons-------
-    private ImageButton mBackButton;
-    private ImageButton mComputerRemoteButton;
-    private ImageButton mEnableEditButton;
-
-    //-------Edit Keyboard Toolbar Buttons-------
-    private ImageButton mCancelEditButton;
-    private ImageButton mAddKeyButton;
-    private ImageButton mConnectButton;
 
     //These are the first drag points of a view
     private float firstDragX = 0;
@@ -107,8 +98,8 @@ public class KeyboardActivity extends BaseActivity {
         });
 
         //On back button click - return to main activity
-        mBackButton = (ImageButton) findViewById(R.id.controller_menu_back_button);
-        mBackButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton backButton = (ImageButton) findViewById(R.id.controller_menu_back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 returnToMainMenu();
@@ -116,8 +107,8 @@ public class KeyboardActivity extends BaseActivity {
         });
 
         //When clicking on computer remote button, lunch the activity
-        mComputerRemoteButton = (ImageButton) findViewById(R.id.computer_remote_menu_button);
-        mComputerRemoteButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton computerRemoteButton = (ImageButton) findViewById(R.id.computer_remote_menu_button);
+        computerRemoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, ComputerRemoteActivity.class);
@@ -125,8 +116,9 @@ public class KeyboardActivity extends BaseActivity {
             }
         });
 
-        mConnectButton = (ImageButton) findViewById(R.id.connect_button);
-        mConnectButton.setOnClickListener(new View.OnClickListener() {
+        //Connect button
+        ImageButton connectButton = (ImageButton) findViewById(R.id.connect_button);
+        connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ConnectDeviceActivity.class);
@@ -137,8 +129,8 @@ public class KeyboardActivity extends BaseActivity {
         //Initialize 'edit mode'
         mEditKeyboardFabToolbar = (FabToolbar) findViewById(R.id.edit_keyboard_toolbar);
 
-        mEnableEditButton = (ImageButton) findViewById(R.id.enable_edit_button);
-        mEnableEditButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton enableEditButton = (ImageButton) findViewById(R.id.enable_edit_button);
+        enableEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 enableEditMode();
@@ -146,19 +138,28 @@ public class KeyboardActivity extends BaseActivity {
         });
 
         //Initialize the edit mode disable button
-        mCancelEditButton = (ImageButton) findViewById(R.id.cancel_edit_button);
-        mCancelEditButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton cancelEditButton = (ImageButton) findViewById(R.id.cancel_edit_button);
+        cancelEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 disableEditMode();
             }
         });
 
-        mAddKeyButton = (ImageButton) findViewById(R.id.add_key_button);
-        mAddKeyButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton applyEditButton = (ImageButton) findViewById(R.id.apply_edit_button);
+        applyEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                applyEdit();
+            }
+        });
+
+        ImageButton addKeyButton = (ImageButton) findViewById(R.id.add_key_button);
+        addKeyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, SelectDeviceActivity.class);
+                intent.putExtra(EventCreationUtils.PURPOSE_EXTRA, SelectActionActivity.Purpose.KEY_CREATION);
                 startActivity(intent);
             }
         });
@@ -201,7 +202,7 @@ public class KeyboardActivity extends BaseActivity {
         mEditKeyboardFabToolbar.contractFab();
 
         for (KeyboardButton keyboardButton : mKeyboardButtonsSet) {
-            int[] originalPosition = keyboardButton.getKeyPositionOnScreen();
+            float[] originalPosition = keyboardButton.getKeyPositionOnScreen();
 
             UIUtils.moveView(keyboardButton, originalPosition[0], originalPosition[1]);
 
@@ -265,13 +266,13 @@ public class KeyboardActivity extends BaseActivity {
             return;
         }
 
-        for (Key key : response.getKeysLayout().getKeys()) {
+        for (KeyView keyView : response.getKeysLayout().getKeys()) {
 
             //Declare a new button and set its name
-            final KeyboardButton button = new KeyboardButton(mContext, key, keysLayout.getScreenSize());
+            final KeyboardButton button = new KeyboardButton(mContext, keyView, keysLayout.getScreenSize());
 
-            int[] size = button.getKeySizeOnScreen();
-            int[] position = button.getKeyPositionOnScreen();
+            float[] size = button.getKeySizeOnScreen();
+            float[] position = button.getKeyPositionOnScreen();
 
             //When touching the button in edit mode, drag & drop the button.
             button.setOnTouchListener(new View.OnTouchListener() {
@@ -284,7 +285,7 @@ public class KeyboardActivity extends BaseActivity {
                     }
 
                     //This is the button that was clicked
-                    KeyboardButton target = ((KeyboardButton) view.getParent());
+                    KeyboardButton target = (KeyboardButton) view.getParent();
                     target.onTouchEvent(motionEvent);
 
                     //Start the drag & drop process
@@ -371,8 +372,17 @@ public class KeyboardActivity extends BaseActivity {
             });
 
             //Add the new button to the layout
-            UIUtils.drawView(mControllerLayout, button, position[0], position[1], size[0], size[1]);
+            UIUtils.drawView(mControllerLayout, button, position[0], position[1], (int) size[0], (int) size[1]);
             mKeyboardButtonsSet.add(button);
+        }
+    }
+
+    private void applyEdit() {
+        float[] widthHeightRatio;
+
+        for (KeyboardButton keyboardButton : mKeyboardButtonsSet) {
+            float[] size = keyboardButton.getSizeOnMakersScreen();
+            float[] position = keyboardButton.getKeyPositionOnMakersScreen();
         }
     }
 }

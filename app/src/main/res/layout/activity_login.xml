@@ -29,14 +29,16 @@
             android:imeOptions="actionNext"
             android:inputType="textEmailAddress|textCapSentences"
             android:nextFocusUp="@+id/password_field"
-            android:theme="@style/Autocomplete" />
+            android:textColor="@android:color/white"
+            android:theme="@style/ControlyTheme.Autocomplete" />
 
         <EditText
             android:id="@+id/password_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@android:color/white" />
 
         <LinearLayout
             style="?android:attr/buttonBarButtonStyle"

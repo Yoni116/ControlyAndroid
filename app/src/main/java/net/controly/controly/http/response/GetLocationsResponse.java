@@ -13,7 +13,7 @@ public class GetLocationsResponse extends BaseResponse {
      * The locations received from the request.
      */
     @SerializedName("data")
-    private Location[] locations;
+    private final Location[] locations;
 
     public GetLocationsResponse(Location[] locations) {
         this.locations = locations;

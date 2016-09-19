@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
 public class CreateKeyboardResponse extends BaseResponse {
 
     @SerializedName("keyboardPic")
-    private String keyboardPicture;
-    private String backgroundImage;
-    private int keyboardId;
+    private final String keyboardPicture;
+    private final String backgroundImage;
+    private final int keyboardId;
 
     public CreateKeyboardResponse(String keyboardPicture, String backgroundImage, int keyboardId) {
         this.keyboardPicture = keyboardPicture;

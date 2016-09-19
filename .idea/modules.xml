@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Controly.iml" filepath="$PROJECT_DIR$/Controly.iml" />
       <module fileurl="file://$PROJECT_DIR$/ControlyAndroid.iml" filepath="$PROJECT_DIR$/ControlyAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

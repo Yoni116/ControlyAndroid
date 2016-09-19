@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.controly.controly.R;
-import net.controly.controly.model.Key;
 import net.controly.controly.util.GraphicUtils;
 
 /**
@@ -24,7 +23,7 @@ import net.controly.controly.util.GraphicUtils;
 public class KeyboardButton extends LinearLayout {
 
     private Context mContext;
-    private Key mKey;
+    private KeyView mKey;
     private int[] mMakersScreenSize;
 
     //-------Views-------
@@ -48,13 +47,13 @@ public class KeyboardButton extends LinearLayout {
      * Initialize a new keyboard button.
      *
      * @param context The context of the application.
-     * @param key     The key to draw.
+     * @param keyView The keyView to draw.
      */
-    public KeyboardButton(Context context, Key key) {
+    public KeyboardButton(Context context, KeyView keyView) {
         super(context);
 
         this.mContext = context;
-        this.mKey = key;
+        this.mKey = keyView;
 
         initializeButton();
     }
@@ -63,11 +62,11 @@ public class KeyboardButton extends LinearLayout {
      * Initialize a new keyboard button.
      *
      * @param context      The context of the application.
-     * @param key          The key to draw.
-     * @param makersScreen The screen size of the person who created the key button.
+     * @param keyView      The keyView to draw.
+     * @param makersScreen The screen size of the person who created the keyView button.
      */
-    public KeyboardButton(Context context, Key key, int[] makersScreen) {
-        this(context, key);
+    public KeyboardButton(Context context, KeyView keyView, int[] makersScreen) {
+        this(context, keyView);
         this.mMakersScreenSize = makersScreen;
     }
 
@@ -75,8 +74,7 @@ public class KeyboardButton extends LinearLayout {
      * Initialize the new button layout.
      */
     private void initializeButton() {
-        LayoutInflater.from(getContext())
-                .inflate(R.layout.view_keyboard_button, this);
+        LayoutInflater.from(getContext()).inflate(R.layout.view_keyboard_button, this);
 
         mKeyView = (RelativeLayout) this.findViewById(R.id.key_shape_drawable);
         mKeyBackground = (RelativeLayout) this.findViewById(R.id.key_icon_color);
@@ -84,7 +82,7 @@ public class KeyboardButton extends LinearLayout {
         mKeyName = (TextView) this.findViewById(R.id.key_name);
 
         //Set the button layout if it's a rectangle.
-        if (mKey.getKeyType() == Key.KeyType.RECTANGLE) {
+        if (mKey.getKeyType() == KeyView.KeyType.RECTANGLE) {
             StateListDrawable drawable = (StateListDrawable) mKeyView.getBackground();
             Drawable[] drawables = ((DrawableContainer.DrawableContainerState) drawable.getConstantState()).getChildren();
 
@@ -123,7 +121,7 @@ public class KeyboardButton extends LinearLayout {
     /**
      * @return The key data.
      */
-    public Key getKeyButton() {
+    public KeyView getKeyButton() {
         return mKey;
     }
 
@@ -177,15 +175,31 @@ public class KeyboardButton extends LinearLayout {
      *
      * @return The first element of the array is the X coordinate, and the second element of the array is the Y coordinate.
      */
-    public int[] getKeyPositionOnScreen() {
-
+    public float[] getKeyPositionOnScreen() {
         float[] widthAndHeightRatio = getWidthAndHeightRatio();
-        int[] size = getKeySizeOnScreen();
+        float[] size = getKeySizeOnScreen();
 
-        int x = (int) (mKey.getX() * widthAndHeightRatio[0]) - (size[0] / 2);
-        int y = (int) (mKey.getY() * widthAndHeightRatio[1]) - (size[1] / 2);
+        float x = (int) (mKey.getX() * widthAndHeightRatio[0]) - (size[0] / 2);
+        float y = (int) (mKey.getY() * widthAndHeightRatio[1]) - (size[1] / 2);
 
-        return new int[]{x, y};
+        return new float[]{x, y};
+    }
+
+    /**
+     * This method calculates the key's position relative to the maker's screen.
+     *
+     * @return The first element of the array is the X coordinate, and the second element of the array is the Y coordinate.
+     */
+    public float[] getKeyPositionOnMakersScreen() {
+        float[] widthAndHeightRatio = getWidthAndHeightRatio();
+        float[] size = getKeySizeOnScreen();
+
+        float[] currPosition = getKeyPositionOnScreen();
+
+        float x = (int) (currPosition[0] + (size[0] / 2)) / widthAndHeightRatio[0];
+        float y = (int) (currPosition[1] + (size[1] / 2)) / widthAndHeightRatio[1];
+
+        return new float[]{x, y};
     }
 
     /**
@@ -193,15 +207,15 @@ public class KeyboardButton extends LinearLayout {
      *
      * @return The first element of the array is the width of the button, and the second element is height of the button.
      */
-    public int[] getKeySizeOnScreen() {
+    public float[] getKeySizeOnScreen() {
         float[] widthAndHeightRatio = getWidthAndHeightRatio();
 
         //The width and height of the button
-        int width, height;
+        float width, height;
 
         //Set the key's size according to its type
-        if (mKey.getKeyType() == Key.KeyType.CIRCLE || mKey.getKeyType() == Key.KeyType.COLOR_PAD
-                || mKey.getKeyType() == Key.KeyType.LEVEL_CONTROL_KEY) {
+        if (mKey.getKeyType() == KeyView.KeyType.CIRCLE || mKey.getKeyType() == KeyView.KeyType.COLOR_PAD
+                || mKey.getKeyType() == KeyView.KeyType.LEVEL_CONTROL_KEY) {
             //Set the width and height of the new button
             width = (int) (mKey.getWidth() * Math.min(widthAndHeightRatio[0], widthAndHeightRatio[1]));
             height = (int) (mKey.getHeight() * Math.min(widthAndHeightRatio[0], widthAndHeightRatio[1]));
@@ -210,7 +224,29 @@ public class KeyboardButton extends LinearLayout {
             height = (int) (mKey.getHeight() * widthAndHeightRatio[1]);
         }
 
-        return new int[]{width, height};
+        return new float[]{width, height};
+    }
+
+    /**
+     * Converts the actual size of the key, to the size relative to the maker's screen.
+     *
+     * @return The first element of the array is the width of the button, and the second element is height of the button.
+     */
+    public float[] getSizeOnMakersScreen() {
+        float[] widthAndHeightRatio = getWidthAndHeightRatio();
+        float width, height;
+
+        //Get the key's size according to its type.
+        if (mKey.getKeyType() == KeyView.KeyType.CIRCLE || mKey.getKeyType() == KeyView.KeyType.COLOR_PAD
+                || mKey.getKeyType() == KeyView.KeyType.LEVEL_CONTROL_KEY) {
+            width = (mKeyView.getWidth() / Math.max(widthAndHeightRatio[0], widthAndHeightRatio[1]));
+            height = (mKeyView.getHeight() / Math.max(widthAndHeightRatio[0], widthAndHeightRatio[1]));
+        } else {
+            width = (mKeyView.getWidth() / widthAndHeightRatio[0]);
+            height = (mKeyView.getHeight() / widthAndHeightRatio[1]);
+        }
+
+        return new float[]{width, height};
     }
 
     /**

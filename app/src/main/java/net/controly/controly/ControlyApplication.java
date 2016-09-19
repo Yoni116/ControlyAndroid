@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
-import net.controly.controly.http.HeaderInterceptor;
+import net.controly.controly.http.RequestInterceptor;
 import net.controly.controly.model.User;
 import net.controly.controly.util.FontUtils;
 import net.controly.controly.util.GsonFactory;
@@ -21,10 +21,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ControlyApplication extends Application {
 
+    public static final String DEFAULT_FONT = "Brandon_reg.ttf";
+
     /**
      * Implementing the singleton design pattern.
      */
     private static ControlyApplication sInstance;
+
+    /**
+     * Preference for deciding whether to auto login.
+     */
+    private static final String KEY_PREF_AUTO_LOGIN = "pref_auto_login";
 
     /**
      * The base url of the server.
@@ -56,11 +63,6 @@ public class ControlyApplication extends Application {
      */
     private final String PREF_JWT = "jwt";
 
-    /**
-     * Preference for deciding whether to auto login.
-     */
-    private static final String KEY_PREF_AUTO_LOGIN = "pref_auto_login";
-
     public static ControlyApplication getInstance() {
         return sInstance;
     }
@@ -73,12 +75,11 @@ public class ControlyApplication extends Application {
         sInstance = this;
 
         //Initialize app font
-        final String fontName = "Brandon_reg.ttf";
-        FontUtils.setDefaultFont(this, fontName);
+        FontUtils.setDefaultFont(this);
 
         //Initialize retrofit
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new HeaderInterceptor())
+                .addInterceptor(new RequestInterceptor())
                 .build();
 
         retrofit = new Retrofit.Builder()
@@ -86,10 +87,6 @@ public class ControlyApplication extends Application {
                 .addConverterFactory(GsonConverterFactory.create(GsonFactory.getGson()))
                 .client(client)
                 .build();
-    }
-
-    public String getAppName() {
-        return "Controly";
     }
 
     /**

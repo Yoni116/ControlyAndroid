@@ -11,7 +11,7 @@ import net.controly.controly.model.Trigger;
 public class GetAllTriggersResponse extends BaseResponse {
 
     @SerializedName("data")
-    private Trigger[] triggers;
+    private final Trigger[] triggers;
 
     public GetAllTriggersResponse(Trigger[] triggers) {
         this.triggers = triggers;

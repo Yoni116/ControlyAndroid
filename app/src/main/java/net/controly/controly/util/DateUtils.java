@@ -2,6 +2,7 @@ package net.controly.controly.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -10,11 +11,8 @@ import java.util.Locale;
  */
 public class DateUtils {
 
-    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-    public static String getDefaultDateFormat() {
-        return DEFAULT_DATE_FORMAT;
-    }
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String TIME_FORMAT_WITH_TIME_ZONE = "H:mm:sZ";
 
     public static Date parse(String date) {
         try {
@@ -25,4 +23,13 @@ public class DateUtils {
         }
     }
 
+    public static String FormatTime(int hour, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(TIME_FORMAT_WITH_TIME_ZONE, Locale.getDefault());
+        return dateFormat.format(calendar.getTime());
+    }
 }

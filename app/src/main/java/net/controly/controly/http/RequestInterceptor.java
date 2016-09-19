@@ -11,7 +11,7 @@ import okhttp3.Response;
 /**
  * This class is used to add the OAuth header when authenticated.
  */
-public class HeaderInterceptor implements Interceptor {
+public class RequestInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();

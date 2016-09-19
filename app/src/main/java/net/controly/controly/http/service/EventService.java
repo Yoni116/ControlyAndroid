@@ -1,7 +1,10 @@
 package net.controly.controly.http.service;
 
+import net.controly.controly.http.response.AddNewLocationResponse;
+import net.controly.controly.http.response.DeleteEventResponse;
 import net.controly.controly.http.response.GetEventsResponse;
 import net.controly.controly.http.response.GetLocationsResponse;
+import net.controly.controly.http.response.SearchAutomationsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -29,6 +32,15 @@ public interface EventService {
 
     @POST("addNewLocation")
     @FormUrlEncoded
-    Call createNewLocation(@Field("userId") long userId, @Field("Latitude") double latitude,
-                           @Field("Longitude") double longitude, @Field("Description") String description);
+    Call<AddNewLocationResponse> createNewLocation(@Field("userId") long userId, @Field("Latitude") double latitude,
+                                                   @Field("Longitude") double longitude, @Field("Description") String description);
+
+    @POST("deleteEvent")
+    @FormUrlEncoded
+    Call<DeleteEventResponse> deleteEvent(@Field("userId") long userId, @Field("eventId") long eventId);
+
+    @POST("searchAutomationByName")
+    @FormUrlEncoded
+    Call<SearchAutomationsResponse> searchAutomations(@Field("userId") long userId, @Field("name") String query,
+                                                      @Field("offset") int offset, @Field("automation") int automation);
 }

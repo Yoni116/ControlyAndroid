@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
-
     <RelativeLayout
         android:id="@+id/key_shape_drawable"
         android:layout_width="match_parent"
@@ -24,8 +23,7 @@
                 android:id="@+id/key_icon_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/color_accent">
+                android:layout_gravity="center">
 
                 <ImageView
                     android:id="@+id/key_icon_drawable"

@@ -1,14 +1,20 @@
 package net.controly.controly.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
+
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
@@ -29,18 +35,25 @@ import retrofit2.Response;
  */
 public class EventsActivity extends BaseActivity {
 
+    private Context mContext;
     private BoxListAdapter<Event> mEventListAdapter;
+
+    private SwipeMenuListView mEventListview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
 
-        configureToolbar("Events", true, false);
+        mContext = this;
 
-        mEventListAdapter = new BoxListAdapter<>(this);
-        ListView eventsListView = (ListView) findViewById(R.id.events_list);
-        eventsListView.setAdapter(mEventListAdapter);
+        configureToolbar(true, false);
+
+        mEventListAdapter = new BoxListAdapter<>(mContext);
+        mEventListview = (SwipeMenuListView) findViewById(R.id.events_list);
+        mEventListview.setAdapter(mEventListAdapter);
+
+        setupSwipeMenu();
 
         loadEvents("");
     }
@@ -60,13 +73,13 @@ public class EventsActivity extends BaseActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                loadEvents(query);
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                loadEvents(newText);
+                return true;
             }
         });
 
@@ -90,8 +103,9 @@ public class EventsActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            //In case that the user wants to create a new event.
             case R.id.main_menu_create_event_button:
-                Intent intent = new Intent(this, SelectTriggerActivity.class);
+                Intent intent = new Intent(mContext, SelectTriggerActivity.class);
                 startActivity(intent);
                 break;
 
@@ -101,6 +115,24 @@ public class EventsActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setupSwipeMenu() {
+        SwipeMenuCreator swipeMenuCreator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                SwipeMenuItem deleteEvent = new SwipeMenuItem(mContext);
+                deleteEvent.setBackground(android.R.color.holo_red_light);
+                deleteEvent.setTitleColor(Color.WHITE);
+                deleteEvent.setTitle("Delete");
+                deleteEvent.setTitleSize(15);
+                deleteEvent.setWidth(300);
+
+                menu.addMenuItem(deleteEvent);
+            }
+        };
+
+        mEventListview.setMenuCreator(swipeMenuCreator);
     }
 
     /**

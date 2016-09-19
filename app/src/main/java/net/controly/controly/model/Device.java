@@ -2,10 +2,12 @@ package net.controly.controly.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * This class represents a device that can perform actions and that can have controllers in the app.
  */
-public class Device implements BoxListItem {
+public class Device implements BoxListItem, Serializable {
 
     @SerializedName("DeviceID")
     private long id;
@@ -17,7 +19,7 @@ public class Device implements BoxListItem {
     private String picture;
 
     @SerializedName("Category")
-    private String category; //TODO This should be an enum
+    private String category;
 
     @SerializedName("Protocol")
     private String protocol;

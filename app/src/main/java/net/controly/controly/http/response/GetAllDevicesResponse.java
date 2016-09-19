@@ -10,7 +10,7 @@ import net.controly.controly.model.Device;
 public class GetAllDevicesResponse extends BaseResponse {
 
     @SerializedName("data")
-    private Device[] devices;
+    private final Device[] devices;
 
     public GetAllDevicesResponse(Device[] devices) {
         this.devices = devices;

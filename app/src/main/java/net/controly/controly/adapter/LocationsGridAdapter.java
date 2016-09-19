@@ -20,8 +20,8 @@ import java.util.List;
 public class LocationsGridAdapter extends BaseAdapter {
 
     private final Context mContext;
+    private final List<Location> mLocationsList;
 
-    private List<Location> mLocationsList;
     private LayoutInflater mInflater;
 
     public LocationsGridAdapter(Context mContext) {
@@ -40,7 +40,7 @@ public class LocationsGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mLocationsList == null ? 0 : mLocationsList.size();
+        return mLocationsList.size();
     }
 
     @Override

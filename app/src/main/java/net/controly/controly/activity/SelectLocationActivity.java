@@ -1,5 +1,6 @@
 package net.controly.controly.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,17 +8,22 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import com.google.gson.JsonObject;
 
 import net.controly.controly.ControlyApplication;
 import net.controly.controly.R;
 import net.controly.controly.adapter.LocationsGridAdapter;
 import net.controly.controly.http.response.GetLocationsResponse;
 import net.controly.controly.http.service.EventService;
+import net.controly.controly.model.EventBuilder;
 import net.controly.controly.model.Location;
-import net.controly.controly.model.Trigger;
 import net.controly.controly.model.User;
+import net.controly.controly.util.EventCreationUtils;
 import net.controly.controly.util.Logger;
 import net.controly.controly.util.UIUtils;
 
@@ -30,9 +36,9 @@ import retrofit2.Response;
  */
 public class SelectLocationActivity extends BaseActivity {
 
-    public static final String TRIGGER_OBJECT_EXTRA = "CHOSEN_TRIGGER";
-    private Trigger trigger;
+    private Context mContext;
 
+    private EventBuilder mEventBuilder;
     private LocationsGridAdapter mLocationListAdapter;
 
     @Override
@@ -40,16 +46,38 @@ public class SelectLocationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_location);
 
-        configureToolbar(getString(R.string.locations_activity_toolbar_title), true, false);
+        mContext = this;
+
+        configureToolbar(true, false);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            trigger = (Trigger) extras.get(TRIGGER_OBJECT_EXTRA);
+            mEventBuilder = (EventBuilder) extras.get(EventCreationUtils.EVENT_BUILDER_OBJECT_EXTRA);
         }
 
         mLocationListAdapter = new LocationsGridAdapter(this);
         GridView locationsGridView = (GridView) findViewById(R.id.locations_grid);
         locationsGridView.setAdapter(mLocationListAdapter);
+
+        locationsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
+                Location location = mLocationListAdapter.getItem(index);
+
+                JsonObject locationJson = new JsonObject();
+                locationJson.addProperty("longitude", location.getLongitude());
+                locationJson.addProperty("latitude", location.getLatitude());
+                locationJson.addProperty("locationId", location.getId());
+
+                mEventBuilder.triggerInfo(locationJson.toString());
+
+                Intent intent = new Intent(mContext, SelectDeviceActivity.class);
+                intent.putExtra(EventCreationUtils.PURPOSE_EXTRA, SelectActionActivity.Purpose.EVENT_CREATION);
+                intent.putExtra(EventCreationUtils.EVENT_BUILDER_OBJECT_EXTRA, mEventBuilder);
+
+                startActivity(intent);
+            }
+        });
 
         loadLocations("");
     }

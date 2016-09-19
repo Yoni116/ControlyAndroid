@@ -16,15 +16,21 @@ public class LocationsUtils {
     /**
      * @return The user's current location.
      */
+    @SuppressWarnings("MissingPermission")
     public static LatLng getCurrentLocation(Context context) {
-        LocationManager locationManager = (LocationManager)
-                context.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
         if (PermissionUtils.hasPermissions(context, Manifest.permission.ACCESS_FINE_LOCATION) &&
                 PermissionUtils.hasPermissions(context, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            @SuppressWarnings("MissingPermission") Location location = locationManager.getLastKnownLocation(locationManager
-                    .getBestProvider(criteria, false));
+
+            //TODO This might crash if location services are turned off.
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
+
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
 

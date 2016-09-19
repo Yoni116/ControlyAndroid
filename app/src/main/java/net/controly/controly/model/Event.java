@@ -25,9 +25,9 @@ public class Event implements BoxListItem {
     private String triggerInfo;
 
     @SerializedName("TriggerID")
-    private String triggerId;
+    private long triggerId;
 
-    @SerializedName("CreateAt")
+    @SerializedName("CreatedAt")
     private Date creationDate;
 
     public Event() {
@@ -73,11 +73,11 @@ public class Event implements BoxListItem {
         this.triggerInfo = triggerInfo;
     }
 
-    public String getTriggerId() {
+    public long getTriggerId() {
         return triggerId;
     }
 
-    public void setTriggerId(String triggerId) {
+    public void setTriggerId(long triggerId) {
         this.triggerId = triggerId;
     }
 

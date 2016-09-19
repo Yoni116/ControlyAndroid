@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import net.controly.controly.R;
 import net.controly.controly.model.BoxListItem;
+import net.controly.controly.util.FontUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +23,8 @@ import java.util.List;
 public class BoxListAdapter<T extends BoxListItem> extends BaseAdapter {
 
     private final Context mContext;
+    private final List<T> mList;
 
-    private List<T> mList;
     private LayoutInflater mInflater;
     private boolean invertFirstItemColor = false;
 
@@ -32,9 +33,9 @@ public class BoxListAdapter<T extends BoxListItem> extends BaseAdapter {
         this.mList = new ArrayList<>();
     }
 
-    public BoxListAdapter(Context mContext, boolean invertFirstItemColor) {
-        this(mContext);
-        this.invertFirstItemColor = invertFirstItemColor;
+    public void addAll(List<T> list) {
+        mList.addAll(list);
+        notifyDataSetChanged();
     }
 
     public void addAll(T[] arr) {
@@ -50,9 +51,18 @@ public class BoxListAdapter<T extends BoxListItem> extends BaseAdapter {
         mList.add(index, element);
     }
 
+    public void remove(int index) {
+        mList.remove(index);
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<T> getItems() {
+        return new ArrayList<>(mList);
+    }
+
     @Override
     public int getCount() {
-        return mList == null ? 0 : mList.size();
+        return mList.size();
     }
 
     @Override
@@ -90,6 +100,7 @@ public class BoxListAdapter<T extends BoxListItem> extends BaseAdapter {
 
         TextView title = (TextView) convertView.findViewById(R.id.box_text);
         title.setText(element.getTitle());
+        FontUtils.setTextViewFont(title);
 
         RelativeLayout background = (RelativeLayout) convertView.findViewById(R.id.box_background);
 

@@ -8,7 +8,16 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+    </android.support.v7.widget.Toolbar>
 
     <GridView
         android:id="@+id/locations_grid"
@@ -16,9 +25,9 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:divider="@color/background_color"
-        android:verticalSpacing="10sp"
         android:listSelector="@android:color/transparent"
         android:numColumns="2"
+        android:verticalSpacing="10sp"
         tools:listitem="@layout/grid_item_locations" />
 
 </LinearLayout>

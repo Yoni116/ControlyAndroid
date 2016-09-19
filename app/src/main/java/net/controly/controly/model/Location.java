@@ -11,22 +11,22 @@ import java.util.Date;
 public class Location implements BoxListItem, Serializable {
 
     @SerializedName("LocationID")
-    private long id;
+    private final long id;
 
     @SerializedName("UserID")
-    private long userId;
+    private final long userId;
 
     @SerializedName("Latitude")
-    private double latitude;
+    private final double latitude;
 
     @SerializedName("Longitude")
-    private double longitude;
+    private final double longitude;
 
     @SerializedName("Description")
-    private String description;
+    private final String description;
 
     @SerializedName("CreatedAt")
-    private Date creationDate;
+    private final Date creationDate;
 
     public Location(long id, long userId, double latitude, double longitude, String description, Date creationDate) {
         this.id = id;

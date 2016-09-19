@@ -30,8 +30,11 @@
             android:exported="true" />
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/title_activity_main" />
-        <activity android:name=".activity.CreateKeyboardActivity">
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activity.CreateKeyboardActivity"
+            android:label="@string/create_keyboard_activity_title">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
@@ -42,12 +45,22 @@
         <activity
             android:name=".activity.ComputerRemoteActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
-        <activity android:name=".activity.SelectDeviceActivity" />
-        <activity android:name=".activity.SelectActionActivity" />
+        <activity
+            android:name=".activity.SelectDeviceActivity"
+            android:label="@string/device_selection_activity_titile" />
+        <activity
+            android:name=".activity.SelectActionActivity"
+            android:label="@string/select_action" />
         <activity android:name=".activity.ConnectDeviceActivity" />
-        <activity android:name=".activity.EventsActivity" />
-        <activity android:name=".activity.SelectTriggerActivity" />
-        <activity android:name=".activity.SelectLocationActivity" />
+        <activity
+            android:name=".activity.EventsActivity"
+            android:label="@string/events" />
+        <activity
+            android:name=".activity.SelectTriggerActivity"
+            android:label="@string/event_trigger" />
+        <activity
+            android:name=".activity.SelectLocationActivity"
+            android:label="@string/locations_activity_toolbar_title" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -60,6 +73,29 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="net.controly.controly.activity.SelectLocationActivity" />
         </activity>
-    </application>
 
+        <activity
+            android:name=".activity.MyLocationsActivity"
+            android:theme="@style/ControlyTheme.Light" />
+
+        <activity
+            android:name=".activity.MyActionsActivity"
+            android:label="@string/my_actions"
+            android:theme="@style/Theme.AppCompat.Light.Dialog">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.controly.controly.activity.SelectDeviceActivity" />
+        </activity>
+
+        <activity
+            android:name=".activity.MyAutomationsActivity"
+            android:label="@string/my_automations">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.controly.controly.activity.SelectDeviceActivity" />
+        </activity>
+
+    </application>
 </manifest>

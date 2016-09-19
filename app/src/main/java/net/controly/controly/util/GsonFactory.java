@@ -17,7 +17,7 @@ public final class GsonFactory {
     public static Gson getGson() {
         if (sGson == null) {
             sGson = new GsonBuilder().
-                    setDateFormat(DateUtils.getDefaultDateFormat())
+                    setDateFormat(DateUtils.DEFAULT_DATE_FORMAT)
                     .create();
         }
 

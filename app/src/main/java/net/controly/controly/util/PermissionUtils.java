@@ -35,7 +35,7 @@ public class PermissionUtils {
                 //Show a dialog explaining why we need this permission.
                 final String dialogTitle = "We need a permission";
 
-                new AlertDialog.Builder(context, R.style.AlertDialogTheme)
+                new AlertDialog.Builder(context, R.style.ControlyDialog_Light_Dialog)
                         .setTitle(dialogTitle)
                         .setMessage(dialogText)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {

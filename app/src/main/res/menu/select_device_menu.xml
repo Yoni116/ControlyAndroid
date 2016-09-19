@@ -3,7 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/create_keyboard_accept"
-        android:title="@string/done_cap"
+        android:id="@+id/create_key_menu_choose_automation"
+        android:icon="@drawable/device_hub_white"
+        android:title="@string/my_automations"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/create_key_menu_save_key"
+        android:icon="@drawable/ic_check_white"
+        android:title="@string/save_key"
         app:showAsAction="ifRoom" />
 </menu>

@@ -1,20 +1,22 @@
 package net.controly.controly.model;
 
+import net.controly.controly.view.KeyView;
+
 /**
  * This class represents the key layout.
  */
 public class KeysLayout {
-    private Key[] keys;
+    private KeyView[] keys;
     private String screenSize;
 
     public KeysLayout() {
     }
 
-    public Key[] getKeys() {
+    public KeyView[] getKeys() {
         return keys;
     }
 
-    public void setKeys(Key[] keys) {
+    public void setKeys(KeyView[] keys) {
         this.keys = keys;
     }
 

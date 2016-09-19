@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * This class represents a device action.
  */
-public class Action implements BoxListItem {
+public class DeviceKey extends Key {
 
     @SerializedName("DeviceKeyID")
     private long id;
@@ -16,10 +16,8 @@ public class Action implements BoxListItem {
     @SerializedName("Description")
     private String description;
 
-    @SerializedName("Command")
-    private String command;
-
-    public Action() {
+    public DeviceKey(String command) {
+        super(command);
     }
 
     public long getId() {
@@ -34,6 +32,10 @@ public class Action implements BoxListItem {
         return deviceId;
     }
 
+    public String getDeviceIdFormatted() {
+        return "dk" + id;
+    }
+
     public void setDeviceId(long deviceId) {
         this.deviceId = deviceId;
     }
@@ -44,14 +46,6 @@ public class Action implements BoxListItem {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public void setCommand(String command) {
-        this.command = command;
     }
 
     @Override

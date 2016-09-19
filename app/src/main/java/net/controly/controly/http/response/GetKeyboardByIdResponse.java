@@ -12,7 +12,7 @@ import net.controly.controly.util.GsonFactory;
 public class GetKeyboardByIdResponse extends BaseResponse {
 
     @SerializedName("data")
-    private JsonElement keyboard;
+    private final JsonElement keyboard;
 
     public GetKeyboardByIdResponse(JsonElement keyboard) {
         this.keyboard = keyboard;

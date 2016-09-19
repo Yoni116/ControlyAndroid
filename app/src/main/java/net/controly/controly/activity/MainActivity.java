@@ -54,8 +54,7 @@ public class MainActivity extends BaseActivity {
         mContext = this;
 
         //Set toolbar text and color
-        configureToolbar(ControlyApplication.getInstance()
-                .getAppName(), false, false);
+        configureToolbar(false, false);
 
         //Set the keyboard list and it's adapter.
         mKeyboardList = (SwipeMenuListView) findViewById(R.id.keyboard_list);
@@ -68,84 +67,11 @@ public class MainActivity extends BaseActivity {
         mKeyboardList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-                Intent controllerActivity = new Intent(mContext, KeyboardActivity.class);
-                controllerActivity.putExtra(KeyboardActivity.KEYBOARD_OBJECT_EXTRA, mKeyboardListAdapter.getItem(position));
-
-                startActivity(controllerActivity);
-                overridePendingTransition(R.anim.slide_in, R.anim.nothing);
+                launchKeyboard(position);
             }
         });
 
-        //Set the swipe menu button for the list.
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-            @Override
-            public void create(SwipeMenu menu) {
-
-                //Set the 'more' button.
-                SwipeMenuItem moreItem = new SwipeMenuItem(getApplicationContext());
-
-                moreItem.setBackground(R.color.light_grey);
-                moreItem.setWidth(400);
-                moreItem.setTitle("More");
-                moreItem.setTitleSize(15);
-                moreItem.setTitleColor(Color.WHITE);
-
-                menu.addMenuItem(moreItem);
-
-                //Set the 'publish' button.
-                SwipeMenuItem publish = new SwipeMenuItem(getApplicationContext());
-
-                publish.setBackground(R.color.light_green);
-                publish.setWidth(400);
-                publish.setTitle("Publish");
-                publish.setTitleSize(15);
-                publish.setTitleColor(Color.WHITE);
-
-                menu.addMenuItem(publish);
-            }
-        };
-
-        mKeyboardList.setMenuCreator(creator);
-
-        //Set the onclick listener for swipe menu buttons.
-        mKeyboardList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, final int index) {
-                Logger.info("User clicked on '" + menu.getMenuItem(index).getTitle() + "' button in the swipe menu.");
-
-                switch (index) {
-                    case 0:
-                        final String[] options = {"Edit", "Delete"};
-                        new AlertDialog.Builder(mContext, R.style.AlertDialogTheme)
-                                .setTitle("Choose an option")
-                                .setItems(options, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        switch (i) {
-                                            case 0:
-                                                Toast.makeText(MainActivity.this, "Will edit...", Toast.LENGTH_SHORT)
-                                                        .show();
-                                                break;
-
-                                            case 1:
-                                                deleteKeyboard(index);
-                                                break;
-                                        }
-                                    }
-                                }).show();
-
-                        break;
-                    case 1:
-                        Toast.makeText(MainActivity.this, "Will lunch the publish activity.", Toast.LENGTH_SHORT)
-                                .show();
-                        break;
-                }
-
-                //Return true to keep swipe menu open when clicking one of the buttons
-                return true;
-            }
-        });
-
+        setupSwipeMenu();
         loadKeyboards();
     }
 
@@ -187,6 +113,87 @@ public class MainActivity extends BaseActivity {
 
         super.onBackPressed();
     }
+
+    private void setupSwipeMenu() {
+        //Set the swipe menu button for the list.
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+
+                //Set the 'more' button.
+                SwipeMenuItem moreItem = new SwipeMenuItem(getApplicationContext());
+
+                moreItem.setBackground(R.color.light_grey);
+                moreItem.setWidth(400);
+                moreItem.setTitle("More");
+                moreItem.setTitleSize(15);
+                moreItem.setTitleColor(Color.WHITE);
+
+                menu.addMenuItem(moreItem);
+
+                //Set the 'publish' button.
+                SwipeMenuItem publish = new SwipeMenuItem(getApplicationContext());
+
+                publish.setBackground(R.color.light_green);
+                publish.setWidth(400);
+                publish.setTitle("Publish");
+                publish.setTitleSize(15);
+                publish.setTitleColor(Color.WHITE);
+
+                menu.addMenuItem(publish);
+            }
+        };
+
+        mKeyboardList.setMenuCreator(creator);
+
+        //Set the onclick listener for swipe menu buttons.
+        mKeyboardList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, final int index) {
+                Logger.info("User clicked on '" + menu.getMenuItem(index).getTitle() + "' button in the swipe menu.");
+
+                switch (index) {
+                    case 0:
+                        final String[] options = {"Edit", "Delete"};
+                        new AlertDialog.Builder(mContext, R.style.ControlyDialog_Light_Dialog)
+                                .setTitle("Choose an option")
+                                .setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        switch (i) {
+                                            case 0:
+                                                Toast.makeText(MainActivity.this, "Will edit...", Toast.LENGTH_SHORT)
+                                                        .show();
+                                                break;
+
+                                            case 1:
+                                                deleteKeyboard(index);
+                                                break;
+                                        }
+                                    }
+                                }).show();
+
+                        break;
+                    case 1:
+                        Toast.makeText(MainActivity.this, "Will lunch the publish activity.", Toast.LENGTH_SHORT)
+                                .show();
+                        break;
+                }
+
+                //Return true to keep swipe menu open when clicking one of the buttons
+                return true;
+            }
+        });
+    }
+
+    private void launchKeyboard(int position) {
+        Intent controllerActivity = new Intent(mContext, KeyboardActivity.class);
+        controllerActivity.putExtra(KeyboardActivity.KEYBOARD_OBJECT_EXTRA, mKeyboardListAdapter.getItem(position));
+
+        startActivity(controllerActivity);
+        overridePendingTransition(R.anim.slide_in, R.anim.nothing);
+    }
+
 
     /**
      * This method loads the keyboards from the API asynchronously.

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import net.controly.controly.R;
 
@@ -23,7 +23,7 @@ public class MenuActivity extends BaseActivity {
         final Context context = this;
 
         //Initialize the logout button
-        FloatingActionButton settingsButton = (FloatingActionButton) findViewById(R.id.settings_button);
+        ImageView settingsButton = (ImageView) findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -32,7 +32,7 @@ public class MenuActivity extends BaseActivity {
             }
         });
 
-        FloatingActionButton createKeyboardButton = (FloatingActionButton) findViewById(R.id.create_keyboard_button);
+        ImageView createKeyboardButton = (ImageView) findViewById(R.id.create_keyboard_button);
         createKeyboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,11 +41,20 @@ public class MenuActivity extends BaseActivity {
             }
         });
 
-        FloatingActionButton eventsButton = (FloatingActionButton) findViewById(R.id.events_button);
+        ImageView eventsButton = (ImageView) findViewById(R.id.events_button);
         eventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, EventsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView myLocationsButton = (ImageView) findViewById(R.id.my_locations_button);
+        myLocationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MyLocationsActivity.class);
                 startActivity(intent);
             }
         });

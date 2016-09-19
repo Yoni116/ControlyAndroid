@@ -12,7 +12,7 @@ import java.util.List;
 public class GetAllUserKeyboardsResponse extends BaseResponse {
 
     @SerializedName("data")
-    private List<Keyboard> keyboards;
+    private final List<Keyboard> keyboards;
 
     public GetAllUserKeyboardsResponse(List<Keyboard> keyboards) {
         this.keyboards = keyboards;
